@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { Sidebar } from '../components/Sidebar';
 import { PublicNavbar } from '../components/PublicNavbar';
 import { ToastManager } from '../components/ToastManager';
-
+import { ScrollToTop } from '../components/ScrollToTop';
 
 
  
