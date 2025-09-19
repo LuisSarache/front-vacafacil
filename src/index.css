@@ -6,11 +6,11 @@
    Paleta de cores personalizada
    ============================== */
 @theme {
-  --color-dark: #2C1A0D;       /* Azul bem escuro */
-  --color-medium: #000000;     /* Azul médio */
-  --color-light: #F5E9D9;      /* Azul claro */
-  --color-accent: #4B3220;     /* Azul/acento esverdeado */
-  --color-background: #B8B0A4; /* Bege claro para fundo */
+  --color-dark: #1c1917;       /* Preto suave */
+  --color-medium: #78716c;     /* Marrom médio */
+  --color-light: #a8a29e;      /* Marrom claro */
+  --color-accent: #d97706;     /* Laranja/marrom quente */
+  --color-background: #fafaf9; /* Branco quente */
 }
 
 /* ==============================
@@ -66,14 +66,13 @@
    Estilo global do body
    ============================== */
 body {
-
   font-family: 'Inter', 'Nunito', 'Roboto', sans-serif; /* Fontes */
   font-weight: 500; /* Peso médio */
   background: linear-gradient(
     135deg,
-    var(--color-medium) 0%,         /* Começa azul claro */
-    var(--color-medium) 50%,       /* Vai para azul médio */
-    var(--color-light) 100%   /* Termina bege claro */
+    #fafaf9 0%,         /* Começa branco quente */
+    #f5f5f4 50%,        /* Vai para off-white */
+    #e7e5e4 100%        /* Termina bege claro */
   );
   min-height: 100vh; /* Sempre ocupa altura mínima da tela */
 }
@@ -82,18 +81,19 @@ body {
    Efeito Glassmorphism
    ============================== */
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.9);         /* Fundo branco translúcido */
+  background: rgba(255, 255, 255, 0.95);        /* Fundo branco mais opaco */
   backdrop-filter: blur(20px);                  /* Efeito de desfoque */
   border-radius: 24px;                          /* Bordas arredondadas */
-  border: 1px solid rgba(255, 255, 255, 0.2);   /* Borda suave */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Sombra */
+  border: 1px solid rgba(120, 113, 108, 0.1);  /* Borda marrom suave */
+  box-shadow: 0 25px 50px -12px rgba(28, 25, 23, 0.15); /* Sombra escura suave */
 }
 
 .glassmorphism-light {
-  background: rgba(255, 255, 255, 0.15);        /* Versão mais clara/transparente */
+  background: rgba(255, 255, 255, 0.9);         /* Versão mais opaca */
   backdrop-filter: blur(16px);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(120, 113, 108, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(28, 25, 23, 0.1);
 }
 
 /* ==============================
@@ -164,44 +164,48 @@ body {
    ============================== */
 /* Botão principal */
 .btn-primary {
-  background: var(--color-light);
+  background: var(--color-dark);
   color: white;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 14px 0 rgba(28, 25, 23, 0.3);
 }
 .btn-primary:hover {
   background: var(--color-accent); /* Muda cor no hover */
-  transform: scale(1.02);          /* Leve zoom */
+  transform: translateY(-2px);     /* Leve elevação */
+  box-shadow: 0 8px 25px 0 rgba(217, 119, 6, 0.4);
 }
 
 /* Botão fantasma (sem fundo) */
 .btn-ghost {
   background: transparent;
-  color: var(--color-light);
+  color: var(--color-dark);
+  border: 1px solid var(--color-medium);
   transition: all 0.3s ease;
 }
 .btn-ghost:hover {
-  color: var(--color-medium); /* Texto muda de cor no hover */
+  background: var(--color-dark);
+  color: white;
 }
 
 /* ==============================
    Campos de input
    ============================== */
 .input-field {
-  background: rgba(255, 255, 255, 0.1);           /* Fundo translúcido */
-  border: 1px solid rgba(255, 255, 255, 0.2);     /* Borda suave */
+  background: rgba(255, 255, 255, 0.95);          /* Fundo branco quase opaco */
+  border: 1px solid rgba(120, 113, 108, 0.3);     /* Borda marrom suave */
   transition: all 0.3s ease;
 }
 .input-field:focus {
-  background: rgba(255, 255, 255, 0.2);           /* Mais visível no foco */
-  border-color: var(--color-light);               /* Destacado em azul claro */
-  box-shadow: 0 0 0 3px rgba(36, 147, 191, 0.1);  /* Glow em volta */
+  background: rgba(255, 255, 255, 1);             /* Totalmente opaco no foco */
+  border-color: var(--color-accent);              /* Destacado em laranja */
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);  /* Glow laranja em volta */
 }
 
 /* ==============================
    Página mobile de redirecionamento
    ============================== */
 .mobile-redirect {
-  background: var(--color-dark); /* Fundo azul escuro */
+  background: var(--color-dark); /* Fundo preto suave */
   color: white;                  /* Texto branco */
   min-height: 100vh;             /* Ocupa tela inteira */
   display: flex;                 /* Flexbox */
