@@ -6,11 +6,11 @@
    Paleta de cores personalizada
    ============================== */
 @theme {
-  --color-dark: #1c1917;       /* Preto suave */
-  --color-medium: #78716c;     /* Marrom médio */
-  --color-light: #a8a29e;      /* Marrom claro */
-  --color-accent: #d97706;     /* Laranja/marrom quente */
-  --color-background: #fafaf9; /* Branco quente */
+  --color-dark: #212121;       /* Preto suave */
+  --color-medium: #264653;     /* Marrom médio */
+  --color-light: #B85C38;      /* Marrom claro */
+  --color-accent: #B87333;     /* Laranja/marrom quente */
+  --color-background: #FAFAFA; /* Branco quente */
 }
 
 /* ==============================

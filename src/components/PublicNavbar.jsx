@@ -27,17 +27,17 @@ return (
                 <div className="flex items-center space-x-3 md:space-x-4">
                     <div className="relative">
                         <img
-                            src="/logoblu.png"
-                            alt="logotipo site blurosiere"
+                            src="/logo.png"
+                            alt="logotipo site vacafacil"
                             className="w-10 h-10 md:w-12 md:h-12 shadow-lg"/>
                         
                     </div>
                     <div>
                         <span className=" text-xl font-bold text-white/80 md:text-2xl">
-                            BluRosiere
+                            VacaFacil
                         </span>
                         <p className="text-xs text-accent/100 font-medium hidden sm:block">
-                        Sistema Psicologico
+                        Modernize sua fazenda
                         </p>
                     </div>
                 </div>
