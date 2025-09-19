@@ -7,10 +7,8 @@ import { useAuth } from '../context/AuthContext';
 // Componentes reutilizáveis
 import { Sidebar } from '../components/Sidebar';
 import { PublicNavbar } from '../components/PublicNavbar';
-import { ToastManager } from '../components/ToastManager';
-
-
-
+import { LoadingSpinner } from '../components/LoadingSpinner';
+import { ScrollToTop } from '../components/ScrollToTop';
  
 // Páginas públicas
 import { Home } from '../pages/Home';
@@ -18,13 +16,6 @@ import { About } from '../pages/About';
 import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
 import { Contact } from '../pages/Contact';
-import { Agendamentos } from '../pages/Agendamentos';
-
-
-// Pagina NotFound
-
- 
-// Páginas protegidas (apenas para usuários autenticad
  
 /* ==============================
    Componente de rota protegida
@@ -52,7 +43,7 @@ const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth(); // Obtém usuário e estado de carregamento
  
   if (loading) return <LoadingSpinner size="lg" />; // Mostra spinner enquanto carrega
-  if (user) return <Navigate to="/dashboard" replace />; // Redireciona usuário logado para dashboard
+  // Usuários logados podem acessar páginas públicas também
  
   return (
     <div className="min-h-screen">
@@ -68,9 +59,12 @@ const PublicRoute = ({ children }) => {
    Componente Dashboard condicional
    ============================== */
 const Dashboard = () => {
-  const { user } = useAuth();
-  // Retorna dashboard específico baseado no tipo do usuário
-  return user?.type === 'psicologo' ? <DashboardPsicologo /> : <DashboardPaciente />;
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-dark mb-6">Dashboard</h1>
+      <p className="text-medium">Bem-vindo ao sistema VacaFácil!</p>
+    </div>
+  );
 };
  
 /* ==============================
