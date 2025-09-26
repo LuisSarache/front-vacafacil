@@ -74,7 +74,7 @@ export const Home = () => {
               VacaFácil
             </h1>
             
-            <h2 className="text-2xl md:text-3xl font-medium text-medium mb-6">
+            <h2 className="text-2xl md:text-3xl font-medium text-accent mb-6">
               Tecnologia Simples para o Campo
             </h2>
             
@@ -115,7 +115,7 @@ export const Home = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-dark mb-6">
               Como Funciona
             </h2>
-            <p className="text-xl text-medium max-w-3xl mx-auto">
+            <p className="text-xl text-accent max-w-3xl mx-auto">
               Em apenas 3 passos simples, você transforma a gestão da sua fazenda
             </p>
           </motion.div>

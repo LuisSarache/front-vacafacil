@@ -6,10 +6,10 @@
    Paleta de cores personalizada
    ============================== */
 @theme {
-  --color-dark: #212121;       /* Preto suave */
+  --color-dark: #6A994E;       /* Preto suave */
   --color-medium: #264653;     /* Marrom médio */
-  --color-light: #B85C38;      /* Marrom claro */
-  --color-accent: #B87333;     /* Laranja/marrom quente */
+  --color-light: #F0E1C0;      /* Marrom claro */
+  --color-accent: #878B88;     /* Laranja/marrom quente */
   --color-background: #FAFAFA; /* Branco quente */
 }
 
