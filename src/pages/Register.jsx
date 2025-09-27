@@ -55,10 +55,10 @@ export const Register = () => {
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
-      <Card className="bg-amber-400 w-full max-w-md" variant="amber">
+      <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white/70 mb-2">Criar Conta</h1>
-          <p className="text-white/50">Cadastre-se na BluRosiere</p>
+          <h1 className="text-3xl font-bold text-dark mb-2">Criar Conta</h1>
+          <p className="text-medium">Cadastre-se no VacaFácil</p>
         </div>
 
        {/* Seletor de usuário */}
@@ -159,8 +159,8 @@ export const Register = () => {
         </form>
 
         <div className="mt-6 text-center space-y-2">
-          <p className="text-white/70">Já possui conta?</p>
-          <Link to="/login" className="text-white/60 font-bold hover:text-accent">
+          <p className="text-medium">Já possui conta?</p>
+          <Link to="/login" className="text-accent font-bold hover:text-dark transition-colors">
             Faça login!
           </Link>
         </div>

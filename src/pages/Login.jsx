@@ -33,11 +33,11 @@ export const Login = () =>{
  
     return(
         <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
-            <Card  className= " w-full  max-w-md" variant="amber">
+            <Card className="w-full max-w-md">
                 {/*Cabeçalho */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white/70 mb-2">Entrar</h1>
-                    <p className="text-white/70">Acesse sua conta   no BluRosiere</p>
+                    <h1 className="text-3xl font-bold text-dark mb-2">Entrar</h1>
+                    <p className="text-medium">Acesse sua conta no VacaFácil</p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <Input
@@ -64,10 +64,10 @@ export const Login = () =>{
                         </Button>
                 </form>
                 <div className="mt-6 text-center space-y-2">
-                    <p className="text-white/70">
+                    <p className="text-medium">
                         Não possui conta?
                     </p>
-                    <Link to = "/register" className=" text-white/70 font-bold hover:text-accent">
+                    <Link to="/register" className="text-accent font-bold hover:text-dark transition-colors">
                         Criar Conta
                     </Link>
                 </div>
