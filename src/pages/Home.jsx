@@ -70,7 +70,7 @@ export const Home = () => {
               <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-accent" />
             </div>
             
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-medium mb-4 sm:mb-6">
               VacaFácil
             </h1>
             
