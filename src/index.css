@@ -8,9 +8,9 @@
 @theme {
   --color-dark: #6A994E;       /* Preto suave */
   --color-medium: #264653;     /* Marrom médio */
-  --color-light: #F0E1C0;      /* Marrom claro */
+  --color-light: #FAFAFA;      /* Marrom claro FAFAFA*/
   --color-accent: #878B88;     /* Laranja/marrom quente */
-  --color-background: #FAFAFA; /* Branco quente */
+  --color-background: #F0E1C0; /* Branco quente */
 }
  
 /* ==============================

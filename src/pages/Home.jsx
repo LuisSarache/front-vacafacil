@@ -71,8 +71,16 @@ export const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+<<<<<<< HEAD
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
+=======
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-2xl overflow-hidden bg-gradient-to-br from-accent/20 to-accent/40 backdrop-blur-sm">
+              <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-green-500" />
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-medium mb-4 sm:mb-6">
+>>>>>>> f9a9b8d381fd786ed724071fafe437acc739ed1b
               VacaFácil
             </h1>
 
