@@ -45,7 +45,7 @@ export const Home = () => {
       descricao: 'Registre informações básicas sobre sua propriedade e rebanho'
     },
     {
-      numero: '2',
+      numero: '2', 
       titulo: 'Registre os Dados',
       descricao: 'Insira informações diárias de produção, custos e eventos'
     },
@@ -58,155 +58,154 @@ export const Home = () => {
 
   return (
     <div>
-      {/* Hero Section COM IMAGEM DE FUNDO */}
-      <section
-        className="relative min-h-screen flex items-center justify-center text-center px-4 py-12 sm:py-20 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/images/bg-hero.jpg')" }} ></section>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-2xl overflow-hidden bg-gradient-to-br from-accent/20 to-accent/40 backdrop-blur-sm">
-          <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-accent" />
+      {/* Hero Section */}
+      <section className="min-h-screen flex items-center justify-center text-center px-4 py-12 sm:py-20">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-2xl overflow-hidden bg-gradient-to-br from-accent/20 to-accent/40 backdrop-blur-sm">
+              <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-red-600" />
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
+              VacaFácil
+            </h1>
+            
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-accent mb-6">
+              Tecnologia Simples para o Campo
+            </h2>
+            
+            <p className="text-lg sm:text-xl text-medium mb-8 max-w-3xl mx-auto leading-relaxed px-4">
+              Desenvolvemos uma plataforma digital que transforma a gestão de fazendas leiteiras, 
+              tornando o controle mais fácil, eficiente e lucrativo para produtores rurais.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+              <Link to="/register" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Começar Agora
+                </Button>
+              </Link>
+              <a href="#como-funciona" onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('como-funciona').scrollIntoView({ behavior: 'smooth' });
+              }} className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+                  Como Funciona
+                </Button>
+              </a>
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
-          VacaFácil
-        </h1>
-
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-accent mb-6">
-          Tecnologia Simples para o Campo
-        </h2>
-
-        <p className="text-lg sm:text-xl text-medium mb-8 max-w-3xl mx-auto leading-relaxed px-4">
-          Desenvolvemos uma plataforma digital que transforma a gestão de fazendas leiteiras,
-          tornando o controle mais fácil, eficiente e lucrativo para produtores rurais.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
-          <Link to="/register" className="w-full sm:w-auto">
-            <Button size="lg" className="w-full sm:w-auto">
-              Começar Agora
-            </Button>
-          </Link>
-          <a href="#como-funciona" onClick={(e) => {
-            e.preventDefault();
-            document.getElementById('como-funciona').scrollIntoView({ behavior: 'smooth' });
-          }} className="w-full sm:w-auto">
-            <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+      {/* Como Funciona */}
+      <section id="como-funciona" className="py-12 sm:py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12 sm:mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-4 sm:mb-6">
               Como Funciona
-            </Button>
-          </a>
+            </h2>
+            <p className="text-lg sm:text-xl text-accent max-w-3xl mx-auto px-4">
+              Em apenas 3 passos simples, você transforma a gestão da sua fazenda
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {comoFunciona.map((passo, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2, duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Card className="text-center h-full hover:scale-105 transition-transform duration-300">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent text-white rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold shadow-lg">
+                    {passo.numero}
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{passo.titulo}</h3>
+                  <p className="text-medium leading-relaxed text-sm sm:text-base">{passo.descricao}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </motion.div>
-    </div>
-      </section >
+      </section>
 
-  {/* Como Funciona */ }
-  < section id = "como-funciona" className = "py-12 sm:py-20 px-4" >
-    <div className="max-w-7xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-center mb-12 sm:mb-16"
-      >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-4 sm:mb-6">
-          Como Funciona
-        </h2>
-        <p className="text-lg sm:text-xl text-accent max-w-3xl mx-auto px-4">
-          Em apenas 3 passos simples, você transforma a gestão da sua fazenda
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-        {comoFunciona.map((passo, index) => (
+      {/* Benefícios */}
+      <section id="beneficios" className="py-12 sm:py-20 px-4 bg-gradient-to-b from-transparent to-accent/5">
+        <div className="max-w-7xl mx-auto">
           <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2, duration: 0.6 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12 sm:mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-4 sm:mb-6">
+              Por que Escolher o VacaFácil?
+            </h2>
+            <p className="text-lg sm:text-xl text-medium max-w-3xl mx-auto px-4">
+              Desenvolvido especialmente para produtores rurais que buscam modernizar sua gestão
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {beneficios.map((beneficio, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Card className="text-center h-full group hover:scale-105 transition-all duration-300">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-medium to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <beneficio.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{beneficio.title}</h3>
+                  <p className="text-medium leading-relaxed text-sm sm:text-base">{beneficio.description}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="py-12 sm:py-20 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Card className="text-center h-full hover:scale-105 transition-transform duration-300">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent text-white rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold shadow-lg">
-                {passo.numero}
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{passo.titulo}</h3>
-              <p className="text-medium leading-relaxed text-sm sm:text-base">{passo.descricao}</p>
-            </Card>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-6 sm:mb-8">
+              Pronto para Modernizar sua Fazenda?
+            </h2>
+            <p className="text-lg sm:text-xl text-medium mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
+              Milhares de produtores já descobriram como a tecnologia pode simplificar 
+              a gestão rural. Experimente gratuitamente e comprove os resultados.
+            </p>
+            <Link to="/register" className="inline-block">
+              <Button size="lg" className="text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-5 rounded-2xl font-semibold shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                Começar Gratuitamente
+              </Button>
+            </Link>
           </motion.div>
-        ))}
-      </div>
+        </div>
+      </section>
     </div>
-      </section >
-
-  {/* Benefícios */ }
-  < section id = "beneficios" className = "py-12 sm:py-20 px-4 bg-gradient-to-b from-transparent to-accent/5" >
-    <div className="max-w-7xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-center mb-12 sm:mb-16"
-      >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-4 sm:mb-6">
-          Por que Escolher o VacaFácil?
-        </h2>
-        <p className="text-lg sm:text-xl text-medium max-w-3xl mx-auto px-4">
-          Desenvolvido especialmente para produtores rurais que buscam modernizar sua gestão
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {beneficios.map((beneficio, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <Card className="text-center h-full group hover:scale-105 transition-all duration-300">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-medium to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                <beneficio.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{beneficio.title}</h3>
-              <p className="text-medium leading-relaxed text-sm sm:text-base">{beneficio.description}</p>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-      </section >
-
-  {/* CTA Final */ }
-  < section className = "py-12 sm:py-20 px-4" >
-    <div className="max-w-4xl mx-auto text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-6 sm:mb-8">
-          Pronto para Modernizar sua Fazenda?
-        </h2>
-        <p className="text-lg sm:text-xl text-medium mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-          Milhares de produtores já descobriram como a tecnologia pode simplificar
-          a gestão rural. Experimente gratuitamente e comprove os resultados.
-        </p>
-        <Link to="/register" className="inline-block">
-          <Button size="lg" className="text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-5 rounded-2xl font-semibold shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            Começar Gratuitamente
-          </Button>
-        </Link>
-      </motion.div>
-    </div>
-      </section >
-    </div >
   );
 };
