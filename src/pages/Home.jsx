@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Heart, Droplets, DollarSign, AlertTriangle, BarChart3, Users, Calendar, FileText } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
+import vacasol from '../assets/vacasol.png'
 
 export const Home = () => {
   const beneficios = [
@@ -45,7 +46,7 @@ export const Home = () => {
       descricao: 'Registre informações básicas sobre sua propriedade e rebanho'
     },
     {
-      numero: '2', 
+      numero: '2',
       titulo: 'Registre os Dados',
       descricao: 'Insira informações diárias de produção, custos e eventos'
     },
@@ -59,30 +60,31 @@ export const Home = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center text-center px-4 py-12 sm:py-20">
+      <section
+        className="min-h-screen flex items-center justify-center text-center px-4 py-12 sm:py-20 bg-cover bg-center bg-no-repeat"
+      >
+        <img src={vacasol} alt="" 
+        />
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-2xl overflow-hidden bg-gradient-to-br from-accent/20 to-accent/40 backdrop-blur-sm">
-              <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-green-500" />
-            </div>
-            
+
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
               VacaFácil
             </h1>
-            
+
             <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-accent mb-6">
               Tecnologia Simples para o Campo
             </h2>
-            
+
             <p className="text-lg sm:text-xl text-medium mb-8 max-w-3xl mx-auto leading-relaxed px-4">
-              Desenvolvemos uma plataforma digital que transforma a gestão de fazendas leiteiras, 
+              Desenvolvemos uma plataforma digital que transforma a gestão de fazendas leiteiras,
               tornando o controle mais fácil, eficiente e lucrativo para produtores rurais.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
               <Link to="/register" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto">
@@ -195,7 +197,7 @@ export const Home = () => {
               Pronto para Modernizar sua Fazenda?
             </h2>
             <p className="text-lg sm:text-xl text-medium mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-              Milhares de produtores já descobriram como a tecnologia pode simplificar 
+              Milhares de produtores já descobriram como a tecnologia pode simplificar
               a gestão rural. Experimente gratuitamente e comprove os resultados.
             </p>
             <Link to="/register" className="inline-block">
