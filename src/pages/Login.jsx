@@ -36,7 +36,7 @@ export const Login = () =>{
             <Card className="w-full max-w-md">
                 {/*Cabeçalho */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-dark mb-2">Entrar</h1>
+                    <h1 className="text-3xl font-bold text-green-600 mb-2">Entrar</h1>
                     <p className="text-medium">Acesse sua conta no VacaFácil</p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -67,7 +67,7 @@ export const Login = () =>{
                     <p className="text-medium">
                         Não possui conta?
                     </p>
-                    <Link to="/register" className="text-accent font-bold hover:text-dark transition-colors">
+                    <Link to="/register" className="text-accent font-bold hover:text-pink-700 transition-colors">
                         Criar Conta
                     </Link>
                 </div>
