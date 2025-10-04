@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Sanchez&display=swap');
-
+ 
 @import "tailwindcss"; /* Importa todas as utilidades do TailwindCSS */
-
+ 
 /* ==============================
    Paleta de cores personalizada
    ============================== */
 @theme {
-  --color-dark: #212121;       /* Preto suave */
+  --color-dark: #6A994E;       /* Preto suave */
   --color-medium: #264653;     /* Marrom médio */
-  --color-light: #B85C38;      /* Marrom claro */
-  --color-accent: #B87333;     /* Laranja/marrom quente */
-  --color-background: #FAFAFA; /* Branco quente */
+  --color-light: #FAFAFA;      /* Marrom claro FAFAFA*/
+  --color-accent: #878B88;     /* Laranja/marrom quente */
+  --color-background: #F0E1C0; /* Branco quente */
 }
-
+ 
 /* ==============================
    Classes utilitárias de cores
    ============================== */
@@ -22,25 +22,25 @@
 .bg-light { background-color: var(--color-light); }
 .bg-accent { background-color: var(--color-accent); }
 .bg-background { background-color: var(--color-background); }
-
+ 
 /* Texto */
 .text-dark { color: var(--color-dark); }
 .text-medium { color: var(--color-medium); }
 .text-light { color: var(--color-light); }
 .text-accent { color: var(--color-accent); }
-
+ 
 /* Bordas */
 .border-dark { border-color: var(--color-dark); }
 .border-medium { border-color: var(--color-medium); }
 .border-light { border-color: var(--color-light); }
 .border-accent { border-color: var(--color-accent); }
-
+ 
 /* Ring (foco do Tailwind) */
 .ring-dark { --tw-ring-color: var(--color-dark); }
 .ring-medium { --tw-ring-color: var(--color-medium); }
 .ring-light { --tw-ring-color: var(--color-light); }
 .ring-accent { --tw-ring-color: var(--color-accent); }
-
+ 
 /* ==============================
    Efeitos de hover (interação)
    ============================== */
@@ -49,19 +49,19 @@
 .hover\:bg-medium:hover { background-color: var(--color-medium); }
 .hover\:bg-light:hover { background-color: var(--color-light); }
 .hover\:bg-accent:hover { background-color: var(--color-accent); }
-
+ 
 /* Texto ao passar mouse */
 .hover\:text-dark:hover { color: var(--color-dark); }
 .hover\:text-medium:hover { color: var(--color-medium); }
 .hover\:text-light:hover { color: var(--color-light); }
 .hover\:text-accent:hover { color: var(--color-accent); }
-
+ 
 /* Bordas ao passar mouse */
 .hover\:border-dark:hover { border-color: var(--color-dark); }
 .hover\:border-medium:hover { border-color: var(--color-medium); }
 .hover\:border-light:hover { border-color: var(--color-light); }
 .hover\:border-accent:hover { border-color: var(--color-accent); }
-
+ 
 /* ==============================
    Estilo global do body
    ============================== */
@@ -76,7 +76,7 @@ body {
   );
   min-height: 100vh; /* Sempre ocupa altura mínima da tela */
 }
-
+ 
 /* ==============================
    Efeito Glassmorphism
    ============================== */
@@ -87,7 +87,7 @@ body {
   border: 1px solid rgba(120, 113, 108, 0.1);  /* Borda marrom suave */
   box-shadow: 0 25px 50px -12px rgba(28, 25, 23, 0.15); /* Sombra escura suave */
 }
-
+ 
 .glassmorphism-light {
   background: rgba(255, 255, 255, 0.9);         /* Versão mais opaca */
   backdrop-filter: blur(16px);
@@ -95,7 +95,7 @@ body {
   border: 1px solid rgba(120, 113, 108, 0.1);
   box-shadow: 0 10px 25px -5px rgba(28, 25, 23, 0.1);
 }
-
+ 
 /* ==============================
    Elementos decorativos de fundo
    ============================== */
@@ -106,7 +106,7 @@ body {
   opacity: 0.3;         /* Transparente */
   z-index: -1;          /* Fica atrás de tudo */
 }
-
+ 
 /* Bolha 1 */
 .bg-decoration-1 {
   width: 300px;
@@ -116,7 +116,7 @@ body {
   left: 10%;
   animation: float 6s ease-in-out infinite; /* Animação de flutuar */
 }
-
+ 
 /* Bolha 2 */
 .bg-decoration-2 {
   width: 200px;
@@ -126,7 +126,7 @@ body {
   right: 15%;
   animation: float 8s ease-in-out infinite reverse; /* Flutua ao contrário */
 }
-
+ 
 /* Bolha 3 */
 .bg-decoration-3 {
   width: 150px;
@@ -136,7 +136,7 @@ body {
   left: 20%;
   animation: float 7s ease-in-out infinite;
 }
-
+ 
 /* ==============================
    Animações
    ============================== */
@@ -144,21 +144,21 @@ body {
   0%, 100% { transform: translateY(0px); }   /* Posição inicial e final */
   50% { transform: translateY(-20px); }      /* Sobe 20px no meio */
 }
-
+ 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); } /* Começa embaixo e invisível */
   to { opacity: 1; transform: translateY(0); }      /* Termina visível e no lugar */
 }
-
+ 
 @keyframes fadeInLeft {
   from { opacity: 0; transform: translateX(-30px); } /* Começa à esquerda e invisível */
   to { opacity: 1; transform: translateX(0); }       /* Termina visível no lugar */
 }
-
+ 
 /* Classes utilitárias para aplicar animações */
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
 .animate-fade-in-left { animation: fadeInLeft 0.6s ease-out; }
-
+ 
 /* ==============================
    Botões
    ============================== */
@@ -174,7 +174,7 @@ body {
   transform: translateY(-2px);     /* Leve elevação */
   box-shadow: 0 8px 25px 0 rgba(217, 119, 6, 0.4);
 }
-
+ 
 /* Botão fantasma (sem fundo) */
 .btn-ghost {
   background: transparent;
@@ -186,7 +186,7 @@ body {
   background: var(--color-dark);
   color: white;
 }
-
+ 
 /* ==============================
    Campos de input
    ============================== */
@@ -200,7 +200,7 @@ body {
   border-color: var(--color-accent);              /* Destacado em laranja */
   box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);  /* Glow laranja em volta */
 }
-
+ 
 /* ==============================
    Página mobile de redirecionamento
    ============================== */
@@ -214,3 +214,5 @@ body {
   text-align: center;            /* Texto centralizado */
   padding: 2rem;                 /* Espaçamento interno */
 }
+ 
+ 

@@ -90,6 +90,14 @@ export const AppRoutes = () => {
           </PublicRoute>
         } />
        
+
+       <Route path="/Home" element={
+          <PublicRoute>
+            <Home />
+          </PublicRoute>
+        } />
+
+
         <Route path="/about" element={
           <PublicRoute>
             <About />
