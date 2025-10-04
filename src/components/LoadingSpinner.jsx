@@ -1,4 +1,4 @@
-export const LoadingSpinner = ({ size = 'md' }) => {
+export const LoadingSpinner = ({ size = 'md', className = '' }) => {
     const sizes = {
       sm: 'w-4 h-4',
       md: 'w-8 h-8',
@@ -6,9 +6,9 @@ export const LoadingSpinner = ({ size = 'md' }) => {
     }
   
     return (
-      <div className="flex justify-center items-center">
+      <div className={`flex justify-center items-center ${className}`}>
         <div
-          className={`${sizes[size]} border-light/30 border-t-light rounded-full animate-spin`}
+          className={`${sizes[size]} border-4 border-medium/20 border-t-accent rounded-full animate-spin`}
         ></div>
       </div>
     )

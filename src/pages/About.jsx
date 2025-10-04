@@ -49,14 +49,14 @@ export const About = () => {
 
       {/* Missão e Visão */}
       <section className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        <div className="p-6 rounded-2xl bg-white shadow-sm">
+        <div className="glassmorphism-light p-6 rounded-2xl">
           <h2 className="text-xl font-semibold text-dark mb-4">Nossa Missão</h2>
           <p className="text-medium">
             Democratizar o acesso à tecnologia no campo, oferecendo ferramentas simples 
             que ajudem produtores rurais a otimizar sua gestão e aumentar a lucratividade.
           </p>
         </div>
-        <div className="p-6 rounded-2xl bg-white shadow-sm">
+        <div className="glassmorphism-light p-6 rounded-2xl">
           <h2 className="text-xl font-semibold text-dark mb-4">Nossa Visão</h2>
           <p className="text-medium">
             Ser a principal plataforma de gestão para fazendas leiteiras no Brasil, 
@@ -69,7 +69,7 @@ export const About = () => {
       <section className="max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold text-center text-dark mb-12">O que buscamos resolver</h2>
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="p-6 bg-white rounded-2xl shadow-sm">
+          <div className="glassmorphism-light p-6 rounded-2xl">
             <h3 className="text-xl font-semibold text-dark mb-4">Problemas</h3>
             <ul className="space-y-2 list-disc list-inside text-medium">
               {problems.map((problem, index) => (
@@ -77,7 +77,7 @@ export const About = () => {
               ))}
             </ul>
           </div>
-          <div className="p-6 bg-white rounded-2xl shadow-sm">
+          <div className="glassmorphism-light p-6 rounded-2xl">
             <h3 className="text-xl font-semibold text-dark mb-4">Nossas Soluções</h3>
             <ul className="space-y-2 list-disc list-inside text-medium">
               {solutions.map((solution, index) => (
@@ -95,7 +95,7 @@ export const About = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition"
+              className="glassmorphism-light p-6 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="mb-4">{feature.icon}</div>
               <h3 className="text-lg font-semibold text-dark mb-2">{feature.title}</h3>
@@ -110,7 +110,7 @@ export const About = () => {
         <h2 className="text-2xl font-bold text-center text-dark mb-12">Nossos Valores</h2>
         <div className="grid md:grid-cols-4 gap-8">
           {values.map((value, index) => (
-            <div key={index} className="p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition text-center">
+            <div key={index} className="glassmorphism-light p-6 rounded-2xl hover:shadow-lg transition-all duration-300 text-center">
               <div className="mb-4 flex justify-center">{value.icon}</div>
               <h3 className="text-lg font-semibold text-dark mb-2">{value.title}</h3>
               <p className="text-medium">{value.description}</p>

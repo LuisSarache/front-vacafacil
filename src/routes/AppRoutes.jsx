@@ -16,15 +16,25 @@ import { About } from '../pages/About';
 import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
 import { Contact } from '../pages/Contact';
+
+// Páginas do sistema
+import { Dashboard } from '../pages/Dashboard';
+import { Rebanho } from '../pages/Rebanho';
+import { CadastroVaca } from '../pages/CadastroVaca';
+import { Producao } from '../pages/Producao';
+import { Financeiro } from '../pages/Financeiro';
+import { Reproducao } from '../pages/Reproducao';
+import { Relatorios } from '../pages/Relatorios';
+import { Configuracoes } from '../pages/Configuracoes';
  
 /* ==============================
    Componente de rota protegida
    ============================== */
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth(); // Obtém usuário e estado de carregamento
+  const { isAuthenticated, loading } = useAuth(); // Obtém estado de autenticação e carregamento
  
   if (loading) return <LoadingSpinner size="lg" />; // Mostra spinner enquanto carrega
-  if (!user) return <Navigate to="/login" replace />; // Redireciona não autenticados para login
+  if (!isAuthenticated) return <Navigate to="/login" replace />; // Redireciona não autenticados para login
  
   return (
     <div className="min-h-screen flex">
@@ -61,17 +71,7 @@ export const PublicRoute = ({ children }) => {
   );
 };
  
-/* ==============================
-   Componente Dashboard condicional
-   ============================== */
-const Dashboard = () => {
-  return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold text-dark mb-6">Dashboard</h1>
-      <p className="text-medium">Bem-vindo ao sistema VacaFácil!</p>
-    </div>
-  );
-};
+
  
 /* ==============================
    Configuração de rotas da aplicação
@@ -79,6 +79,7 @@ const Dashboard = () => {
 export const AppRoutes = () => {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
  
         {/* ==============================
@@ -129,6 +130,48 @@ export const AppRoutes = () => {
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/rebanho" element={
+          <ProtectedRoute>
+            <Rebanho /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/rebanho/novo" element={
+          <ProtectedRoute>
+            <CadastroVaca /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/producao" element={
+          <ProtectedRoute>
+            <Producao /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/financeiro" element={
+          <ProtectedRoute>
+            <Financeiro /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/reproducao" element={
+          <ProtectedRoute>
+            <Reproducao /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/relatorios" element={
+          <ProtectedRoute>
+            <Relatorios /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/configuracoes" element={
+          <ProtectedRoute>
+            <Configuracoes /> 
           </ProtectedRoute>
         } />
       </Routes>

@@ -13,11 +13,13 @@ import {
   X,
   LogOut,
   BarChart3,
-  Calendar,
   User,
   Users,
-  MessageCircle,
-  Bell
+  Milk,
+  DollarSign,
+  Heart,
+  FileText,
+  Settings
 } from 'lucide-react';
  
 export const Sidebar = () => {
@@ -37,20 +39,16 @@ export const Sidebar = () => {
     navigate('/login'); // redireciona para página de login
   };
  
-  // 📌 Links de navegação, diferentes para psicólogo ou paciente
-  const navLinks =
-    user?.type === 'psicologo'
-      ? [
-          { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-          { to: '/solicitacoes', label: 'Solicitações', icon: Bell },
-          { to: '/pacientes', label: 'Pacientes', icon: Users },
-          { to: '/chat-ia', label: 'Chat IA', icon: MessageCircle },
-          { to: '/relatorios', label: 'Relatórios', icon: BarChart3 }
-        ]
-      : [
-          { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-          { to: '/agendamento', label: 'Solicitar Sessão', icon: Calendar }
-        ];
+  // 📌 Links de navegação do VacaFácil
+  const navLinks = [
+    { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+    { to: '/rebanho', label: 'Rebanho', icon: Users },
+    { to: '/producao', label: 'Produção', icon: Milk },
+    { to: '/financeiro', label: 'Financeiro', icon: DollarSign },
+    { to: '/reproducao', label: 'Reprodução', icon: Heart },
+    { to: '/relatorios', label: 'Relatórios', icon: FileText },
+    { to: '/configuracoes', label: 'Configurações', icon: Settings }
+  ];
  
   // 📌 Função para verificar se o link é o atual
   const isActive = (path) => location.pathname === path;
@@ -96,10 +94,10 @@ export const Sidebar = () => {
           {/* 📌 Logo da aplicação */}
           <div className="flex items-center space-x-3 p-6 border-b border-white/10">
             {/* Logo com cantos arredondados */}
-            <img src="/logoblu.png" alt="blurosiere" className="w-10 h-10 rounded-lg" />
+            <img src="/logo.png" alt="VacaFácil" className="w-10 h-10 rounded-lg" />
             <div>
-              <span className="text-xl font-bold text-white">BluRosiere</span>
-              <p className="text-xs text-white/60">Sistema Psicológico</p>
+              <span className="text-xl font-bold text-white">VacaFácil</span>
+              <p className="text-xs text-white/60">Gestão de Fazendas</p>
             </div>
           </div>
  

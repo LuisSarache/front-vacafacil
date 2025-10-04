@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
+import { ToastManager } from "../components/ToastManager";
 import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
-import toast from "react-hot-toast";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -20,10 +20,10 @@ export const Contact = () => {
     try {
       // Colocar api do backend qnd tiver pronto
 
-      toast.success("Mensagem preparada para envio!");
+      ToastManager.success("Mensagem preparada para envio!");
       setFormData({ name: '', email: '', message: '' }); // limpa o formulário
     } catch (error) {
-      toast.error("Ocorreu um erro ao enviar a mensagem.");
+      ToastManager.error("Ocorreu um erro ao enviar a mensagem.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ export const Contact = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
         {/* Formulário */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xl border border-medium/20">
+        <div className="glassmorphism p-4 sm:p-6 rounded-2xl">
           <h2 className="text-lg sm:text-xl font-semibold text-dark mb-4">Envie sua mensagem</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
@@ -91,7 +91,7 @@ export const Contact = () => {
         </div>
 
         {/* Informações de Contato */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xl border border-medium/20 space-y-4 sm:space-y-6">
+        <div className="glassmorphism p-4 sm:p-6 rounded-2xl space-y-4 sm:space-y-6">
           <h2 className="text-lg sm:text-xl font-semibold text-dark mb-4">Outros canais</h2>
           <div className="space-y-3 sm:space-y-4 text-medium">
             <p className="flex items-center gap-2 text-sm sm:text-base break-all sm:break-normal">

@@ -60,27 +60,18 @@ export const Home = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section
-        className="min-h-screen flex items-center justify-center text-center px-4 py-12 sm:py-20 bg-cover bg-center bg-no-repeat"
-      >
-        <img src={vacasol} alt="" 
-        />
-        <div className="max-w-5xl mx-auto">
+      <section className="min-h-screen relative flex items-center justify-center text-center px-4 py-12 sm:py-20">
+        <div className="absolute inset-0 z-0">
+          <img src={vacasol} alt="Vaca no campo" className="w-full h-full object-cover opacity-20" />
+        </div>
+        <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-<<<<<<< HEAD
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
-=======
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-2xl overflow-hidden bg-gradient-to-br from-accent/20 to-accent/40 backdrop-blur-sm">
-              <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-green-500" />
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-medium mb-4 sm:mb-6">
->>>>>>> f9a9b8d381fd786ed724071fafe437acc739ed1b
               VacaFácil
             </h1>
 
@@ -139,7 +130,7 @@ export const Home = () => {
                 transition={{ delay: index * 0.2, duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <Card className="text-center h-full hover:scale-105 transition-transform duration-300">
+                <Card className="glassmorphism-light text-center h-full hover:scale-105 transition-transform duration-300 p-6">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent text-white rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold shadow-lg">
                     {passo.numero}
                   </div>
@@ -179,7 +170,7 @@ export const Home = () => {
                 transition={{ delay: index * 0.1, duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <Card className="text-center h-full group hover:scale-105 transition-all duration-300">
+                <Card className="glassmorphism-light text-center h-full group hover:scale-105 transition-all duration-300 p-6">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-medium to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                     <beneficio.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                   </div>
