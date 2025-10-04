@@ -10,7 +10,7 @@ import { Plus, Calendar, Heart, Baby, Syringe, AlertCircle, Filter, Search } fro
 
 export const Reproducao = () => {
   const [activeTab, setActiveTab] = useState('inseminacao');
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(''); // 'inseminacao', 'vacina', etc
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,14 +34,7 @@ export const Reproducao = () => {
     { vaca: 'Bonita #003', vacina: 'Raiva', dataAplicacao: '2024-01-10', proximaDose: '2024-01-10' }
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'prenha': return 'bg-green-100 text-green-800';
-      case 'aguardando': return 'bg-yellow-100 text-yellow-800';
-      case 'vazia': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
+
 
   return (
     <div className="space-y-6">
