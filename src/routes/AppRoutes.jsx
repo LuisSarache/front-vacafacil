@@ -39,17 +39,23 @@ const ProtectedRoute = ({ children }) => {
 /* ==============================
    Componente de rota pública
    ============================== */
-const PublicRoute = ({ children }) => {
-  const { user, loading } = useAuth(); // Obtém usuário e estado de carregamento
- 
-  if (loading) return <LoadingSpinner size="lg" />; // Mostra spinner enquanto carrega
-  // Usuários logados podem acessar páginas públicas também
- 
+export const PublicRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  // Enquanto os dados do usuário estão sendo carregados, mostra spinner
+  if (loading) return <LoadingSpinner size="lg" />;
+
+  // Se o usuário já está logado, redireciona para o dashboard
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Usuário não logado pode acessar a página pública
   return (
     <div className="min-h-screen">
-      <PublicNavbar /> {/* Navbar pública */}
+      <PublicNavbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children} {/* Conteúdo da página pública */}
+        {children}
       </main>
     </div>
   );
@@ -114,7 +120,7 @@ export const AppRoutes = () => {
            ============================== */}
         <Route path="/dashboard" element={
           <ProtectedRoute>
-            <Dashboard /> {/* Escolhe dashboard de psicólogo ou paciente */}
+            <Dashboard /> 
           </ProtectedRoute>
         } />
       </Routes>

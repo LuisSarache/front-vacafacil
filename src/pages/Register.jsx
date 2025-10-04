@@ -9,17 +9,18 @@ import { Input } from "../components/Input";
 import toast from "react-hot-toast";
 
 export const Register = () => {
-  const [userType, setUserType] = useState("paciente");
   const [formData, setFormData] = useState({
     name: "",
+    cpfCnpj: "",
     email: "",
     password: "",
     confirmPassword: "",
-    CRP: "",
-    specialty: "",
     phone: "",
-    birthDate: "",
+    farmName: "",
+    location: "",
+    herdSize: "",
   });
+
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export const Register = () => {
     try {
       const { user, token } = await mockApi.register({
         ...formData,
-        type: userType,
+        type: "produtor", // registro único
       });
       login(user, token);
       toast.success("Conta criada com sucesso!");
@@ -57,29 +58,10 @@ export const Register = () => {
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
       <Card className="bg-amber-400 w-full max-w-md" variant="amber">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white/70 mb-2">Criar Conta</h1>
-          <p className="text-white/50">Cadastre-se na BluRosiere</p>
-        </div>
-
-       {/* Seletor de usuário */}
-        <div className="flex justify-center mb-6 gap-3">
-        <Button
-            type="button"
-            variant={userType === "paciente" ? "primary" : "secondary"}
-            size="sm"
-            onClick={() => setUserType("paciente")}
-        >
-            Paciente
-        </Button>
-
-        <Button
-            type="button"
-            variant={userType === "psicologo" ? "primary" : "secondary"}
-            size="sm"
-            onClick={() => setUserType("psicologo")}
-        >
-            Psicólogo
-        </Button>
+          <h1 className="text-3xl font-bold text-white/70 mb-2">
+            Criar Conta
+          </h1>
+          <p className="text-white/50">Cadastre-se como Produtor de Leite</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,6 +70,13 @@ export const Register = () => {
             value={formData.name}
             onChange={handleInputChange("name")}
             placeholder="Seu nome completo"
+            required
+          />
+          <Input
+            label="CPF ou CNPJ"
+            value={formData.cpfCnpj}
+            onChange={handleInputChange("cpfCnpj")}
+            placeholder="Digite seu CPF ou CNPJ"
             required
           />
           <Input
@@ -122,36 +111,21 @@ export const Register = () => {
             placeholder="Digite seu telefone"
             required
           />
-
-          {userType === "paciente" && (
-            <Input
-              label="Data de Nascimento"
-              type="date"
-              value={formData.birthDate}
-              onChange={handleInputChange("birthDate")}
-              placeholder="Digite a sua data de nascimento"
-              required
-            />
-          )}
-
-          {userType === "psicologo" && (
-            <>
-              <Input
-                label="CRP"
-                value={formData.CRP}
-                onChange={handleInputChange("CRP")}
-                placeholder="Ex: 12/34567"
-                required
-              />
-              <Input
-                label="Especialidade"
-                value={formData.specialty}
-                onChange={handleInputChange("specialty")}
-                placeholder="Ex: Psicologia Clínica, Terapia Cognitiva"
-                required
-              />
-            </>
-          )}
+          <Input
+            label="Nome da Fazenda"
+            value={formData.farmName}
+            onChange={handleInputChange("farmName")}
+            placeholder="Digite o nome da fazenda"
+            required
+          />
+          <Input
+            label="Localização"
+            value={formData.location}
+            onChange={handleInputChange("location")}
+            placeholder="Cidade/Estado"
+            required
+          />
+        
 
           <Button type="submit" loading={loading} className="w-full">
             Criar Conta
@@ -160,7 +134,10 @@ export const Register = () => {
 
         <div className="mt-6 text-center space-y-2">
           <p className="text-white/70">Já possui conta?</p>
-          <Link to="/login" className="text-white/60 font-bold hover:text-accent">
+          <Link
+            to="/login"
+            className="text-white/60 font-bold hover:text-accent"
+          >
             Faça login!
           </Link>
         </div>
