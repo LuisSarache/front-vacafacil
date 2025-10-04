@@ -126,7 +126,7 @@ export const Sidebar = () => {
                     // Estilo muda se o link for o ativo
                     className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
                       isActive(link.to)
-                        ? 'bg-light text-white' // ativo: fundo claro + texto branco
+                        ? 'bg-white/20  text-white' // ativo: fundo claro + texto branco
                         : 'text-white/70 hover:text-white hover:bg-white/10' // inativo: texto cinza, hover melhora contraste
                     }`}
                     onClick={() => setIsOpen(false)} // Fecha menu mobile ao clicar
