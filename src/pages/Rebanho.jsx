@@ -61,8 +61,8 @@ export const Rebanho = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-dark">Gestão do Rebanho</h1>
-          <p className="text-medium/70 mt-1">Gerencie todas as informações do seu rebanho</p>
+          <h1 className="text-3xl font-bold text-white">Gestão do Rebanho</h1>
+          <p className="text-white/70 mt-1">Gerencie todas as informações do seu rebanho</p>
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" size="sm" className="flex items-center">
@@ -128,7 +128,7 @@ export const Rebanho = () => {
       </Card>
 
       {/* Lista de Vacas */}
-      <Card className="glassmorphism">
+      <Card>
         {loading ? (
           <div className="p-12 text-center">
             <LoadingSpinner size="lg" />
@@ -254,36 +254,36 @@ export const Rebanho = () => {
 
       {/* Estatísticas Rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="glassmorphism-light p-6 text-center hover:shadow-lg transition-all duration-300">
-          <div className="text-3xl font-bold text-dark mb-2">{vacas.length}</div>
-          <div className="text-sm text-medium/70">Total de Vacas</div>
+        <Card className="p-6 text-center hover:shadow-lg transition-all duration-300">
+          <div className="text-3xl font-bold text-gray-900 mb-2">{vacas.length}</div>
+          <div className="text-sm text-gray-600">Total de Vacas</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
             <div className="bg-blue-600 h-2 rounded-full" style={{width: '100%'}}></div>
           </div>
         </Card>
-        <Card className="glassmorphism-light p-6 text-center hover:shadow-lg transition-all duration-300">
-          <div className="text-3xl font-bold text-dark mb-2">
+        <Card className="p-6 text-center hover:shadow-lg transition-all duration-300">
+          <div className="text-3xl font-bold text-gray-900 mb-2">
             {vacas.filter(v => v.status === 'lactacao').length}
           </div>
-          <div className="text-sm text-medium/70">Em Lactação</div>
+          <div className="text-sm text-gray-600">Em Lactação</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
             <div className="bg-green-600 h-2 rounded-full" style={{width: `${(vacas.filter(v => v.status === 'lactacao').length / vacas.length) * 100}%`}}></div>
           </div>
         </Card>
-        <Card className="glassmorphism-light p-6 text-center hover:shadow-lg transition-all duration-300">
-          <div className="text-3xl font-bold text-dark mb-2">
+        <Card className="p-6 text-center hover:shadow-lg transition-all duration-300">
+          <div className="text-3xl font-bold text-gray-900 mb-2">
             {vacas.filter(v => v.status === 'prenha').length}
           </div>
-          <div className="text-sm text-medium/70">Prenhas</div>
+          <div className="text-sm text-gray-600">Prenhas</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
             <div className="bg-blue-600 h-2 rounded-full" style={{width: `${(vacas.filter(v => v.status === 'prenha').length / vacas.length) * 100}%`}}></div>
           </div>
         </Card>
-        <Card className="glassmorphism-light p-6 text-center hover:shadow-lg transition-all duration-300">
-          <div className="text-3xl font-bold text-dark mb-2">
+        <Card className="p-6 text-center hover:shadow-lg transition-all duration-300">
+          <div className="text-3xl font-bold text-gray-900 mb-2">
             {vacas.filter(v => v.status === 'seca').length}
           </div>
-          <div className="text-sm text-medium/70">Secas</div>
+          <div className="text-sm text-gray-600">Secas</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
             <div className="bg-yellow-600 h-2 rounded-full" style={{width: `${(vacas.filter(v => v.status === 'seca').length / vacas.length) * 100}%`}}></div>
           </div>

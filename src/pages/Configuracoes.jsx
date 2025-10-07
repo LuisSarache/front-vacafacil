@@ -93,8 +93,8 @@ export const Configuracoes = () => {
 
       {/* Conteúdo das Tabs */}
       {activeTab === 'perfil' && (
-        <Card className="glassmorphism p-6">
-          <h3 className="text-lg font-semibold text-dark mb-6">Informações da Fazenda</h3>
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Informações da Fazenda</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -145,8 +145,8 @@ export const Configuracoes = () => {
       )}
 
       {activeTab === 'precos' && (
-        <Card className="glassmorphism p-6">
-          <h3 className="text-lg font-semibold text-dark mb-6">Configuração de Preços</h3>
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Configuração de Preços</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -194,8 +194,8 @@ export const Configuracoes = () => {
       )}
 
       {activeTab === 'notificacoes' && (
-        <Card className="glassmorphism p-6">
-          <h3 className="text-lg font-semibold text-dark mb-6">Preferências de Notificação</h3>
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Preferências de Notificação</h3>
           
           <div className="space-y-6">
             <div>
@@ -261,8 +261,8 @@ export const Configuracoes = () => {
 
       {activeTab === 'sistema' && (
         <div className="space-y-6">
-          <Card className="glassmorphism p-6">
-            <h3 className="text-lg font-semibold text-dark mb-6">Configurações do Sistema</h3>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Configurações do Sistema</h3>
             
             <div className="space-y-6">
               <div>
@@ -322,8 +322,8 @@ export const Configuracoes = () => {
             </div>
           </Card>
           
-          <Card className="glassmorphism p-6">
-            <h3 className="text-lg font-semibold text-dark mb-4">Integração IoT</h3>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Integração IoT</h3>
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center">
                 <Wifi className="w-5 h-5 text-gray-400 mr-3" />
@@ -338,8 +338,8 @@ export const Configuracoes = () => {
             </div>
           </Card>
           
-          <Card className="glassmorphism p-6">
-            <h3 className="text-lg font-semibold text-dark mb-4">Usuários e Permissões</h3>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Usuários e Permissões</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
