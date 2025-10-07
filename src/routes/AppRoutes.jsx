@@ -37,7 +37,7 @@ const ProtectedRoute = ({ children }) => {
   if (!isAuthenticated) return <Navigate to="/login" replace />; // Redireciona não autenticados para login
  
   return (
-    <div className="min-h-screen flex bg-dashboard">
+    <div className="min-h-screen flex">
       <Sidebar /> {/* Sidebar lateral sempre visível */}
       <main className="flex-1 lg:ml-64 p-8">
         {children} {/* Conteúdo da página protegida */}

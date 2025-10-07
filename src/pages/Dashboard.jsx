@@ -24,9 +24,9 @@ export const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-white">Dashboard VacaFácil</h1>
+        <h1 className="text-3xl font-bold text-dark">Dashboard VacaFácil</h1>
         <div className="flex items-center gap-4">
-          <div className="text-sm text-white/70">
+          <div className="text-sm text-medium">
             Última atualização: {lastUpdate.toLocaleString('pt-BR')}
           </div>
           <Button 
@@ -109,9 +109,9 @@ export const Dashboard = () => {
       </div>
 
       {/* Alertas */}
-      <Card className="glassmorphism p-6">
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-dark flex items-center">
+          <h2 className="text-xl font-semibold text-gray-900 flex items-center">
             <Bell className="w-5 h-5 mr-2 text-red-500" />
             Alertas Importantes
           </h2>
@@ -142,9 +142,9 @@ export const Dashboard = () => {
 
       {/* Gráfico e Atividades */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="glassmorphism p-6">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-dark">Produção dos Últimos 7 Dias</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Produção dos Últimos 7 Dias</h3>
             <Button size="sm" variant="secondary" onClick={() => ToastManager.info('Detalhes em desenvolvimento')}>
               Ver Detalhes
             </Button>
@@ -162,9 +162,9 @@ export const Dashboard = () => {
           </div>
         </Card>
 
-        <Card className="glassmorphism p-6">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-dark">Próximas Atividades</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Próximas Atividades</h3>
             <Button size="sm" variant="secondary" onClick={() => ToastManager.info('Agenda em desenvolvimento')}>
               Agenda
             </Button>
