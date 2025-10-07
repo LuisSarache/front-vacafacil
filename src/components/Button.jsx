@@ -12,8 +12,8 @@ export const Button = ({
   
   // Estilos de acordo com o tipo de botão
   const variants = {
-    primary: 'bg-dark text-white hover:bg-accent hover:text-white focus:ring-accent shadow-lg hover:shadow-xl', // Botão principal
-    secondary: 'bg-transparent border-2 border-dark text-dark hover:bg-dark hover:text-white focus:ring-dark' // Botão secundário
+    primary: 'bg-dark text-white hover:bg-medium hover:text-white focus:ring-medium shadow-lg hover:shadow-xl', // Botão principal
+    secondary: 'bg-transparent border-2 border-dark text-dark hover:bg-medium hover:text-white focus:ring-medium' // Botão secundário
   };
   
   // Tamanhos disponíveis para o botão

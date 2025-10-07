@@ -37,7 +37,7 @@ const ProtectedRoute = ({ children }) => {
   if (!isAuthenticated) return <Navigate to="/login" replace />; // Redireciona não autenticados para login
  
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-dashboard">
       <Sidebar /> {/* Sidebar lateral sempre visível */}
       <main className="flex-1 lg:ml-64 p-8">
         {children} {/* Conteúdo da página protegida */}
@@ -49,7 +49,7 @@ const ProtectedRoute = ({ children }) => {
 /* ==============================
    Componente de rota pública
    ============================== */
-export const PublicRoute = ({ children }) => {
+export const PublicRoute = ({ children, fullWidth = false }) => {
   const { isAuthenticated, loading } = useAuth();
 
   // Enquanto os dados do usuário estão sendo carregados, mostra spinner
@@ -64,9 +64,13 @@ export const PublicRoute = ({ children }) => {
   return (
     <div className="min-h-screen">
       <PublicNavbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
+      {fullWidth ? (
+        children
+      ) : (
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {children}
+        </main>
+      )}
     </div>
   );
 };
@@ -86,14 +90,14 @@ export const AppRoutes = () => {
            Rotas Públicas
            ============================== */}
         <Route path="/" element={
-          <PublicRoute>
+          <PublicRoute fullWidth>
             <Home />
           </PublicRoute>
         } />
        
 
        <Route path="/Home" element={
-          <PublicRoute>
+          <PublicRoute fullWidth>
             <Home />
           </PublicRoute>
         } />

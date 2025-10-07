@@ -61,9 +61,15 @@ export const Home = () => {
     <div>
       {/* Hero Section */}
       <section className="min-h-screen relative flex items-center justify-center text-center px-4 py-12 sm:py-20">
-        <div className="absolute inset-0 z-0">
-          <img src={vacasol} alt="Vaca no campo" className="w-full h-full object-cover opacity-20" />
-        </div>
+        <motion.div 
+          className="absolute inset-0 z-0"
+  initial={{ scale: 1.1, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{ duration: 1.5, ease: "easeOut" }}
+>
+  <img src={vacasol} alt="Vaca no campo" className="w-full h-full object-cover object-center" />
+  <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
+</motion.div>
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -71,15 +77,15 @@ export const Home = () => {
             transition={{ duration: 0.8 }}
           >
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-dark mb-4 sm:mb-6">
-              VacaFácil
-            </h1>
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white drop-shadow-lg mb-4 sm:mb-6">
+          VacaFácil
+        </h1>
 
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-accent mb-6">
-              Tecnologia Simples para o Campo
-            </h2>
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-white/90 drop-shadow-md mb-6">
+          Tecnologia Simples para o Campo
+        </h2>
 
-            <p className="text-lg sm:text-xl text-medium mb-8 max-w-3xl mx-auto leading-relaxed px-4">
+            <p className="text-lg sm:text-xl text-white/80 drop-shadow-md mb-8 max-w-3xl mx-auto leading-relaxed px-4">
               Desenvolvemos uma plataforma digital que transforma a gestão de fazendas leiteiras,
               tornando o controle mais fácil, eficiente e lucrativo para produtores rurais.
             </p>
@@ -103,6 +109,54 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* Estatísticas */}
+      <section className="py-16 bg-white/95 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <motion.div 
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-3xl sm:text-4xl font-bold text-accent mb-2">500+</h3>
+              <p className="text-medium text-sm sm:text-base">Fazendas Ativas</p>
+            </motion.div>
+            <motion.div 
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-3xl sm:text-4xl font-bold text-accent mb-2">15k+</h3>
+              <p className="text-medium text-sm sm:text-base">Vacas Monitoradas</p>
+            </motion.div>
+            <motion.div 
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-3xl sm:text-4xl font-bold text-accent mb-2">98%</h3>
+              <p className="text-medium text-sm sm:text-base">Satisfação</p>
+            </motion.div>
+            <motion.div 
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-3xl sm:text-4xl font-bold text-accent mb-2">24/7</h3>
+              <p className="text-medium text-sm sm:text-base">Suporte</p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Como Funciona */}
       <section id="como-funciona" className="py-12 sm:py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -123,21 +177,15 @@ export const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {comoFunciona.map((passo, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2, duration: 0.6 }}
-                viewport={{ once: true }}
-              >
-                <Card className="glassmorphism-light text-center h-full hover:scale-105 transition-transform duration-300 p-6">
+              <div key={index}>
+                <Card className="text-center h-full hover:scale-105 hover:shadow-2xl transition-all duration-300">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent text-white rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold shadow-lg">
                     {passo.numero}
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{passo.titulo}</h3>
                   <p className="text-medium leading-relaxed text-sm sm:text-base">{passo.descricao}</p>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -163,21 +211,15 @@ export const Home = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {beneficios.map((beneficio, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                viewport={{ once: true }}
-              >
-                <Card className="glassmorphism-light text-center h-full group hover:scale-105 transition-all duration-300 p-6">
+              <div key={index}>
+                <Card className="text-center h-full group hover:scale-105 hover:shadow-2xl transition-all duration-300">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-medium to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                     <beneficio.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{beneficio.title}</h3>
                   <p className="text-medium leading-relaxed text-sm sm:text-base">{beneficio.description}</p>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

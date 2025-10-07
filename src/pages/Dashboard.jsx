@@ -24,9 +24,9 @@ export const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-dark">Dashboard VacaFácil</h1>
+        <h1 className="text-3xl font-bold text-white">Dashboard VacaFácil</h1>
         <div className="flex items-center gap-4">
-          <div className="text-sm text-medium">
+          <div className="text-sm text-white/70">
             Última atualização: {lastUpdate.toLocaleString('pt-BR')}
           </div>
           <Button 
