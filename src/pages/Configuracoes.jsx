@@ -3,9 +3,11 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { ToastManager } from '../components/ToastManager';
-import { Save, User, Bell, DollarSign, Wifi, Shield } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Save, User, Bell, DollarSign, Wifi, Shield, Moon, Sun } from 'lucide-react';
 
 export const Configuracoes = () => {
+  const { isDark, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('perfil');
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
@@ -42,7 +44,7 @@ export const Configuracoes = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       ToastManager.success('Configurações salvas com sucesso!');
-    } catch (error) {
+    } catch {
       ToastManager.error('Erro ao salvar configurações');
     } finally {
       setLoading(false);
@@ -263,6 +265,32 @@ export const Configuracoes = () => {
             <h3 className="text-lg font-semibold text-dark mb-6">Configurações do Sistema</h3>
             
             <div className="space-y-6">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-4">Aparência</h4>
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200">
+                  <div className="flex items-center">
+                    {isDark ? (
+                      <Moon className="w-5 h-5 text-blue-600 mr-3" />
+                    ) : (
+                      <Sun className="w-5 h-5 text-yellow-600 mr-3" />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-900">Modo {isDark ? 'Escuro' : 'Claro'}</p>
+                      <p className="text-sm text-gray-500">Alterne entre tema claro e escuro</p>
+                    </div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isDark}
+                      onChange={toggleTheme}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              </div>
+              
               <div>
                 <h4 className="font-medium text-gray-900 mb-4">Backup e Sincronização</h4>
                 <div className="space-y-3">

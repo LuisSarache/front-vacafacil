@@ -7,6 +7,7 @@ import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Input } from "../components/Input";
 import { ToastManager } from "../components/ToastManager";
+import { validateEmail, validatePassword, validatePhone, validateRequired } from "../utils/validation";
 
 export const Register = () => {
   const [formData, setFormData] = useState({
@@ -34,10 +35,32 @@ export const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateRequired(formData.name)) {
+      ToastManager.error("Nome é obrigatório");
+      return;
+    }
+    
+    if (!validateEmail(formData.email)) {
+      ToastManager.error("E-mail inválido");
+      return;
+    }
+    
+    if (!validatePassword(formData.password)) {
+      ToastManager.error("Senha deve ter no mínimo 6 caracteres");
+      return;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       ToastManager.error("Senhas não coincidem");
       return;
     }
+    
+    if (!validatePhone(formData.phone)) {
+      ToastManager.error("Telefone inválido");
+      return;
+    }
+    
     setLoading(true);
     try {
       const { user, token } = await mockApi.register({

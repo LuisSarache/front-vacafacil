@@ -6,15 +6,18 @@ import { Input } from '../components/Input';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { Pagination } from '../components/Pagination';
 import { Search, Plus, Filter, Eye, Edit, Trash2, Download, Upload } from 'lucide-react';
 
 export const Rebanho = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('todos');
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [selectedVacas, setSelectedVacas] = useState([]);
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, vacaId: null, vacaNome: '' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const vacas = [
     { id: 1, numero: '001', nome: 'Mimosa', raca: 'Holandesa', nascimento: '2020-03-15', status: 'lactacao', producaoMedia: 25 },
@@ -48,6 +51,12 @@ export const Rebanho = () => {
     return matchesSearch && matchesFilter;
   });
 
+  const totalPages = Math.ceil(filteredVacas.length / itemsPerPage);
+  const paginatedVacas = filteredVacas.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -67,11 +76,11 @@ export const Rebanho = () => {
           <Button className="flex items-center" onClick={() => navigate('/rebanho/novo')}>
             <Plus className="w-4 h-4 mr-2" />
             Nova Vaca
-          </Button>
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* Filtros */}
+        {/* Filtros */}
       <Card className="glassmorphism p-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -167,7 +176,7 @@ export const Rebanho = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {filteredVacas.map((vaca) => (
+                {paginatedVacas.map((vaca) => (
                   <tr key={vaca.id} className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-green-50 transition-all duration-200">
                     <td className="px-6 py-4">
                       <input 
@@ -232,6 +241,13 @@ export const Rebanho = () => {
                 ))}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         )}
       </Card>

@@ -6,6 +6,7 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { ToastManager } from "../components/ToastManager";
+import { validateEmail, validatePassword } from "../utils/validation";
 
 export const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -15,6 +16,17 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateEmail(formData.email)) {
+      ToastManager.error("E-mail inválido");
+      return;
+    }
+    
+    if (!validatePassword(formData.password)) {
+      ToastManager.error("Senha deve ter no mínimo 6 caracteres");
+      return;
+    }
+    
     setLoading(true);
 
     try {
