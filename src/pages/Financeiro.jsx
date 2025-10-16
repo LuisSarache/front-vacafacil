@@ -1,17 +1,35 @@
 import { useState } from 'react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
+import { Input } from '../components/Input';
+import { Modal } from '../components/Modal';
 import { ToastManager } from '../components/ToastManager';
-import { Plus, TrendingUp, TrendingDown, DollarSign, PieChart } from 'lucide-react';
+import { useFinanceiro } from '../context/FinanceiroContext';
+import { exportToCSV } from '../utils/export';
+import { Plus, TrendingUp, TrendingDown, DollarSign, PieChart, Download, Trash2 } from 'lucide-react';
 
 export const Financeiro = () => {
+  const { receitas, despesas, addReceita, addDespesa, deleteReceita, deleteDespesa, getTotalReceitas, getTotalDespesas, getLucro } = useFinanceiro();
   const [activeTab, setActiveTab] = useState('resumo');
+  const [showModal, setShowModal] = useState(false);
+  const [tipoTransacao, setTipoTransacao] = useState('receita');
+  const [formData, setFormData] = useState({
+    descricao: '',
+    valor: '',
+    data: new Date().toISOString().split('T')[0],
+    categoria: ''
+  });
+
+  const totalReceitas = getTotalReceitas();
+  const totalDespesas = getTotalDespesas();
+  const lucro = getLucro();
+  const margemLucro = totalReceitas > 0 ? ((lucro / totalReceitas) * 100).toFixed(1) : 0;
 
   const resumoFinanceiro = {
-    receitas: 15800,
-    despesas: 8300,
-    lucro: 7500,
-    margemLucro: 47.5
+    receitas: totalReceitas,
+    despesas: totalDespesas,
+    lucro,
+    margemLucro
   };
 
   const despesas = [
@@ -33,10 +51,27 @@ export const Financeiro = () => {
           <h1 className="text-3xl font-bold text-dark">Custos e Financeiro</h1>
           <p className="text-medium/70 mt-1">Controle financeiro completo da fazenda</p>
         </div>
-        <Button className="flex items-center" onClick={() => ToastManager.info('Formulário de transação em desenvolvimento!')}>
-          <Plus className="w-4 h-4 mr-2" />
-          Nova Transação
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" className="flex items-center" onClick={() => {
+            try {
+              const dados = [...receitas.map(r => ({ ...r, tipo: 'Receita' })), ...despesas.map(d => ({ ...d, tipo: 'Despesa' }))];
+              exportToCSV(dados, 'financeiro.csv');
+              ToastManager.success('Dados exportados!');
+            } catch {
+              ToastManager.error('Erro ao exportar');
+            }
+          }}>
+            <Download className="w-4 h-4 mr-2" />
+            Exportar
+          </Button>
+          <Button className="flex items-center" onClick={() => {
+            setTipoTransacao('receita');
+            setShowModal(true);
+          }}>
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Transação
+          </Button>
+        </div>
       </div>
 
       {/* Resumo Financeiro */}
@@ -178,18 +213,26 @@ export const Financeiro = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/01/2024</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Venda de leite - Laticínio ABC</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Venda de Leite</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">R$ 4.200</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10/01/2024</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Venda de novilha</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Venda de Animais</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">R$ 1.600</td>
-                </tr>
+                {receitas.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(item.data).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.descricao}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.categoria}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-green-600">R$ {parseFloat(item.valor).toLocaleString()}</span>
+                        <Button size="sm" variant="secondary" className="p-1 ml-2" onClick={() => {
+                          deleteReceita(item.id);
+                          ToastManager.success('Receita excluída');
+                        }}>
+                          <Trash2 className="w-3 h-3 text-red-600" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -212,18 +255,26 @@ export const Financeiro = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">12/01/2024</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ração concentrada</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ração</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-red-600">R$ 1.200</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">08/01/2024</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Vacinas e medicamentos</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Medicamentos</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-red-600">R$ 800</td>
-                </tr>
+                {despesas.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(item.data).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.descricao}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.categoria}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-red-600">R$ {parseFloat(item.valor).toLocaleString()}</span>
+                        <Button size="sm" variant="secondary" className="p-1 ml-2" onClick={() => {
+                          deleteDespesa(item.id);
+                          ToastManager.success('Despesa excluída');
+                        }}>
+                          <Trash2 className="w-3 h-3 text-red-600" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -253,6 +304,103 @@ export const Financeiro = () => {
           </Card>
         </div>
       )}
+
+      {/* Modal de Transação */}
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={`Nova ${tipoTransacao === 'receita' ? 'Receita' : 'Despesa'}`}>
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          if (tipoTransacao === 'receita') {
+            addReceita(formData);
+            ToastManager.success('Receita adicionada!');
+          } else {
+            addDespesa(formData);
+            ToastManager.success('Despesa adicionada!');
+          }
+          setShowModal(false);
+          setFormData({ descricao: '', valor: '', data: new Date().toISOString().split('T')[0], categoria: '' });
+        }} className="space-y-4">
+          <div className="flex gap-2 mb-4">
+            <button
+              type="button"
+              onClick={() => setTipoTransacao('receita')}
+              className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                tipoTransacao === 'receita' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              Receita
+            </button>
+            <button
+              type="button"
+              onClick={() => setTipoTransacao('despesa')}
+              className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                tipoTransacao === 'despesa' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              Despesa
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+            <Input
+              value={formData.descricao}
+              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Valor (R$)</label>
+            <Input
+              type="number"
+              step="0.01"
+              value={formData.valor}
+              onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Data</label>
+            <Input
+              type="date"
+              value={formData.data}
+              onChange={(e) => setFormData({ ...formData, data: e.target.value })}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+            <select
+              value={formData.categoria}
+              onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
+              className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent bg-white text-dark"
+              required
+            >
+              <option value="">Selecione</option>
+              {tipoTransacao === 'receita' ? (
+                <>
+                  <option value="Venda">Venda</option>
+                  <option value="Leite">Leite</option>
+                  <option value="Animais">Animais</option>
+                  <option value="Outros">Outros</option>
+                </>
+              ) : (
+                <>
+                  <option value="Alimentação">Alimentação</option>
+                  <option value="Saúde">Saúde</option>
+                  <option value="Funcionários">Funcionários</option>
+                  <option value="Manutenção">Manutenção</option>
+                  <option value="Outros">Outros</option>
+                </>
+              )}
+            </select>
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="secondary" className="flex-1" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit" className="flex-1">Salvar</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

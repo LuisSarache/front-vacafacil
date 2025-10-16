@@ -2,14 +2,25 @@ import { useState } from 'react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
+import { Modal } from '../components/Modal';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
+import { useProducao } from '../context/ProducaoContext';
+import { exportToCSV } from '../utils/export';
 import { Plus, Download, Calendar, TrendingUp, BarChart3, Target, Award } from 'lucide-react';
 
 export const Producao = () => {
+  const { registros, addRegistro } = useProducao();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
-  const [viewMode, setViewMode] = useState('tabela'); // 'tabela' ou 'cards'
+  const [viewMode, setViewMode] = useState('tabela');
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    vacaId: '',
+    vacaNome: '',
+    periodo: 'Manhã',
+    quantidade: ''
+  });
 
   const producaoData = [
     { vaca: 'Mimosa #001', manha: 12, tarde: 13, total: 25 },
@@ -46,11 +57,18 @@ export const Producao = () => {
               Cards
             </button>
           </div>
-          <Button variant="secondary" className="flex items-center" onClick={() => ToastManager.info('Exportando dados...')}>
+          <Button variant="secondary" className="flex items-center" onClick={() => {
+            try {
+              exportToCSV(producaoData, 'producao.csv');
+              ToastManager.success('Dados exportados!');
+            } catch {
+              ToastManager.error('Erro ao exportar');
+            }
+          }}>
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
-          <Button className="flex items-center" onClick={() => ToastManager.success('Formulário de registro em desenvolvimento!')}>
+          <Button className="flex items-center" onClick={() => setShowModal(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Registrar Ordenha
           </Button>
@@ -350,6 +368,64 @@ export const Producao = () => {
           )}
         </div>
       </Card>
+
+      {/* Modal de Registro */}
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Registrar Ordenha">
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          addRegistro({ ...formData, data: selectedDate });
+          ToastManager.success('Produção registrada!');
+          setShowModal(false);
+          setFormData({ vacaId: '', vacaNome: '', periodo: 'Manhã', quantidade: '' });
+        }} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Vaca</label>
+            <select
+              value={formData.vacaId}
+              onChange={(e) => {
+                const selected = e.target.selectedOptions[0];
+                setFormData({ ...formData, vacaId: e.target.value, vacaNome: selected.text });
+              }}
+              className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent bg-white text-dark"
+              required
+            >
+              <option value="">Selecione</option>
+              <option value="1">Mimosa #001</option>
+              <option value="2">Estrela #002</option>
+              <option value="3">Bonita #003</option>
+              <option value="4">Flor #004</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Período</label>
+            <select
+              value={formData.periodo}
+              onChange={(e) => setFormData({ ...formData, periodo: e.target.value })}
+              className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent bg-white text-dark"
+            >
+              <option value="Manhã">Manhã</option>
+              <option value="Tarde">Tarde</option>
+              <option value="Noite">Noite</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Quantidade (L)</label>
+            <Input
+              type="number"
+              step="0.1"
+              value={formData.quantidade}
+              onChange={(e) => setFormData({ ...formData, quantidade: e.target.value })}
+              required
+            />
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="secondary" className="flex-1" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit" className="flex-1">Registrar</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

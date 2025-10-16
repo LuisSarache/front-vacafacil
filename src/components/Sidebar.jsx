@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ThemeToggle } from './ThemeToggle';
+import { NotificationPanel } from './NotificationPanel';
 import {
   Menu,
   X,
@@ -108,13 +109,14 @@ export const Sidebar = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                 <User className="w-5 h-5 text-white" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-white font-medium">{user?.name}</p>
                 {/* Tipo de usuário */}
                 <p className="text-xs text-white/60 capitalize">{user?.type}</p>
               </div>
+              <NotificationPanel />
             </div>
-       
+            <ThemeToggle />
           </div>
  
           {/* 📌 Navegação (lista de links) */}

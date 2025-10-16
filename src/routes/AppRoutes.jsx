@@ -1,5 +1,6 @@
 // Importação de rotas do React Router
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
  
 // Importa contexto de autenticação
 import { useAuth } from '../context/AuthContext';
@@ -11,21 +12,23 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ScrollToTop } from '../components/ScrollToTop';
  
 // Páginas públicas
-import { Home } from '../pages/Home';
-import { About } from '../pages/About';
-import { Login } from '../pages/Login';
-import { Register } from '../pages/Register';
-import { Contact } from '../pages/Contact';
+const Home = lazy(() => import('../pages/Home').then(m => ({ default: m.Home })));
+const About = lazy(() => import('../pages/About').then(m => ({ default: m.About })));
+const Login = lazy(() => import('../pages/Login').then(m => ({ default: m.Login })));
+const Register = lazy(() => import('../pages/Register').then(m => ({ default: m.Register })));
+const Contact = lazy(() => import('../pages/Contact').then(m => ({ default: m.Contact })));
 
 // Páginas do sistema
-import { Dashboard } from '../pages/Dashboard';
-import { Rebanho } from '../pages/Rebanho';
-import { CadastroVaca } from '../pages/CadastroVaca';
-import { Producao } from '../pages/Producao';
-import { Financeiro } from '../pages/Financeiro';
-import { Reproducao } from '../pages/Reproducao';
-import { Relatorios } from '../pages/Relatorios';
-import { Configuracoes } from '../pages/Configuracoes';
+const Dashboard = lazy(() => import('../pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const Rebanho = lazy(() => import('../pages/Rebanho').then(m => ({ default: m.Rebanho })));
+const CadastroVaca = lazy(() => import('../pages/CadastroVaca').then(m => ({ default: m.CadastroVaca })));
+const VacaDetalhes = lazy(() => import('../pages/VacaDetalhes').then(m => ({ default: m.VacaDetalhes })));
+const EditarVaca = lazy(() => import('../pages/EditarVaca').then(m => ({ default: m.EditarVaca })));
+const Producao = lazy(() => import('../pages/Producao').then(m => ({ default: m.Producao })));
+const Financeiro = lazy(() => import('../pages/Financeiro').then(m => ({ default: m.Financeiro })));
+const Reproducao = lazy(() => import('../pages/Reproducao').then(m => ({ default: m.Reproducao })));
+const Relatorios = lazy(() => import('../pages/Relatorios').then(m => ({ default: m.Relatorios })));
+const Configuracoes = lazy(() => import('../pages/Configuracoes').then(m => ({ default: m.Configuracoes })));
  
 /* ==============================
    Componente de rota protegida
@@ -84,6 +87,7 @@ export const AppRoutes = () => {
   return (
     <Router>
       <ScrollToTop />
+      <Suspense fallback={<LoadingSpinner size="lg" />}>
       <Routes>
  
         {/* ==============================
@@ -149,6 +153,18 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         } />
         
+        <Route path="/rebanho/:id" element={
+          <ProtectedRoute>
+            <VacaDetalhes /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/rebanho/editar/:id" element={
+          <ProtectedRoute>
+            <EditarVaca /> 
+          </ProtectedRoute>
+        } />
+        
         <Route path="/producao" element={
           <ProtectedRoute>
             <Producao /> 
@@ -179,6 +195,7 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         } />
       </Routes>
+      </Suspense>
     </Router>
   );
 };

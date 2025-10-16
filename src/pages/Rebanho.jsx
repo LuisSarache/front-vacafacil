@@ -65,11 +65,19 @@ export const Rebanho = () => {
           <p className="text-white/70 mt-1">Gerencie todas as informações do seu rebanho</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" size="sm" className="flex items-center">
+          <Button variant="secondary" size="sm" className="flex items-center" onClick={() => ToastManager.info('Importação em desenvolvimento')}>
             <Upload className="w-4 h-4 mr-2" />
             Importar
           </Button>
-          <Button variant="secondary" size="sm" className="flex items-center">
+          <Button variant="secondary" size="sm" className="flex items-center" onClick={() => {
+            const { exportToCSV } = require('../utils/export');
+            try {
+              exportToCSV(filteredVacas, 'rebanho.csv');
+              ToastManager.success('Dados exportados com sucesso!');
+            } catch {
+              ToastManager.error('Erro ao exportar dados');
+            }
+          }}>
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
@@ -220,10 +228,10 @@ export const Rebanho = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-1">
-                        <Button size="sm" variant="secondary" className="p-2" onClick={() => ToastManager.info('Visualizando detalhes...')}>
+                        <Button size="sm" variant="secondary" className="p-2" onClick={() => navigate(`/rebanho/${vaca.id}`)}>
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="secondary" className="p-2" onClick={() => ToastManager.info('Editando vaca...')}>
+                        <Button size="sm" variant="secondary" className="p-2" onClick={() => navigate(`/rebanho/editar/${vaca.id}`)}>
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button size="sm" variant="secondary" className="p-2 text-red-600 hover:text-red-800" onClick={() => {
