@@ -32,14 +32,14 @@ export const Financeiro = () => {
     margemLucro
   };
 
-  const despesas = [
+  const distribuicaoDespesas = [
     { categoria: 'Ração', valor: 3200, percentual: 38.6 },
     { categoria: 'Medicamentos', valor: 1800, percentual: 21.7 },
     { categoria: 'Funcionários', valor: 2500, percentual: 30.1 },
     { categoria: 'Outros', valor: 800, percentual: 9.6 }
   ];
 
-  const receitas = [
+  const distribuicaoReceitas = [
     { fonte: 'Venda de Leite', valor: 14200, percentual: 89.9 },
     { fonte: 'Venda de Animais', valor: 1600, percentual: 10.1 }
   ];
@@ -162,7 +162,7 @@ export const Financeiro = () => {
           <Card className="glassmorphism p-6">
             <h3 className="text-lg font-semibold text-dark mb-4">Distribuição de Despesas</h3>
             <div className="space-y-4">
-              {despesas.map((item, index) => (
+              {distribuicaoDespesas.map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="w-4 h-4 bg-red-500 rounded mr-3"></div>
@@ -180,7 +180,7 @@ export const Financeiro = () => {
           <Card className="glassmorphism p-6">
             <h3 className="text-lg font-semibold text-dark mb-4">Distribuição de Receitas</h3>
             <div className="space-y-4">
-              {receitas.map((item, index) => (
+              {distribuicaoReceitas.map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="w-4 h-4 bg-green-500 rounded mr-3"></div>
