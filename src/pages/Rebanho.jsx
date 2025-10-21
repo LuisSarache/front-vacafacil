@@ -61,8 +61,8 @@ export const Rebanho = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white">Gestão do Rebanho</h1>
-          <p className="text-white/70 mt-1">Gerencie todas as informações do seu rebanho</p>
+          <h1 className="text-3xl font-bold text-dark">Gestão do Rebanho</h1>
+          <p className="text-medium/70 mt-1">Gerencie todas as informações do seu rebanho</p>
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" size="sm" className="flex items-center" onClick={() => ToastManager.info('Importação em desenvolvimento')}>
