@@ -33,6 +33,14 @@ VacaFácil é uma plataforma web moderna e intuitiva para gestão completa de fa
 - ✅ Visualização em tabelas
 - ✅ Exportação de dados financeiros
 
+### 🛒 Marketplace
+- ✅ Compra e venda de vacas entre produtores
+- ✅ Filtros por raça, tipo (venda/procura)
+- ✅ Busca avançada de anúncios
+- ✅ Criação de anúncios personalizados
+- ✅ Informações detalhadas (preço, idade, produção)
+- ✅ Sistema de contato direto
+
 ### 🔐 Autenticação
 - ✅ Login e registro de usuários
 - ✅ Validação de formulários
@@ -42,21 +50,24 @@ VacaFácil é uma plataforma web moderna e intuitiva para gestão completa de fa
 - ✅ Proteção contra timing attacks
 
 ### 🔔 Notificações
-- ✅ Sistema de notificações in-app
-- ✅ Badge com contador
+- ✅ Sistema de notificações in-app redesenhado
+- ✅ Badge com contador animado
 - ✅ Histórico de notificações
 - ✅ Marcar como lida/excluir
 - ✅ Persistência no localStorage
+- ✅ Design moderno com gradientes e animações
+- ✅ Dark mode otimizado
 
 ### 🎨 Interface e UX
-- ✅ Dark mode funcional
+- ✅ Dark mode otimizado com melhor legibilidade
 - ✅ Design responsivo
-- ✅ Glassmorphism
+- ✅ Glassmorphism aprimorado
 - ✅ Skeleton loaders
 - ✅ Tooltips informativos
 - ✅ Animações suaves (Framer Motion)
 - ✅ Feedback visual
 - ✅ Toast notifications
+- ✅ Scrollbar customizada
 
 ### ⚡ Performance e Qualidade
 - ✅ Lazy loading de componentes
@@ -132,11 +143,13 @@ front-vacafacil/
 │   │   ├── CadastroVaca.jsx
 │   │   ├── Configuracoes.jsx
 │   │   ├── Contact.jsx
+│   │   ├── CriarAnuncio.jsx
 │   │   ├── Dashboard.jsx
 │   │   ├── EditarVaca.jsx
 │   │   ├── Financeiro.jsx
 │   │   ├── Home.jsx
 │   │   ├── Login.jsx
+│   │   ├── Marketplace.jsx
 │   │   ├── Producao.jsx
 │   │   ├── Rebanho.jsx
 │   │   ├── Register.jsx
@@ -216,15 +229,16 @@ Senha: 123456
 
 ## 📊 Status do Projeto
 
-**Versão Atual:** 1.5 (MVP Completo)
+**Versão Atual:** 1.6 (MVP Completo + Marketplace)
 
 ### Completo ✅
 - ✅ CRUD de Vacas (Create, Read, Update, Delete)
 - ✅ Sistema de Produção
 - ✅ Controle Financeiro (Receitas/Despesas)
+- ✅ Marketplace (Compra/Venda)
 - ✅ Autenticação e Autorização
-- ✅ Notificações em Tempo Real
-- ✅ Dark Mode
+- ✅ Notificações em Tempo Real (Redesenhadas)
+- ✅ Dark Mode Otimizado
 - ✅ Validações de Formulários
 - ✅ Exportação de Dados (CSV)
 - ✅ Tratamento de Erros Robusto
@@ -248,7 +262,16 @@ Senha: 123456
 
 ## 🔧 Melhorias Recentes
 
-### v1.5 (Atual)
+### v1.6 (Atual)
+- ✅ Implementado Marketplace completo
+- ✅ Redesenhado painel de notificações
+- ✅ Otimizado dark mode com melhor legibilidade
+- ✅ Adicionado gradientes e animações modernas
+- ✅ Melhorado contraste de cores no dark mode
+- ✅ Scrollbar customizada
+- ✅ Corrigido posicionamento de notificações
+
+### v1.5
 - ✅ Implementado VacasContext para CRUD completo
 - ✅ Corrigido timing attack na autenticação
 - ✅ Adicionado tratamento de erros em todos os try-catch
@@ -265,6 +288,8 @@ Senha: 123456
 - ✅ Corrigido campos opcionais em VacaDetalhes
 - ✅ Corrigido persistência de dados no CRUD
 - ✅ Corrigido validações de formulários
+- ✅ Corrigido posicionamento do painel de notificações
+- ✅ Corrigido visibilidade de textos no dark mode
 
 ## 🔒 Segurança
 
@@ -295,4 +320,4 @@ Contribuições são bem-vindas! Sinta-se à vontade para:
 
 **VacaFácil** - Tecnologia Simples para o Campo 🌾
 
-*Última atualização: Janeiro 2024*
+*Última atualização: Janeiro 2025*
