@@ -20,7 +20,8 @@ import {
   DollarSign,
   Heart,
   FileText,
-  Settings
+  Settings,
+  ShoppingCart
 } from 'lucide-react';
  
 export const Sidebar = () => {
@@ -46,6 +47,7 @@ export const Sidebar = () => {
     { to: '/rebanho', label: 'Rebanho', icon: Users },
     { to: '/producao', label: 'Produção', icon: Milk },
     { to: '/financeiro', label: 'Financeiro', icon: DollarSign },
+    { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart },
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }
