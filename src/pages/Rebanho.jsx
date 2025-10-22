@@ -19,12 +19,12 @@ export const Rebanho = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const vacas = [
+  const [vacas, setVacas] = useState([
     { id: 1, numero: '001', nome: 'Mimosa', raca: 'Holandesa', nascimento: '2020-03-15', status: 'lactacao', producaoMedia: 25 },
     { id: 2, numero: '002', nome: 'Estrela', raca: 'Jersey', nascimento: '2019-08-22', status: 'seca', producaoMedia: 18 },
     { id: 3, numero: '003', nome: 'Bonita', raca: 'Holandesa', nascimento: '2021-01-10', status: 'prenha', producaoMedia: 22 },
     { id: 4, numero: '004', nome: 'Flor', raca: 'Gir', nascimento: '2020-11-05', status: 'lactacao', producaoMedia: 20 }
-  ];
+  ]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -34,7 +34,7 @@ export const Rebanho = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-
+  
   const getStatusText = (status) => {
     switch (status) {
       case 'lactacao': return 'Lactação';
@@ -61,8 +61,8 @@ export const Rebanho = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white">Gestão do Rebanho</h1>
-          <p className="text-white/70 mt-1">Gerencie todas as informações do seu rebanho</p>
+          <h1 className="text-3xl font-bold text-dark">Gestão do Rebanho</h1>
+          <p className="text-medium/70 mt-1">Gerencie todas as informações do seu rebanho</p>
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" size="sm" className="flex items-center" onClick={() => ToastManager.info('Importação em desenvolvimento')}>

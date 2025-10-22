@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Heart, Droplets, DollarSign, AlertTriangle, BarChart3, Users, Calendar, FileText } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
-import vacasol from '../assets/vacasol.png'
+import vacasol from '../assets/vacasol.webp'
 
 export const Home = () => {
   const beneficios = [

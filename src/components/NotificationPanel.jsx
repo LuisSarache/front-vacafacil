@@ -62,7 +62,7 @@ export const NotificationPanel = () => {
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <Card className="absolute right-0 top-12 w-96 max-h-[600px] overflow-hidden z-50 glassmorphism">
+          <Card className="absolute right top-12 w-96 max-h-[600px] overflow-hidden z-50 glassmorphism">
             <div className="p-4 border-b border-medium/20 flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-dark">Notificações</h3>
