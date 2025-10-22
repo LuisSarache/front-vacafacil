@@ -31,7 +31,7 @@ export const Relatorios = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Relatórios e Gráficos</h1>
+        <h1 className="text-3xl font-bold text-dark">Relatórios e Gráficos</h1>
         <Button className="flex items-center">
           <Download className="w-4 h-4 mr-2" />
           Exportar PDF
