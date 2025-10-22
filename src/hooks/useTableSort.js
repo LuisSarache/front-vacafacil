@@ -7,17 +7,24 @@ export const useTableSort = (data, initialKey = null) => {
   });
 
   const sortedData = useMemo(() => {
-    if (!sortConfig.key) return data;
+    try {
+      if (!sortConfig.key || !data) return data;
 
-    return [...data].sort((a, b) => {
-      const aValue = a[sortConfig.key];
-      const bValue = b[sortConfig.key];
+      return [...data].sort((a, b) => {
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
 
-      if (aValue === bValue) return 0;
+        if (aValue === bValue) return 0;
+        if (aValue == null) return 1;
+        if (bValue == null) return -1;
 
-      const comparison = aValue < bValue ? -1 : 1;
-      return sortConfig.direction === 'asc' ? comparison : -comparison;
-    });
+        const comparison = aValue < bValue ? -1 : 1;
+        return sortConfig.direction === 'asc' ? comparison : -comparison;
+      });
+    } catch (error) {
+      console.error('Erro ao ordenar dados:', error);
+      return data;
+    }
   }, [data, sortConfig]);
 
   const requestSort = (key) => {

@@ -14,18 +14,21 @@ export function ProducaoProvider({ children }) {
   const [registros, setRegistros] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('producao_registros');
-    if (saved) {
-      setRegistros(JSON.parse(saved));
-    } else {
-      // Dados mock iniciais
-      const mockData = [
-        { id: 1, vacaId: 1, vacaNome: 'Mimosa #001', data: '2024-01-20', periodo: 'Manhã', quantidade: 26 },
-        { id: 2, vacaId: 1, vacaNome: 'Mimosa #001', data: '2024-01-20', periodo: 'Tarde', quantidade: 24 },
-        { id: 3, vacaId: 2, vacaNome: 'Estrela #002', data: '2024-01-20', periodo: 'Manhã', quantidade: 18 }
-      ];
-      setRegistros(mockData);
-      localStorage.setItem('producao_registros', JSON.stringify(mockData));
+    try {
+      const saved = localStorage.getItem('producao_registros');
+      if (saved) {
+        setRegistros(JSON.parse(saved));
+      } else {
+        const mockData = [
+          { id: 1, vacaId: 1, vacaNome: 'Mimosa #001', data: '2024-01-20', periodo: 'Manhã', quantidade: 26 },
+          { id: 2, vacaId: 1, vacaNome: 'Mimosa #001', data: '2024-01-20', periodo: 'Tarde', quantidade: 24 },
+          { id: 3, vacaId: 2, vacaNome: 'Estrela #002', data: '2024-01-20', periodo: 'Manhã', quantidade: 18 }
+        ];
+        setRegistros(mockData);
+        localStorage.setItem('producao_registros', JSON.stringify(mockData));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar produção:', error);
     }
   }, []);
 
