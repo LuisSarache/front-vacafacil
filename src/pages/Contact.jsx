@@ -26,9 +26,8 @@ export const Contact = () => {
 
       ToastManager.success("Mensagem preparada para envio!");
       setFormData({ name: '', email: '', message: '' }); // limpa o formulário
-    } catch (error) {
+    } catch {
       ToastManager.error("Ocorreu um erro ao enviar a mensagem.");
-      console.error(error);
     } finally {
       setLoading(false);
     }

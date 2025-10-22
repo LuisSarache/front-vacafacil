@@ -4,20 +4,23 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import { ProducaoProvider } from "./context/ProducaoContext";
 import { FinanceiroProvider } from "./context/FinanceiroContext";
+import { VacasProvider } from "./context/VacasContext";
 import { AppRoutes } from "./routes/AppRoutes";
 
 function App(){
     return(
         <ThemeProvider>
             <AuthProvider>
-                <NotificationProvider>
-                    <ProducaoProvider>
-                        <FinanceiroProvider>
-                            <AppRoutes/>
-                            <Toaster />
-                        </FinanceiroProvider>
-                    </ProducaoProvider>
-                </NotificationProvider>
+                <VacasProvider>
+                    <NotificationProvider>
+                        <ProducaoProvider>
+                            <FinanceiroProvider>
+                                <AppRoutes/>
+                                <Toaster />
+                            </FinanceiroProvider>
+                        </ProducaoProvider>
+                    </NotificationProvider>
+                </VacasProvider>
             </AuthProvider>
         </ThemeProvider>
     )

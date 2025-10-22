@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useVacas } from '../context/VacasContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -10,19 +11,28 @@ import { ArrowLeft, Save } from 'lucide-react';
 export const EditarVaca = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getVacaById, updateVaca } = useVacas();
   const [loading, setLoading] = useState(false);
-
-  // Mock data - substituir por API
   const [formData, setFormData] = useState({
-    numero: '001',
-    nome: 'Mimosa',
-    raca: 'Holandesa',
-    nascimento: '2020-03-15',
-    peso: 550,
-    mae: 'Estrela #002',
-    pai: 'Touro Campeão',
-    observacoes: 'Vaca de alta produção'
+    numero: '',
+    nome: '',
+    raca: '',
+    nascimento: '',
+    peso: '',
+    mae: '',
+    pai: '',
+    observacoes: ''
   });
+
+  useEffect(() => {
+    const vaca = getVacaById(id);
+    if (vaca) {
+      setFormData(vaca);
+    } else {
+      ToastManager.error('Vaca não encontrada');
+      navigate('/rebanho');
+    }
+  }, [id, getVacaById, navigate]);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -43,7 +53,8 @@ export const EditarVaca = () => {
 
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 500));
+      updateVaca(id, formData);
       ToastManager.success('Vaca atualizada com sucesso!');
       navigate(`/rebanho/${id}`);
     } catch {

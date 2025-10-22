@@ -92,11 +92,11 @@ export const Home = () => {
                   Começar Agora
                 </Button>
               </Link>
-              <Link to="#como-funciona" className="w-full sm:w-auto">
+              <a href="#como-funciona" className="w-full sm:w-auto">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto">
                   Como Funciona
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>

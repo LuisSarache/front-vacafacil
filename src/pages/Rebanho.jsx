@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useVacas } from '../context/VacasContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -11,20 +12,14 @@ import { Search, Plus, Filter, Eye, Edit, Trash2, Download, Upload } from 'lucid
 
 export const Rebanho = () => {
   const navigate = useNavigate();
+  const { vacas, deleteVaca } = useVacas();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('todos');
-  const [loading, _setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedVacas, setSelectedVacas] = useState([]);
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, vacaId: null, vacaNome: '' });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  const [vacas, setVacas] = useState([
-    { id: 1, numero: '001', nome: 'Mimosa', raca: 'Holandesa', nascimento: '2020-03-15', status: 'lactacao', producaoMedia: 25 },
-    { id: 2, numero: '002', nome: 'Estrela', raca: 'Jersey', nascimento: '2019-08-22', status: 'seca', producaoMedia: 18 },
-    { id: 3, numero: '003', nome: 'Bonita', raca: 'Holandesa', nascimento: '2021-01-10', status: 'prenha', producaoMedia: 22 },
-    { id: 4, numero: '004', nome: 'Flor', raca: 'Gir', nascimento: '2020-11-05', status: 'lactacao', producaoMedia: 20 }
-  ]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -69,9 +64,9 @@ export const Rebanho = () => {
             <Upload className="w-4 h-4 mr-2" />
             Importar
           </Button>
-          <Button variant="secondary" size="sm" className="flex items-center" onClick={() => {
-            const { exportToCSV } = require('../utils/export');
+          <Button variant="secondary" size="sm" className="flex items-center" onClick={async () => {
             try {
+              const { exportToCSV } = await import('../utils/export');
               exportToCSV(filteredVacas, 'rebanho.csv');
               ToastManager.success('Dados exportados com sucesso!');
             } catch {
@@ -303,10 +298,17 @@ export const Rebanho = () => {
         isOpen={confirmDialog.isOpen}
         onClose={() => setConfirmDialog({ isOpen: false, vacaId: null, vacaNome: '' })}
         onConfirm={async () => {
-          // Simular remoção
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          ToastManager.success(`Vaca ${confirmDialog.vacaNome} removida com sucesso!`);
-          setConfirmDialog({ isOpen: false, vacaId: null, vacaNome: '' });
+          setLoading(true);
+          try {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            deleteVaca(confirmDialog.vacaId);
+            ToastManager.success(`Vaca ${confirmDialog.vacaNome} removida com sucesso!`);
+            setConfirmDialog({ isOpen: false, vacaId: null, vacaNome: '' });
+          } catch {
+            ToastManager.error('Erro ao remover vaca');
+          } finally {
+            setLoading(false);
+          }
         }}
         type="danger"
         title="Remover Vaca"

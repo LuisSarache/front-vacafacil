@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
@@ -22,12 +22,9 @@ export const Register = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleInputChange = useCallback(
-    (field) => (e) => {
-      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
-    },
-    []
-  );
+  const handleInputChange = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
