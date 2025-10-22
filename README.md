@@ -97,6 +97,7 @@ front-vacafacil/
 │   │   └── Tooltip.jsx
 │   ├── context/         # Context API
 │   │   ├── AuthContext.jsx
+│       ├── FinanceiroContext.jsx    
 │   │   ├── NotificationContext.jsx
 │   │   ├── ProducaoContext.jsx
 │   │   └── ThemeContext.jsx
