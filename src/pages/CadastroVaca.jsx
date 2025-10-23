@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useVacas } from '../context/VacasContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { FormField } from '../components/FormField';
 import { ToastManager } from '../components/ToastManager';
 import { ArrowLeft, Save, Upload, Camera } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 export const CadastroVaca = () => {
   const navigate = useNavigate();
+  const { addVaca } = useVacas();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     numero: '',
@@ -87,12 +89,11 @@ export const CadastroVaca = () => {
     setLoading(true);
     
     try {
-      // Simular chamada API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      addVaca({ ...formData, producaoMedia: 0 });
       ToastManager.success('Vaca cadastrada com sucesso!');
       navigate('/rebanho');
-    } catch (error) {
+    } catch {
       ToastManager.error('Erro ao cadastrar vaca. Tente novamente.');
     } finally {
       setLoading(false);

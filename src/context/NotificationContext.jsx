@@ -15,15 +15,17 @@ export function NotificationProvider({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    // Carregar notificações do localStorage
-    const saved = localStorage.getItem('notifications');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setNotifications(parsed);
-      setUnreadCount(parsed.filter(n => !n.read).length);
+    try {
+      const saved = localStorage.getItem('notifications');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setNotifications(parsed);
+        setUnreadCount(parsed.filter(n => !n.read).length);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar notificações:', error);
     }
 
-    // Simular novas notificações
     const interval = setInterval(() => {
       addNotification({
         type: 'info',
@@ -31,7 +33,7 @@ export function NotificationProvider({ children }) {
         message: 'Verificar produção de leite',
         timestamp: new Date().toISOString()
       });
-    }, 300000); // A cada 5 minutos
+    }, 300000);
 
     return () => clearInterval(interval);
   }, []);

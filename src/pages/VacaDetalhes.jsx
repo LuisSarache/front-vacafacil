@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useVacas } from '../context/VacasContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Badge } from '../components/Badge';
@@ -9,25 +10,19 @@ import { ArrowLeft, Edit, Trash2, Calendar, Milk, Heart, Activity } from 'lucide
 export const VacaDetalhes = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getVacaById, deleteVaca } = useVacas();
   const [loading, setLoading] = useState(false);
 
-  // Mock data - substituir por API real
-  const vaca = {
-    id: 1,
-    numero: '001',
-    nome: 'Mimosa',
-    raca: 'Holandesa',
-    nascimento: '2020-03-15',
-    status: 'lactacao',
-    producaoMedia: 25,
-    peso: 550,
-    mae: 'Estrela #002',
-    pai: 'Touro Campeão',
-    ultimaInseminacao: '2023-12-10',
-    ultimaVacina: '2024-01-15',
-    proximaVacina: '2024-07-15',
-    observacoes: 'Vaca de alta produção, necessita atenção especial na alimentação.'
-  };
+  const vaca = getVacaById(id);
+
+  if (!vaca) {
+    return (
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-bold text-dark mb-4">Vaca não encontrada</h2>
+        <Button onClick={() => navigate('/rebanho')}>Voltar ao Rebanho</Button>
+      </div>
+    );
+  }
 
   const producaoHistorico = [
     { data: '2024-01-20', quantidade: 26, periodo: 'Manhã' },
@@ -37,9 +32,12 @@ export const VacaDetalhes = () => {
   ];
 
   const handleDelete = async () => {
+    if (!window.confirm(`Tem certeza que deseja remover ${vaca.nome}?`)) return;
+    
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 500));
+      deleteVaca(id);
       ToastManager.success('Vaca removida com sucesso!');
       navigate('/rebanho');
     } catch {
@@ -173,24 +171,33 @@ export const VacaDetalhes = () => {
         <Card className="glassmorphism p-6">
           <h3 className="text-lg font-semibold text-dark mb-4">Saúde e Reprodução</h3>
           <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-medium/70">Última Inseminação:</span>
-              <span className="font-medium text-dark">
-                {new Date(vaca.ultimaInseminacao).toLocaleDateString('pt-BR')}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-medium/70">Última Vacina:</span>
-              <span className="font-medium text-dark">
-                {new Date(vaca.ultimaVacina).toLocaleDateString('pt-BR')}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-medium/70">Próxima Vacina:</span>
-              <span className="font-medium text-dark">
-                {new Date(vaca.proximaVacina).toLocaleDateString('pt-BR')}
-              </span>
-            </div>
+            {vaca.ultimaInseminacao && (
+              <div className="flex justify-between">
+                <span className="text-medium/70">Última Inseminação:</span>
+                <span className="font-medium text-dark">
+                  {new Date(vaca.ultimaInseminacao).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            )}
+            {vaca.ultimaVacina && (
+              <div className="flex justify-between">
+                <span className="text-medium/70">Última Vacina:</span>
+                <span className="font-medium text-dark">
+                  {new Date(vaca.ultimaVacina).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            )}
+            {vaca.proximaVacina && (
+              <div className="flex justify-between">
+                <span className="text-medium/70">Próxima Vacina:</span>
+                <span className="font-medium text-dark">
+                  {new Date(vaca.proximaVacina).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            )}
+            {!vaca.ultimaInseminacao && !vaca.ultimaVacina && !vaca.proximaVacina && (
+              <p className="text-medium/70 text-sm">Nenhuma informação de saúde registrada</p>
+            )}
           </div>
         </Card>
       </div>
@@ -223,10 +230,12 @@ export const VacaDetalhes = () => {
       </Card>
 
       {/* Observações */}
-      <Card className="glassmorphism p-6">
-        <h3 className="text-lg font-semibold text-dark mb-4">Observações</h3>
-        <p className="text-medium">{vaca.observacoes}</p>
-      </Card>
+      {vaca.observacoes && (
+        <Card className="glassmorphism p-6">
+          <h3 className="text-lg font-semibold text-dark mb-4">Observações</h3>
+          <p className="text-medium">{vaca.observacoes}</p>
+        </Card>
+      )}
     </div>
   );
 };

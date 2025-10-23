@@ -10,7 +10,7 @@ import { exportToCSV } from '../utils/export';
 import { Plus, Download, Calendar, TrendingUp, BarChart3, Target, Award } from 'lucide-react';
 
 export const Producao = () => {
-  const { registros, addRegistro } = useProducao();
+  const { addRegistro } = useProducao();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('tabela');

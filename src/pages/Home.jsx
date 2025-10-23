@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { MousePointer, Activity, TrendingUp, FileBarChart, Smartphone, Bell, Calendar, FileText } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
-import vacasol from '../assets/vacasol.png'
+import vacasol from '../assets/vacasol.webp'
 
 export const Home = () => {
   const beneficios = [
@@ -92,11 +92,11 @@ export const Home = () => {
                   Começar Agora
                 </Button>
               </Link>
-              <Link to="#como-funciona" className="w-full sm:w-auto">
+              <a href="#como-funciona" className="w-full sm:w-auto">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto">
                   Como Funciona
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>

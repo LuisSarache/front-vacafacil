@@ -31,6 +31,8 @@ const Reproducao = lazy(() => import('../pages/Reproducao').then(m => ({ default
 const Relatorios = lazy(() => import('../pages/Relatorios').then(m => ({ default: m.Relatorios })));
 
 const Configuracoes = lazy(() => import('../pages/Configuracoes').then(m => ({ default: m.Configuracoes })));
+const Marketplace = lazy(() => import('../pages/Marketplace').then(m => ({ default: m.Marketplace })));
+const CriarAnuncio = lazy(() => import('../pages/CriarAnuncio').then(m => ({ default: m.CriarAnuncio })));
  
 /* ==============================
    Componente de rota protegida
@@ -196,6 +198,18 @@ export const AppRoutes = () => {
         <Route path="/configuracoes" element={
           <ProtectedRoute>
             <Configuracoes /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/marketplace" element={
+          <ProtectedRoute>
+            <Marketplace /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/marketplace/novo" element={
+          <ProtectedRoute>
+            <CriarAnuncio /> 
           </ProtectedRoute>
         } />
       </Routes>

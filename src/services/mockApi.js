@@ -56,9 +56,9 @@ export const mockApi = {
   async login(email, password) {
     await delay(1000);
     const currentUsers = getStorageData(STORAGE_KEYS.USERS, initialUsers);
-    const user = currentUsers.find(u => u.email === email && verifyPassword(password, u.password));
+    const user = currentUsers.find(u => u.email === email);
     
-    if (!user) {
+    if (!user || !verifyPassword(password, user.password)) {
       throw new Error('E-mail ou senha incorretos');
     }
     
@@ -69,32 +69,36 @@ export const mockApi = {
   },
 
   async register(userData) {
-    await delay(1000);
-    const currentUsers = getStorageData(STORAGE_KEYS.USERS, initialUsers);
-    
-    if (currentUsers.find(u => u.email === userData.email)) {
-      throw new Error('E-mail já cadastrado');
+    try {
+      await delay(1000);
+      const currentUsers = getStorageData(STORAGE_KEYS.USERS, initialUsers);
+      
+      if (currentUsers.find(u => u.email === userData.email)) {
+        throw new Error('E-mail já cadastrado');
+      }
+      
+      const newUser = { 
+        id: Date.now(), 
+        email: userData.email,
+        password: hashPassword(userData.password),
+        name: userData.name,
+        farmName: userData.farmName,
+        location: userData.location,
+        phone: userData.phone,
+        cpfCnpj: userData.cpfCnpj,
+        type: 'produtor',
+        createdAt: new Date().toISOString()
+      };
+      
+      currentUsers.push(newUser);
+      setStorageData(STORAGE_KEYS.USERS, currentUsers);
+      
+      return { 
+        user: { ...newUser, password: undefined }, 
+        token: `token-${newUser.id}-${Date.now()}` 
+      };
+    } catch (error) {
+      throw error;
     }
-    
-    const newUser = { 
-      id: Date.now(), 
-      email: userData.email,
-      password: hashPassword(userData.password),
-      name: userData.name,
-      farmName: userData.farmName,
-      location: userData.location,
-      phone: userData.phone,
-      cpfCnpj: userData.cpfCnpj,
-      type: 'produtor',
-      createdAt: new Date().toISOString()
-    };
-    
-    currentUsers.push(newUser);
-    setStorageData(STORAGE_KEYS.USERS, currentUsers);
-    
-    return { 
-      user: { ...newUser, password: undefined }, 
-      token: `token-${newUser.id}-${Date.now()}` 
-    };
   }
 };
