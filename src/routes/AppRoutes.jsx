@@ -2,8 +2,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
  
-// Importa contexto de autenticação
+// Importa contextos
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
  
 // Componentes reutilizáveis
 import { Sidebar } from '../components/Sidebar';
@@ -28,6 +29,7 @@ const Producao = lazy(() => import('../pages/Producao').then(m => ({ default: m.
 const Financeiro = lazy(() => import('../pages/Financeiro').then(m => ({ default: m.Financeiro })));
 const Reproducao = lazy(() => import('../pages/Reproducao').then(m => ({ default: m.Reproducao })));
 const Relatorios = lazy(() => import('../pages/Relatorios').then(m => ({ default: m.Relatorios })));
+
 const Configuracoes = lazy(() => import('../pages/Configuracoes').then(m => ({ default: m.Configuracoes })));
  
 /* ==============================
@@ -35,12 +37,13 @@ const Configuracoes = lazy(() => import('../pages/Configuracoes').then(m => ({ d
    ============================== */
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth(); // Obtém estado de autenticação e carregamento
+  const { isDark } = useTheme(); // Obtém estado do tema
  
   if (loading) return <LoadingSpinner size="lg" />; // Mostra spinner enquanto carrega
   if (!isAuthenticated) return <Navigate to="/login" replace />; // Redireciona não autenticados para login
  
   return (
-    <div className="min-h-screen flex">
+    <div className={`min-h-screen flex dashboard-container ${isDark ? 'dark' : ''}`}>
       <Sidebar /> {/* Sidebar lateral sempre visível */}
       <main className="flex-1 lg:ml-64 p-8">
         {children} {/* Conteúdo da página protegida */}
@@ -65,7 +68,7 @@ export const PublicRoute = ({ children, fullWidth = false }) => {
 
   // Usuário não logado pode acessar a página pública
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen public-page">
       <PublicNavbar />
       {fullWidth ? (
         children
@@ -188,6 +191,7 @@ export const AppRoutes = () => {
             <Relatorios /> 
           </ProtectedRoute>
         } />
+
         
         <Route path="/configuracoes" element={
           <ProtectedRoute>
