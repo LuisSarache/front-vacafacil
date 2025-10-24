@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Badge } from '../components/Badge';
 import { ToastManager } from '../components/ToastManager';
-import { Search, Filter, ShoppingCart, DollarSign, MapPin, Calendar, Milk } from 'lucide-react';
+import { Search, Filter, ShoppingCart, DollarSign, MapPin, Calendar, Milk, PlusCircle } from 'lucide-react';
 
 export const Marketplace = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRaca, setFilterRaca] = useState('todas');
   const [filterTipo, setFilterTipo] = useState('todos');
+  const [showForm, setShowForm] = useState(false);
 
-  const anuncios = [
+  // 🔹 Lista inicial de anúncios
+  const [anuncios, setAnuncios] = useState([
     {
       id: 1,
       tipo: 'venda',
@@ -56,8 +56,23 @@ export const Marketplace = () => {
       descricao: 'Busco vaca girolando com produção mínima de 20L/dia',
       status: 'procurando'
     }
-  ];
+  ]);
 
+  // 🔹 Novo anúncio temporário
+  const [novoAnuncio, setNovoAnuncio] = useState({
+    tipo: 'venda',
+    titulo: '',
+    raca: '',
+    idade: '',
+    producaoMedia: '',
+    preco: '',
+    localizacao: '',
+    vendedor: '',
+    telefone: '',
+    descricao: ''
+  });
+
+  // 🔹 Filtro
   const filteredAnuncios = anuncios.filter(anuncio => {
     const matchesSearch = anuncio.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          anuncio.raca.toLowerCase().includes(searchTerm.toLowerCase());
@@ -66,20 +81,84 @@ export const Marketplace = () => {
     return matchesSearch && matchesRaca && matchesTipo;
   });
 
+  // 🔹 Função para adicionar anúncio
+  const handleAddAnuncio = () => {
+    if (!novoAnuncio.titulo || !novoAnuncio.raca || !novoAnuncio.preco) {
+      ToastManager.error('Preencha pelo menos o título, raça e preço!');
+      return;
+    }
+
+    const novo = {
+      ...novoAnuncio,
+      id: Date.now(),
+      preco: Number(novoAnuncio.preco),
+      idade: novoAnuncio.idade ? Number(novoAnuncio.idade) : null,
+      producaoMedia: novoAnuncio.producaoMedia ? Number(novoAnuncio.producaoMedia) : 0,
+      status: 'disponivel'
+    };
+
+    setAnuncios([...anuncios, novo]);
+    setShowForm(false);
+    setNovoAnuncio({
+      tipo: 'venda',
+      titulo: '',
+      raca: '',
+      idade: '',
+      producaoMedia: '',
+      preco: '',
+      localizacao: '',
+      vendedor: '',
+      telefone: '',
+      descricao: ''
+    });
+    ToastManager.success('Anúncio adicionado com sucesso!');
+  };
+
   return (
     <div className="space-y-6">
+      {/* Cabeçalho */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-dark">Marketplace</h1>
           <p className="text-medium/70 mt-1">Compre e venda vacas com outros produtores</p>
         </div>
-        <Button className="flex items-center" onClick={() => navigate('/marketplace/novo')}>
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          Criar Anúncio
+        <Button className="flex items-center" onClick={() => setShowForm(!showForm)}>
+          <PlusCircle className="w-4 h-4 mr-2" />
+          {showForm ? 'Cancelar' : 'Adicionar Anúncio'}
         </Button>
       </div>
 
-      {/* Filtros */}
+      {/* 🔹 Formulário */}
+      {showForm && (
+        <Card className="p-6 space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <Input placeholder="Título" value={novoAnuncio.titulo} onChange={e => setNovoAnuncio({...novoAnuncio, titulo: e.target.value})} />
+            <Input placeholder="Raça" value={novoAnuncio.raca} onChange={e => setNovoAnuncio({...novoAnuncio, raca: e.target.value})} />
+            <select value={novoAnuncio.tipo} onChange={e => setNovoAnuncio({...novoAnuncio, tipo: e.target.value})} className="border rounded-lg p-2">
+              <option value="venda">Venda</option>
+              <option value="compra">Procura</option>
+            </select>
+            <Input placeholder="Preço (R$)" type="number" value={novoAnuncio.preco} onChange={e => setNovoAnuncio({...novoAnuncio, preco: e.target.value})} />
+            <Input placeholder="Idade (anos)" type="number" value={novoAnuncio.idade} onChange={e => setNovoAnuncio({...novoAnuncio, idade: e.target.value})} />
+            <Input placeholder="Produção Média (L/dia)" type="number" value={novoAnuncio.producaoMedia} onChange={e => setNovoAnuncio({...novoAnuncio, producaoMedia: e.target.value})} />
+            <Input placeholder="Localização" value={novoAnuncio.localizacao} onChange={e => setNovoAnuncio({...novoAnuncio, localizacao: e.target.value})} />
+            <Input placeholder="Vendedor" value={novoAnuncio.vendedor} onChange={e => setNovoAnuncio({...novoAnuncio, vendedor: e.target.value})} />
+            <Input placeholder="Telefone" value={novoAnuncio.telefone} onChange={e => setNovoAnuncio({...novoAnuncio, telefone: e.target.value})} />
+          </div>
+          <textarea
+            placeholder="Descrição"
+            className="w-full border rounded-lg p-2"
+            rows={3}
+            value={novoAnuncio.descricao}
+            onChange={e => setNovoAnuncio({...novoAnuncio, descricao: e.target.value})}
+          />
+          <div className="text-right">
+            <Button onClick={handleAddAnuncio}>Salvar Anúncio</Button>
+          </div>
+        </Card>
+      )}
+
+      {/* 🔹 Filtros */}
       <Card className="glassmorphism p-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -120,7 +199,7 @@ export const Marketplace = () => {
         </div>
       </Card>
 
-      {/* Lista de Anúncios */}
+      {/* 🔹 Lista de Anúncios */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredAnuncios.map((anuncio) => (
           <Card key={anuncio.id} className="glassmorphism p-6 hover:shadow-lg transition-all">
@@ -139,21 +218,21 @@ export const Marketplace = () => {
                 <DollarSign className="w-4 h-4 mr-2" />
                 <span className="font-bold text-dark">R$ {anuncio.preco.toLocaleString()}</span>
               </div>
-              
+
               {anuncio.idade && (
                 <div className="flex items-center text-sm text-medium">
                   <Calendar className="w-4 h-4 mr-2" />
                   <span>{anuncio.idade} anos</span>
                 </div>
               )}
-              
+
               {anuncio.producaoMedia > 0 && (
                 <div className="flex items-center text-sm text-medium">
                   <Milk className="w-4 h-4 mr-2" />
                   <span>{anuncio.producaoMedia}L/dia</span>
                 </div>
               )}
-              
+
               <div className="flex items-center text-sm text-medium">
                 <MapPin className="w-4 h-4 mr-2" />
                 <span>{anuncio.localizacao}</span>
