@@ -31,6 +31,22 @@ export const Producao = () => {
 
   const totalDia = producaoData.reduce((sum, item) => sum + item.total, 0);
 
+  // 🔹 Função para validar horário de ordenha
+  const validarHorarioOrdenha = (periodo) => {
+    const agora = new Date();
+    const hora = agora.getHours();
+    const minuto = agora.getMinutes();
+    const horaDecimal = hora + minuto / 60;
+
+    if (periodo === 'Manhã') {
+      return horaDecimal >= 3.5 && horaDecimal <= 10; // 03:30 às 10:00
+    }
+    if (periodo === 'Tarde') {
+      return horaDecimal >= 16 || horaDecimal <= 0; // 16:00 às 00:00
+    }
+    return false;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -68,7 +84,10 @@ export const Producao = () => {
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
-          <Button className="flex items-center" onClick={() => setShowModal(true)}>
+          <Button 
+            className="flex items-center" 
+            onClick={() => setShowModal(true)}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Registrar Ordenha
           </Button>
@@ -299,7 +318,7 @@ export const Producao = () => {
                   {item.total >= 20 ? 'Excelente' : item.total >= 15 ? 'Normal' : 'Baixa'}
                 </span>
               </div>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
                   <span className="text-sm text-medium/70">Manhã:</span>
@@ -314,7 +333,7 @@ export const Producao = () => {
                   <span className="text-xl font-bold text-dark">{item.total}L</span>
                 </div>
               </div>
-              
+
               <div className="mt-4">
                 <div className="flex justify-between text-xs text-medium/70 mb-1">
                   <span>Performance</span>
@@ -337,35 +356,12 @@ export const Producao = () => {
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-dark">Tendência de Produção (7 dias)</h3>
           <div className="flex gap-2">
-            <Button size="sm" variant="secondary">7 dias</Button>
-            <Button size="sm" variant="secondary">30 dias</Button>
-            <Button size="sm" variant="secondary">90 dias</Button>
+            <Button size="sm" variant="secondary">Últimos 7 dias</Button>
+            <Button size="sm" variant="secondary">Últimos 30 dias</Button>
           </div>
         </div>
-        <div className="h-64 bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 rounded-lg flex items-center justify-center border border-blue-100">
-          {loading ? (
-            <LoadingSpinner size="lg" />
-          ) : (
-            <div className="text-center">
-              <TrendingUp className="w-16 h-16 text-dark mx-auto mb-4" />
-              <p className="text-medium font-medium">Gráfico interativo de tendência</p>
-              <p className="text-sm text-medium/70 mt-2">Visualização avançada em desenvolvimento</p>
-              <div className="flex justify-center gap-4 mt-4 text-xs">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
-                  <span className="text-medium/70">Manhã</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
-                  <span className="text-medium/70">Tarde</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-                  <span className="text-medium/70">Total</span>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="w-full h-64 flex items-center justify-center text-medium/50">
+          Gráfico de Tendência aqui
         </div>
       </Card>
 
@@ -373,6 +369,12 @@ export const Producao = () => {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Registrar Ordenha">
         <form onSubmit={(e) => {
           e.preventDefault();
+
+          if (!validarHorarioOrdenha(formData.periodo)) {
+            ToastManager.error('Agora não é hora dessa ordenha');
+            return;
+          }
+
           addRegistro({ ...formData, data: selectedDate });
           ToastManager.success('Produção registrada!');
           setShowModal(false);
@@ -405,7 +407,6 @@ export const Producao = () => {
             >
               <option value="Manhã">Manhã</option>
               <option value="Tarde">Tarde</option>
-              <option value="Noite">Noite</option>
             </select>
           </div>
           <div>
@@ -418,11 +419,25 @@ export const Producao = () => {
               required
             />
           </div>
+
+          {/* 🔹 Aviso se estiver fora do horário */}
+          {!validarHorarioOrdenha(formData.periodo) && (
+            <p className="text-red-600 text-sm mt-1">
+              Fora do horário permitido para ordenha. Horários permitidos: Manhã (03:30 às 10:00) | Tarde (16:00 às 00:00)
+            </p>
+          )}
+
           <div className="flex gap-3 pt-4">
             <Button type="button" variant="secondary" className="flex-1" onClick={() => setShowModal(false)}>
               Cancelar
             </Button>
-            <Button type="submit" className="flex-1">Registrar</Button>
+            <Button 
+              type="submit" 
+              className="flex-1"
+              disabled={!validarHorarioOrdenha(formData.periodo)}
+            >
+              Registrar
+            </Button>
           </div>
         </form>
       </Modal>
