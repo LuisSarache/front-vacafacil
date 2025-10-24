@@ -240,7 +240,6 @@ Senha: 123456
 - ✅ Notificações em Tempo Real (Redesenhadas)
 - ✅ Dark Mode Otimizado
 - ✅ Validações de Formulários
-- ✅ Exportação de Dados (CSV)
 - ✅ Tratamento de Erros Robusto
 - ✅ Persistência de Dados (localStorage)
 - ✅ Context API para Estado Global
@@ -308,16 +307,6 @@ Este projeto está sob a licença MIT.
 
 Desenvolvido com ❤️ para facilitar a vida dos produtores rurais.
 
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para:
-- Reportar bugs
-- Sugerir novas funcionalidades
-- Enviar pull requests
-- Melhorar a documentação
-
 ---
 
 **VacaFácil** - Tecnologia Simples para o Campo 🌾
-
-*Última atualização: Janeiro 2025*
