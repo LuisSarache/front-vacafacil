@@ -22,7 +22,7 @@ export const ThemeToggle = () => {
       </div>
       <div className="relative inline-flex items-center">
         <div className={`w-10 h-5 rounded-full transition-colors ${
-          isDark ? 'bg-blue-500' : 'bg-gray-400'
+          isDark ? 'bg-blue-500' : 'bg-gray-200'
         }`}>
           <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
             isDark ? 'translate-x-5' : 'translate-x-0'
