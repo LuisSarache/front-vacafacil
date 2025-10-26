@@ -320,4 +320,4 @@ Contribuições são bem-vindas! Sinta-se à vontade para:
 
 **VacaFácil** - Tecnologia Simples para o Campo 🌾
 
-*Última atualização: Janeiro 2025*
+
