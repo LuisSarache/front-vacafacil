@@ -22,13 +22,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     try {
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      }
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
     } catch (error) {
       console.error('Erro ao salvar tema:', error);
     }

@@ -25,7 +25,8 @@ export const Badge = ({
 
   return (
     <span 
-      className={`inline-flex items-center font-semibold rounded-full ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`badge inline-flex items-center font-semibold rounded-full ${variants[variant]} ${sizes[size]} ${className}`}
+      data-variant={variant}
     >
       {children}
     </span>

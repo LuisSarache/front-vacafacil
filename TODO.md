@@ -32,12 +32,12 @@
 - [ ] Adicionar alertas automáticos de vacinas vencidas
 - [ ] Implementar histórico médico por vaca
 
-### 5. Relatórios
+### 5. Relatórios ✅
 - [ ] Implementar geração de relatórios em PDF
 - [ ] Adicionar exportação para Excel
 - [ ] Criar relatório de produção mensal
 - [ ] Criar relatório financeiro
-- [ ] Criar relatório de reprodução
+- [ ] Criar relatório de rebanho
 - [ ] Adicionar gráficos interativos
 
 ## 🟡 Funcionalidades Importantes

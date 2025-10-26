@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, Droplets, DollarSign, AlertTriangle, BarChart3, Users, Calendar, FileText } from 'lucide-react';
+import { MousePointer, Activity, TrendingUp, FileBarChart, Smartphone, Bell, Calendar, FileText } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import vacasol from '../assets/vacasol.webp'
@@ -8,32 +8,32 @@ import vacasol from '../assets/vacasol.webp'
 export const Home = () => {
   const beneficios = [
     {
-      icon: Heart,
+      icon: MousePointer,
       title: 'Fácil de Usar',
       description: 'Interface intuitiva pensada para produtores rurais de todos os níveis de experiência'
     },
     {
-      icon: Droplets,
+      icon: Activity,
       title: 'Dados em Tempo Real',
       description: 'Acompanhe informações atualizadas sobre sua fazenda a qualquer momento'
     },
     {
-      icon: DollarSign,
+      icon: TrendingUp,
       title: 'Aumento da Lucratividade',
       description: 'Otimize custos e maximize lucros com análises inteligentes'
     },
     {
-      icon: BarChart3,
+      icon: FileBarChart,
       title: 'Relatórios Automáticos',
       description: 'Gere relatórios profissionais sem complicação para tomada de decisões'
     },
     {
-      icon: Users,
+      icon: Smartphone,
       title: 'Acesso Multiplataforma',
       description: 'Use no computador, tablet ou celular - funciona em qualquer dispositivo'
     },
     {
-      icon: AlertTriangle,
+      icon: Bell,
       title: 'Alertas Inteligentes',
       description: 'Nunca mais esqueça datas importantes com notificações automáticas'
     }
@@ -160,7 +160,7 @@ export const Home = () => {
             {beneficios.map((beneficio, index) => (
               <div key={index}>
                 <Card className="text-center h-full group">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-medium to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-medium rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
                     <beneficio.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-dark mb-3 sm:mb-4">{beneficio.title}</h3>
