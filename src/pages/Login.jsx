@@ -7,12 +7,14 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { ToastManager } from "../components/ToastManager";
+import { PasswordRecovery } from "../components/PasswordRecovery";
 import { validateEmail, validatePassword } from "../utils/validation";
 import { Shield, BarChart3, Users } from "lucide-react";
 
 export const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [showRecovery, setShowRecovery] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -173,20 +175,34 @@ export const Login = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.9 }}
-                className="mt-6 text-center"
+                className="mt-6 text-center space-y-3"
               >
-                <p className="text-gray-600 mb-2">Não possui conta?</p>
-                <Link 
-                  to="/register" 
-                  className="text-dark font-semibold hover:text-medium transition-colors duration-300 hover:underline"
+                <button
+                  type="button"
+                  onClick={() => setShowRecovery(true)}
+                  className="text-sm text-gray-600 hover:text-dark transition-colors duration-300 hover:underline"
                 >
-                  Criar conta gratuita
-                </Link>
+                  Esqueceu sua senha?
+                </button>
+                <div>
+                  <p className="text-gray-600 mb-2">Não possui conta?</p>
+                  <Link 
+                    to="/register" 
+                    className="text-dark font-semibold hover:text-medium transition-colors duration-300 hover:underline"
+                  >
+                    Criar conta gratuita
+                  </Link>
+                </div>
               </motion.div>
             </Card>
           </motion.div>
         </motion.div>
       </div>
+      
+      <PasswordRecovery 
+        isOpen={showRecovery} 
+        onClose={() => setShowRecovery(false)} 
+      />
     </div>
   );
 };

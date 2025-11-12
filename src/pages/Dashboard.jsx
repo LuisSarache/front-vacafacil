@@ -3,6 +3,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
+import { InteractiveChart } from '../components/InteractiveChart';
 import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw, Bell } from 'lucide-react';
 
 export const Dashboard = () => {
@@ -19,6 +20,16 @@ export const Dashboard = () => {
     { tipo: 'Vacina', vaca: 'Mimosa #123', prazo: '2 dias' },
     { tipo: 'Secagem', vaca: 'Estrela #089', prazo: 'Hoje' },
     { tipo: 'Prenhez', vaca: 'Bonita #156', prazo: '1 dia' }
+  ];
+
+  const chartData = [
+    { date: '2024-01-10', value: 820, label: '10/01' },
+    { date: '2024-01-11', value: 850, label: '11/01' },
+    { date: '2024-01-12', value: 780, label: '12/01' },
+    { date: '2024-01-13', value: 900, label: '13/01' },
+    { date: '2024-01-14', value: 870, label: '14/01' },
+    { date: '2024-01-15', value: 920, label: '15/01' },
+    { date: '2024-01-16', value: 850, label: '16/01' }
   ];
 
   return (
@@ -149,17 +160,11 @@ export const Dashboard = () => {
               Ver Detalhes
             </Button>
           </div>
-          <div className="h-48 bg-gradient-to-br from-blue-50 to-green-50 rounded-lg flex items-center justify-center border border-blue-100">
-            {loading ? (
-              <LoadingSpinner size="lg" />
-            ) : (
-              <div className="text-center">
-                <TrendingUp className="w-12 h-12 text-dark mx-auto mb-2" />
-                <span className="text-medium">Gráfico interativo em desenvolvimento</span>
-                <p className="text-sm text-medium/70 mt-1">Média: 85L/dia • Tendência: ↗️ +3%</p>
-              </div>
-            )}
-          </div>
+          <InteractiveChart 
+            data={chartData}
+            title="Produção dos Últimos 7 Dias"
+            type="line"
+          />
         </Card>
 
         <Card className="p-6">

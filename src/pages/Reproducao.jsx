@@ -6,33 +6,50 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { Modal } from '../components/Modal';
 import { FormField } from '../components/FormField';
+import { useReproducao } from '../context/ReproducaoContext';
+import { useVacas } from '../context/VacasContext';
+import { VaccinationCalendar } from '../components/VaccinationCalendar';
 import { Plus, Calendar, Heart, Baby, Syringe, AlertCircle, Filter, Search } from 'lucide-react';
 
 export const Reproducao = () => {
   const [activeTab, setActiveTab] = useState('inseminacao');
   const [loading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(''); // 'inseminacao', 'vacina', etc
+  const [modalType, setModalType] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [formData, setFormData] = useState({});
 
-  const inseminacoes = [
-    { vaca: 'Mimosa #001', data: '2024-01-10', touro: 'Campeão', status: 'aguardando', proximaVerificacao: '2024-02-10' },
-    { vaca: 'Flor #004', data: '2024-01-05', touro: 'Forte', status: 'prenha', previsaoParto: '2024-10-05' }
-  ];
+  const { inseminacoes, vacinas, partos, adicionarInseminacao, adicionarVacina, adicionarParto, confirmarPrenhez, getVacinasVencidas, getVacasPrenhas } = useReproducao();
+  const { vacas } = useVacas();
 
-  const prenhas = [
-    { vaca: 'Bonita #003', inseminacao: '2023-12-15', previsaoParto: '2024-09-15', diasGestacao: 180 },
-    { vaca: 'Flor #004', inseminacao: '2024-01-05', previsaoParto: '2024-10-05', diasGestacao: 15 }
-  ];
+  const prenhas = getVacasPrenhas();
+  const vacinasVencidas = getVacinasVencidas();
 
-  const partos = [
-    { vaca: 'Estrela #002', dataParto: '2024-01-01', sexoBezerro: 'Fêmea', pesoBezerro: 35, observacoes: 'Parto normal' }
-  ];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      if (modalType === 'inseminacao') {
+        adicionarInseminacao(formData);
+        ToastManager.success('Inseminação registrada com sucesso!');
+      } else if (modalType === 'vacina') {
+        adicionarVacina(formData);
+        ToastManager.success('Vacinação registrada com sucesso!');
+      } else if (modalType === 'parto') {
+        adicionarParto(formData);
+        ToastManager.success('Parto registrado com sucesso!');
+      }
+      setShowModal(false);
+      setFormData({});
+    } catch {
+      ToastManager.error('Erro ao salvar registro');
+    }
+  };
 
-  const vacinas = [
-    { vaca: 'Mimosa #001', vacina: 'Brucelose', dataAplicacao: '2024-01-15', proximaDose: '2024-07-15' },
-    { vaca: 'Bonita #003', vacina: 'Raiva', dataAplicacao: '2024-01-10', proximaDose: '2024-01-10' }
-  ];
+  const openModal = (type) => {
+    setModalType(type);
+    setFormData({});
+    setShowModal(true);
+  };
 
 
 
@@ -48,10 +65,7 @@ export const Reproducao = () => {
             <Filter className="w-4 h-4 mr-2" />
             Filtros
           </Button>
-          <Button className="flex items-center" onClick={() => {
-            setModalType('inseminacao');
-            setShowModal(true);
-          }}>
+          <Button className="flex items-center" onClick={() => openModal('inseminacao')}>
             <Plus className="w-4 h-4 mr-2" />
             Novo Registro
           </Button>
@@ -103,7 +117,7 @@ export const Reproducao = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-medium/70">Vacinas Pendentes</p>
-              <p className="text-2xl font-bold text-dark">2</p>
+              <p className="text-2xl font-bold text-dark">{vacinasVencidas.length}</p>
               <p className="text-xs text-red-600 mt-1">Urgente</p>
             </div>
             <div className="p-3 bg-red-100 rounded-full">
@@ -149,10 +163,7 @@ export const Reproducao = () => {
                     className="pl-10 pr-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent text-sm"
                   />
                 </div>
-                <Button size="sm" onClick={() => {
-                  setModalType('inseminacao');
-                  setShowModal(true);
-                }}>
+                <Button size="sm" onClick={() => openModal('inseminacao')}>
                   <Plus className="w-4 h-4 mr-2" />
                   Nova Inseminação
                 </Button>
@@ -208,8 +219,8 @@ export const Reproducao = () => {
                           <Button size="sm" variant="secondary" className="p-2">
                             Editar
                           </Button>
-                          <Button size="sm" variant="secondary" className="p-2">
-                            Verificar
+                          <Button size="sm" variant="secondary" className="p-2" onClick={() => confirmarPrenhez(item.id)}>
+                            Confirmar Prenhez
                           </Button>
                         </div>
                       </td>
@@ -309,7 +320,12 @@ export const Reproducao = () => {
       )}
 
       {activeTab === 'vacinas' && (
-        <Card>
+        <div className="space-y-6">
+          <VaccinationCalendar 
+            vacinas={vacinas} 
+            onSchedule={() => openModal('vacina')} 
+          />
+          <Card>
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold">Controle de Vacinas</h3>
           </div>
@@ -352,49 +368,68 @@ export const Reproducao = () => {
             </table>
           </div>
         </Card>
+        </div>
       )}
       {/* Modal para Novos Registros */}
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        title={`Nova ${modalType === 'inseminacao' ? 'Inseminação' : 'Vacinação'}`}
+        title={`Nova ${modalType === 'inseminacao' ? 'Inseminação' : modalType === 'vacina' ? 'Vacinação' : 'Registro de Parto'}`}
         size="md"
       >
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <FormField
             label="Vaca"
             as="select"
             placeholder="Selecione a vaca"
-            options={['Mimosa #001', 'Estrela #002', 'Bonita #003', 'Flor #004']}
+            options={vacas.map(vaca => `${vaca.nome} #${vaca.numero}`)}
+            value={formData.vaca || ''}
+            onChange={(e) => setFormData({...formData, vaca: e.target.value})}
             required
           />
           
-          {modalType === 'inseminacao' ? (
+          {modalType === 'inseminacao' && (
             <>
-              <FormField
-                label="Data da Inseminação"
-                type="date"
-                required
-              />
               <FormField
                 label="Touro"
                 placeholder="Nome do touro"
+                value={formData.touro || ''}
+                onChange={(e) => setFormData({...formData, touro: e.target.value})}
                 required
               />
             </>
-          ) : (
+          )}
+          
+          {modalType === 'vacina' && (
             <>
               <FormField
                 label="Tipo de Vacina"
                 as="select"
                 placeholder="Selecione a vacina"
                 options={['Brucelose', 'Raiva', 'Febre Aftosa', 'IBR/BVD']}
+                value={formData.vacina || ''}
+                onChange={(e) => setFormData({...formData, vacina: e.target.value})}
+                required
+              />
+            </>
+          )}
+          
+          {modalType === 'parto' && (
+            <>
+              <FormField
+                label="Sexo do Bezerro"
+                as="select"
+                options={['Macho', 'Fêmea']}
+                value={formData.sexoBezerro || ''}
+                onChange={(e) => setFormData({...formData, sexoBezerro: e.target.value})}
                 required
               />
               <FormField
-                label="Data de Aplicação"
-                type="date"
-                required
+                label="Peso (kg)"
+                type="number"
+                placeholder="Peso do bezerro"
+                value={formData.pesoBezerro || ''}
+                onChange={(e) => setFormData({...formData, pesoBezerro: e.target.value})}
               />
             </>
           )}
@@ -404,6 +439,8 @@ export const Reproducao = () => {
             as="textarea"
             placeholder="Informações adicionais..."
             rows={3}
+            value={formData.observacoes || ''}
+            onChange={(e) => setFormData({...formData, observacoes: e.target.value})}
           />
           
           <div className="flex gap-3 pt-4">
@@ -418,11 +455,6 @@ export const Reproducao = () => {
             <Button 
               type="submit" 
               className="flex-1"
-              onClick={(e) => {
-                e.preventDefault();
-                ToastManager.success(`${modalType === 'inseminacao' ? 'Inseminação' : 'Vacinação'} registrada com sucesso!`);
-                setShowModal(false);
-              }}
             >
               Salvar
             </Button>

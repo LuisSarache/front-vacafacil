@@ -20,10 +20,24 @@ export const CadastroVaca = () => {
     pai: '',
     mae: '',
     status: 'lactacao',
-    observacoes: ''
+    observacoes: '',
+    foto: null
   });
 
   const [errors, setErrors] = useState({});
+  const [fotoPreview, setFotoPreview] = useState(null);
+
+  const handleFotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFotoPreview(reader.result);
+        setFormData(prev => ({ ...prev, foto: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const racas = [
     'Holandesa',
@@ -229,18 +243,46 @@ export const CadastroVaca = () => {
               <h3 className="text-lg font-semibold text-dark mb-4">Foto da Vaca</h3>
               
               <div className="border-2 border-dashed border-medium/30 rounded-lg p-8 text-center">
-                <Camera className="w-12 h-12 text-medium/50 mx-auto mb-4" />
-                <p className="text-medium/70 mb-4">Adicione uma foto da vaca</p>
-                <div className="space-y-2">
-                  <Button variant="secondary" size="sm" className="w-full">
-                    <Upload className="w-4 h-4 mr-2" />
-                    Fazer Upload
-                  </Button>
-                  <Button variant="secondary" size="sm" className="w-full">
-                    <Camera className="w-4 h-4 mr-2" />
-                    Tirar Foto
-                  </Button>
-                </div>
+                {fotoPreview ? (
+                  <div className="space-y-4">
+                    <img
+                      src={fotoPreview}
+                      alt="Preview da vaca"
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => {
+                        setFotoPreview(null);
+                        setFormData(prev => ({ ...prev, foto: null }));
+                      }}
+                    >
+                      Remover Foto
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <Camera className="w-12 h-12 text-medium/50 mx-auto mb-4" />
+                    <p className="text-medium/70 mb-4">Adicione uma foto da vaca</p>
+                    <div className="space-y-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFotoChange}
+                        className="hidden"
+                        id="foto-upload"
+                      />
+                      <label htmlFor="foto-upload">
+                        <Button variant="secondary" size="sm" className="w-full" as="span">
+                          <Upload className="w-4 h-4 mr-2" />
+                          Fazer Upload
+                        </Button>
+                      </label>
+                    </div>
+                  </>
+                )}
               </div>
             </Card>
 

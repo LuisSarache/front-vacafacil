@@ -5,21 +5,32 @@ import { NotificationProvider } from "./context/NotificationContext";
 import { ProducaoProvider } from "./context/ProducaoContext";
 import { FinanceiroProvider } from "./context/FinanceiroContext";
 import { VacasProvider } from "./context/VacasContext";
+import { ReproducaoProvider } from "./context/ReproducaoContext";
+import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 import { AppRoutes } from "./routes/AppRoutes";
+import { registerServiceWorker } from "./utils/pwa";
+import { useEffect } from 'react';
 
 function App(){
+    useEffect(() => {
+        registerServiceWorker();
+    }, []);
+
     return(
         <ThemeProvider>
             <AuthProvider>
                 <VacasProvider>
-                    <NotificationProvider>
-                        <ProducaoProvider>
-                            <FinanceiroProvider>
-                                <AppRoutes/>
-                                <Toaster />
-                            </FinanceiroProvider>
-                        </ProducaoProvider>
-                    </NotificationProvider>
+                    <ReproducaoProvider>
+                        <NotificationProvider>
+                            <ProducaoProvider>
+                                <FinanceiroProvider>
+                                    <KeyboardShortcuts />
+                                    <AppRoutes/>
+                                    <Toaster />
+                                </FinanceiroProvider>
+                            </ProducaoProvider>
+                        </NotificationProvider>
+                    </ReproducaoProvider>
                 </VacasProvider>
             </AuthProvider>
         </ThemeProvider>

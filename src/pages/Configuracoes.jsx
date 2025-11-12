@@ -3,6 +3,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { ToastManager } from '../components/ToastManager';
+import { DataBackup } from '../components/DataBackup';
 import { useTheme } from '../context/ThemeContext';
 import { Save, User, Bell, DollarSign, Wifi, Shield, Moon, Sun } from 'lucide-react';
 
@@ -55,6 +56,7 @@ export const Configuracoes = () => {
     { id: 'perfil', label: 'Perfil', icon: User },
     { id: 'precos', label: 'Preços', icon: DollarSign },
     { id: 'notificacoes', label: 'Notificações', icon: Bell },
+    { id: 'backup', label: 'Backup', icon: Shield },
     { id: 'sistema', label: 'Sistema', icon: Shield }
   ];
 
@@ -257,6 +259,10 @@ export const Configuracoes = () => {
             </div>
           </div>
         </Card>
+      )}
+
+      {activeTab === 'backup' && (
+        <DataBackup />
       )}
 
       {activeTab === 'sistema' && (

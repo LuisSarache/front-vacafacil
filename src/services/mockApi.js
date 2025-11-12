@@ -69,36 +69,32 @@ export const mockApi = {
   },
 
   async register(userData) {
-    try {
-      await delay(1000);
-      const currentUsers = getStorageData(STORAGE_KEYS.USERS, initialUsers);
-      
-      if (currentUsers.find(u => u.email === userData.email)) {
-        throw new Error('E-mail já cadastrado');
-      }
-      
-      const newUser = { 
-        id: Date.now(), 
-        email: userData.email,
-        password: hashPassword(userData.password),
-        name: userData.name,
-        farmName: userData.farmName,
-        location: userData.location,
-        phone: userData.phone,
-        cpfCnpj: userData.cpfCnpj,
-        type: 'produtor',
-        createdAt: new Date().toISOString()
-      };
-      
-      currentUsers.push(newUser);
-      setStorageData(STORAGE_KEYS.USERS, currentUsers);
-      
-      return { 
-        user: { ...newUser, password: undefined }, 
-        token: `token-${newUser.id}-${Date.now()}` 
-      };
-    } catch (error) {
-      throw error;
+    await delay(1000);
+    const currentUsers = getStorageData(STORAGE_KEYS.USERS, initialUsers);
+    
+    if (currentUsers.find(u => u.email === userData.email)) {
+      throw new Error('E-mail já cadastrado');
     }
+    
+    const newUser = { 
+      id: Date.now(), 
+      email: userData.email,
+      password: hashPassword(userData.password),
+      name: userData.name,
+      farmName: userData.farmName,
+      location: userData.location,
+      phone: userData.phone,
+      cpfCnpj: userData.cpfCnpj,
+      type: 'produtor',
+      createdAt: new Date().toISOString()
+    };
+    
+    currentUsers.push(newUser);
+    setStorageData(STORAGE_KEYS.USERS, currentUsers);
+    
+    return { 
+      user: { ...newUser, password: undefined }, 
+      token: `token-${newUser.id}-${Date.now()}` 
+    };
   }
 };

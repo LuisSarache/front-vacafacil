@@ -7,6 +7,7 @@ import { Input } from '../components/Input';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { AdvancedFilters } from '../components/AdvancedFilters';
 import { Pagination } from '../components/Pagination';
 import { Search, Plus, Filter, Eye, Edit, Trash2, Download, Upload } from 'lucide-react';
 
@@ -17,6 +18,8 @@ export const Rebanho = () => {
   const [filterStatus, setFilterStatus] = useState('todos');
   const [loading, setLoading] = useState(false);
   const [selectedVacas, setSelectedVacas] = useState([]);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({});
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, vacaId: null, vacaNome: '' });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -106,7 +109,11 @@ export const Rebanho = () => {
               <option value="seca">Seca</option>
               <option value="prenha">Prenha</option>
             </select>
-            <Button variant="secondary" className="flex items-center">
+            <Button 
+              variant="secondary" 
+              className="flex items-center"
+              onClick={() => setShowAdvancedFilters(true)}
+            >
               <Filter className="w-4 h-4 mr-2" />
               Filtros Avançados
             </Button>
@@ -315,6 +322,16 @@ export const Rebanho = () => {
         message={`Tem certeza que deseja remover a vaca "${confirmDialog.vacaNome}" do rebanho? Esta ação não pode ser desfeita.`}
         confirmText="Remover"
         cancelText="Cancelar"
+      />
+      
+      <AdvancedFilters
+        isOpen={showAdvancedFilters}
+        onClose={() => setShowAdvancedFilters(false)}
+        onApply={(filters) => {
+          setActiveFilters(filters);
+          ToastManager.success('Filtros aplicados com sucesso!');
+        }}
+        filters={activeFilters}
       />
     </div>
   );

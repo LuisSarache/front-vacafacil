@@ -1,11 +1,93 @@
 import { useState } from 'react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
-import { Download, Calendar, TrendingUp, BarChart3, PieChart, FileText } from 'lucide-react';
+import { ToastManager } from '../components/ToastManager';
+import { exportToExcel, exportMultipleSheets } from '../utils/excel';
+import { Download, Calendar, TrendingUp, BarChart3, PieChart, FileText, FileSpreadsheet } from 'lucide-react';
+import jsPDF from 'jspdf';
 
 export const Relatorios = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('mensal');
   const [selectedReport, setSelectedReport] = useState('producao');
+
+  const generatePDF = () => {
+    try {
+      const doc = new jsPDF();
+      
+      // Header
+      doc.setFontSize(20);
+      doc.text('VacaFácil - Relatório de Produção', 20, 30);
+      
+      doc.setFontSize(12);
+      doc.text(`Período: ${selectedPeriod}`, 20, 45);
+      doc.text(`Data de geração: ${new Date().toLocaleDateString('pt-BR')}`, 20, 55);
+      
+      // Production data
+      doc.setFontSize(14);
+      doc.text('Resumo de Produção:', 20, 75);
+      
+      doc.setFontSize(11);
+      doc.text(`Total do Período: ${dadosProducao.totalPeriodo}L`, 25, 90);
+      doc.text(`Média Diária: ${dadosProducao.mediaDiaria}L`, 25, 100);
+      doc.text(`Melhor Dia: ${dadosProducao.melhorDia.producao}L (${dadosProducao.melhorDia.data})`, 25, 110);
+      doc.text(`Menor Produção: ${dadosProducao.piorDia.producao}L (${dadosProducao.piorDia.data})`, 25, 120);
+      
+      // Ranking table
+      doc.setFontSize(14);
+      doc.text('Ranking de Vacas:', 20, 140);
+      
+      doc.setFontSize(10);
+      let yPos = 155;
+      rankingVacas.forEach((vaca) => {
+        doc.text(`${vaca.posicao}º - ${vaca.vaca}: ${vaca.producao}L (${vaca.media}L/dia)`, 25, yPos);
+        yPos += 10;
+      });
+      
+      // Footer
+      doc.setFontSize(8);
+      doc.text('Gerado por VacaFácil - Sistema de Gestão de Fazendas Leiteiras', 20, 280);
+      
+      doc.save(`relatorio-producao-${selectedPeriod}-${new Date().toISOString().split('T')[0]}.pdf`);
+      ToastManager.success('Relatório PDF gerado com sucesso!');
+    } catch {
+      ToastManager.error('Erro ao gerar relatório PDF');
+    }
+  };
+
+  const generateExcel = () => {
+    try {
+      const sheets = [
+        {
+          name: 'Produção',
+          data: [
+            { Período: selectedPeriod, 'Total (L)': dadosProducao.totalPeriodo, 'Média Diária (L)': dadosProducao.mediaDiaria },
+            { 'Melhor Dia': dadosProducao.melhorDia.data, 'Produção (L)': dadosProducao.melhorDia.producao },
+            { 'Menor Produção': dadosProducao.piorDia.data, 'Produção (L)': dadosProducao.piorDia.producao }
+          ]
+        },
+        {
+          name: 'Ranking Vacas',
+          data: rankingVacas.map(vaca => ({
+            Posição: vaca.posicao,
+            Vaca: vaca.vaca,
+            'Produção Total (L)': vaca.producao,
+            'Média Diária (L)': vaca.media,
+            'Performance (%)': Math.round((vaca.media / 25) * 100)
+          }))
+        }
+      ];
+      
+      const success = exportMultipleSheets(sheets, `relatorio-completo-${selectedPeriod}-${new Date().toISOString().split('T')[0]}`);
+      
+      if (success) {
+        ToastManager.success('Relatório Excel gerado com sucesso!');
+      } else {
+        ToastManager.error('Erro ao gerar relatório Excel');
+      }
+    } catch {
+      ToastManager.error('Erro ao gerar relatório Excel');
+    }
+  };
 
   const relatoriosDisponiveis = [
     { id: 'producao', nome: 'Produção por Período', icon: TrendingUp },
@@ -32,10 +114,16 @@ export const Relatorios = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-dark">Relatórios e Gráficos</h1>
-        <Button className="flex items-center">
-          <Download className="w-4 h-4 mr-2" />
-          Exportar PDF
-        </Button>
+        <div className="flex gap-2">
+          <Button className="flex items-center" onClick={generatePDF}>
+            <Download className="w-4 h-4 mr-2" />
+            Exportar PDF
+          </Button>
+          <Button variant="secondary" className="flex items-center" onClick={generateExcel}>
+            <FileSpreadsheet className="w-4 h-4 mr-2" />
+            Exportar Excel
+          </Button>
+        </div>
       </div>
 
       {/* Filtros */}
