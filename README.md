@@ -70,6 +70,62 @@ VacaFácil é uma plataforma web moderna e intuitiva para gestão completa de fa
 - ✅ Recuperação de senha
 - ✅ Configurações personalizadas
 
+### 💳 Sistema de Assinatura
+- ✅ 3 planos: Gratuito, Básico e Pro
+- ✅ Escolha de plano após login
+- ✅ Limites por plano
+- ✅ Upgrade/downgrade de planos
+- ✅ Cancelamento de assinatura
+- ✅ Status da assinatura
+- ✅ Avisos de limite atingido
+- ✅ Pagamento simulado
+
+#### 📋 Detalhes dos Planos:
+
+**🆓 GRATUITO**
+- Até 5 vacas
+- 30 dias de histórico de produção
+- Relatórios básicos
+- Suporte por email
+- Sem marketplace
+- Sem analytics
+
+**💰 BÁSICO (R$ 29,90/mês)**
+- Até 50 vacas
+- 1 ano de histórico
+- Relatórios completos PDF/Excel
+- Marketplace incluído
+- Analytics básico
+- Suporte prioritário
+- 50 relatórios/mês
+- 20 exportações/mês
+
+**🚀 PRO (R$ 59,90/mês)**
+- Vacas ilimitadas
+- Histórico completo
+- Relatórios avançados
+- Marketplace premium
+- Analytics avançado
+- Suporte 24/7
+- Backup em nuvem
+- Acesso à API
+- Relatórios ilimitados
+- Exportações ilimitadas
+
+#### 🔄 Fluxo de Onboarding:
+1. **Login/Registro** → Usuário autentica no sistema
+2. **Detecção Automática** → Sistema verifica se é novo usuário
+3. **Redirecionamento** → Vai automaticamente para escolha de plano
+4. **Seleção Obrigatória** → Deve escolher um plano para continuar
+5. **Ativação** → Plano é ativado e usuário acessa o dashboard
+
+#### 🛡️ Controle de Limites:
+- **Verificação em tempo real** durante cadastros
+- **Avisos visuais** quando limite está próximo
+- **Bloqueio automático** ao atingir limite
+- **Sugestão de upgrade** com call-to-action
+- **Contadores dinâmicos** de uso atual vs limite
+
 ### 🔔 Notificações
 - ✅ Sistema de notificações in-app redesenhado
 - ✅ Badge com contador animado
@@ -182,13 +238,17 @@ front-vacafacil/
 │   │   ├── Tooltip.jsx
 │   │   ├── UserProfile.jsx          # Perfil do usuário
 │   │   ├── VaccinationCalendar.jsx  # Calendário de vacinação
-│   │   └── VirtualList.jsx          # Lista virtual
+│   │   ├── VirtualList.jsx          # Lista virtual
+│   │   ├── PlanCard.jsx             # Card de plano
+│   │   ├── SubscriptionStatus.jsx   # Status da assinatura
+│   │   └── LimitWarning.jsx         # Aviso de limite
 │   ├── context/         # Context API - Estado Global
 │   │   ├── AuthContext.jsx          # Autenticação
 │   │   ├── FinanceiroContext.jsx    # Finanças
 │   │   ├── NotificationContext.jsx  # Notificações
 │   │   ├── ProducaoContext.jsx      # Produção
 │   │   ├── ReproducaoContext.jsx    # Reprodução e Saúde
+│   │   ├── SubscriptionContext.jsx  # Assinatura e Planos
 │   │   ├── ThemeContext.jsx         # Tema (Dark/Light)
 │   │   └── VacasContext.jsx         # CRUD de Vacas
 │   ├── hooks/           # Custom hooks reutilizáveis
@@ -211,6 +271,8 @@ front-vacafacil/
 │   │   ├── Register.jsx
 │   │   ├── Relatorios.jsx
 │   │   ├── Reproducao.jsx
+│   │   ├── Assinatura.jsx
+│   │   ├── EscolherPlano.jsx
 │   │   └── VacaDetalhes.jsx
 │   ├── routes/          # Configuração de rotas
 │   │   └── AppRoutes.jsx
@@ -298,6 +360,7 @@ Senha: 123456
 - ✅ Marketplace (Compra/Venda)
 - ✅ Reprodução e Saúde Animal
 - ✅ Autenticação e Perfil de Usuário
+- ✅ Sistema de Assinatura Completo
 - ✅ Notificações Push (PWA)
 - ✅ Relatórios PDF/Excel
 - ✅ Gráficos Interativos
@@ -381,3 +444,37 @@ Desenvolvido com ❤️ para facilitar a vida dos produtores rurais.
 **VacaFácil** - Tecnologia Simples para o Campo 🌾
 
 ---
+
+## 🚀 Guia do Backend
+
+**📖 [BACKEND_GUIDE.md](./BACKEND_GUIDE.md)** - Guia completo para implementar o backend em FastAPI
+
+### Tecnologias Backend
+- **FastAPI** - Framework web moderno
+- **PostgreSQL** - Banco de dados
+- **SQLAlchemy** - ORM
+- **JWT** - Autenticação
+- **Stripe/PayPal** - Pagamentos
+- **Alembic** - Migrações
+- **Docker** - Containerização
+
+### Funcionalidades Backend
+- ✅ API REST completa
+- ✅ Autenticação JWT segura
+- ✅ Sistema de assinatura e pagamentos
+- ✅ Controle de limites por plano
+- ✅ CRUD para todas as entidades
+- ✅ Validações robustas
+- ✅ Webhooks de pagamento
+- ✅ Documentação automática (Swagger)
+- ✅ Testes automatizados
+- ✅ Deploy com Docker
+
+### APIs de Assinatura
+- **GET /subscriptions/plans** - Listar planos disponíveis
+- **POST /subscriptions/subscribe** - Criar nova assinatura
+- **PUT /subscriptions/upgrade** - Fazer upgrade de plano
+- **DELETE /subscriptions/cancel** - Cancelar assinatura
+- **GET /subscriptions/status** - Status da assinatura
+- **POST /subscriptions/webhooks** - Webhooks de pagamento
+- **GET /subscriptions/usage** - Uso atual vs limites

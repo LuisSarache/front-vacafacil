@@ -4,6 +4,7 @@ import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { InteractiveChart } from '../components/InteractiveChart';
+import { SubscriptionStatus } from '../components/SubscriptionStatus';
 import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw, Bell } from 'lucide-react';
 
 export const Dashboard = () => {
@@ -35,7 +36,10 @@ export const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-dark">Dashboard VacaFácil</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-dark">Dashboard VacaFácil</h1>
+          <SubscriptionStatus />
+        </div>
         <div className="flex items-center gap-4">
           <div className="text-sm text-medium">
             Última atualização: {lastUpdate.toLocaleString('pt-BR')}

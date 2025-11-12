@@ -438,6 +438,369 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     return {"access_token": access_token, "token_type": "bearer"}
 ```
 
+## 💳 Sistema de Assinatura
+
+### 1. Modelos de Assinatura (app/models/subscription.py)
+
+```python
+from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, ForeignKey, Enum
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from app.database import Base
+import enum
+
+class PlanType(str, enum.Enum):
+    FREE = "free"
+    BASIC = "basic"
+    PRO = "pro"
+
+class SubscriptionStatus(str, enum.Enum):
+    ACTIVE = "active"
+    CANCELLED = "cancelled"
+    EXPIRED = "expired"
+    PENDING = "pending"
+
+class Subscription(Base):
+    __tablename__ = "subscriptions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
+    plan_type = Column(Enum(PlanType), nullable=False, default=PlanType.FREE)
+    status = Column(Enum(SubscriptionStatus), nullable=False, default=SubscriptionStatus.ACTIVE)
+    start_date = Column(DateTime(timezone=True), server_default=func.now())
+    end_date = Column(DateTime(timezone=True))
+    price = Column(Float, default=0.0)
+    payment_method = Column(String)
+    stripe_subscription_id = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Relacionamentos
+    user = relationship("User", back_populates="subscription")
+    payments = relationship("Payment", back_populates="subscription")
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    subscription_id = Column(Integer, ForeignKey("subscriptions.id"), nullable=False)
+    amount = Column(Float, nullable=False)
+    currency = Column(String, default="BRL")
+    status = Column(String, nullable=False)  # success, failed, pending
+    payment_method = Column(String)
+    transaction_id = Column(String, unique=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relacionamentos
+    subscription = relationship("Subscription", back_populates="payments")
+```
+
+### 2. Schemas de Assinatura (app/schemas/subscription.py)
+
+```python
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
+from app.models.subscription import PlanType, SubscriptionStatus
+
+class PlanBase(BaseModel):
+    name: str
+    price: float
+    max_vacas: int
+    features: dict
+
+class SubscriptionCreate(BaseModel):
+    plan_type: PlanType
+    payment_method: Optional[str] = None
+
+class SubscriptionUpdate(BaseModel):
+    plan_type: Optional[PlanType] = None
+    status: Optional[SubscriptionStatus] = None
+
+class SubscriptionResponse(BaseModel):
+    id: int
+    user_id: int
+    plan_type: PlanType
+    status: SubscriptionStatus
+    start_date: datetime
+    end_date: Optional[datetime]
+    price: float
+    
+    class Config:
+        from_attributes = True
+
+class UsageLimits(BaseModel):
+    vacas: dict
+    producao: dict
+    relatorios: dict
+    exportacoes: dict
+```
+
+### 3. API de Assinatura (app/routers/subscriptions.py)
+
+```python
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.user import User
+from app.models.subscription import Subscription, PlanType
+from app.schemas.subscription import SubscriptionCreate, SubscriptionResponse, UsageLimits
+from app.utils.dependencies import get_current_user
+from app.services.subscription_service import SubscriptionService
+
+router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
+
+@router.get("/plans")
+def get_plans():
+    """Listar todos os planos disponíveis"""
+    return {
+        "free": {
+            "name": "Gratuito",
+            "price": 0,
+            "max_vacas": 5,
+            "features": {
+                "producao_historico": 30,
+                "relatorios": "basico",
+                "marketplace": False,
+                "analytics": False
+            }
+        },
+        "basic": {
+            "name": "Básico",
+            "price": 29.90,
+            "max_vacas": 50,
+            "features": {
+                "producao_historico": 365,
+                "relatorios": "completo",
+                "marketplace": True,
+                "analytics": "basico"
+            }
+        },
+        "pro": {
+            "name": "Pro",
+            "price": 59.90,
+            "max_vacas": -1,  # ilimitado
+            "features": {
+                "producao_historico": -1,
+                "relatorios": "avancado",
+                "marketplace": True,
+                "analytics": "avancado",
+                "api_access": True,
+                "backup": True
+            }
+        }
+    }
+
+@router.post("/subscribe", response_model=SubscriptionResponse)
+def create_subscription(
+    subscription: SubscriptionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    service = SubscriptionService(db)
+    return service.create_subscription(current_user.id, subscription)
+
+@router.get("/status", response_model=SubscriptionResponse)
+def get_subscription_status(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    subscription = db.query(Subscription).filter(
+        Subscription.user_id == current_user.id
+    ).first()
+    
+    if not subscription:
+        raise HTTPException(status_code=404, detail="Subscription not found")
+    
+    return subscription
+
+@router.put("/upgrade", response_model=SubscriptionResponse)
+def upgrade_subscription(
+    new_plan: PlanType,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    service = SubscriptionService(db)
+    return service.upgrade_subscription(current_user.id, new_plan)
+
+@router.delete("/cancel")
+def cancel_subscription(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    service = SubscriptionService(db)
+    return service.cancel_subscription(current_user.id)
+
+@router.get("/usage", response_model=UsageLimits)
+def get_usage_limits(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    service = SubscriptionService(db)
+    return service.get_usage_limits(current_user.id)
+```
+
+### 4. Serviço de Assinatura (app/services/subscription_service.py)
+
+```python
+from sqlalchemy.orm import Session
+from app.models.subscription import Subscription, Payment, PlanType, SubscriptionStatus
+from app.models.vaca import Vaca
+from app.schemas.subscription import SubscriptionCreate
+from datetime import datetime, timedelta
+import stripe
+
+class SubscriptionService:
+    def __init__(self, db: Session):
+        self.db = db
+        
+    def create_subscription(self, user_id: int, subscription_data: SubscriptionCreate):
+        # Verificar se já tem assinatura
+        existing = self.db.query(Subscription).filter(
+            Subscription.user_id == user_id
+        ).first()
+        
+        if existing:
+            return self.upgrade_subscription(user_id, subscription_data.plan_type)
+        
+        # Criar nova assinatura
+        end_date = None
+        if subscription_data.plan_type != PlanType.FREE:
+            end_date = datetime.utcnow() + timedelta(days=30)
+        
+        subscription = Subscription(
+            user_id=user_id,
+            plan_type=subscription_data.plan_type,
+            end_date=end_date,
+            price=self.get_plan_price(subscription_data.plan_type),
+            payment_method=subscription_data.payment_method
+        )
+        
+        self.db.add(subscription)
+        self.db.commit()
+        self.db.refresh(subscription)
+        
+        return subscription
+    
+    def upgrade_subscription(self, user_id: int, new_plan: PlanType):
+        subscription = self.db.query(Subscription).filter(
+            Subscription.user_id == user_id
+        ).first()
+        
+        if not subscription:
+            raise ValueError("Subscription not found")
+        
+        subscription.plan_type = new_plan
+        subscription.price = self.get_plan_price(new_plan)
+        subscription.updated_at = datetime.utcnow()
+        
+        if new_plan != PlanType.FREE:
+            subscription.end_date = datetime.utcnow() + timedelta(days=30)
+        else:
+            subscription.end_date = None
+        
+        self.db.commit()
+        return subscription
+    
+    def cancel_subscription(self, user_id: int):
+        subscription = self.db.query(Subscription).filter(
+            Subscription.user_id == user_id
+        ).first()
+        
+        if not subscription:
+            raise ValueError("Subscription not found")
+        
+        subscription.status = SubscriptionStatus.CANCELLED
+        self.db.commit()
+        
+        return {"message": "Subscription cancelled successfully"}
+    
+    def check_limits(self, user_id: int, resource: str, current_count: int = None):
+        subscription = self.db.query(Subscription).filter(
+            Subscription.user_id == user_id
+        ).first()
+        
+        if not subscription:
+            return False
+        
+        limits = self.get_plan_limits(subscription.plan_type)
+        
+        if resource == "vacas":
+            if current_count is None:
+                current_count = self.db.query(Vaca).filter(
+                    Vaca.user_id == user_id
+                ).count()
+            
+            max_vacas = limits.get("max_vacas", 0)
+            return max_vacas == -1 or current_count < max_vacas
+        
+        return True
+    
+    def get_plan_price(self, plan_type: PlanType) -> float:
+        prices = {
+            PlanType.FREE: 0.0,
+            PlanType.BASIC: 29.90,
+            PlanType.PRO: 59.90
+        }
+        return prices.get(plan_type, 0.0)
+    
+    def get_plan_limits(self, plan_type: PlanType) -> dict:
+        limits = {
+            PlanType.FREE: {
+                "max_vacas": 5,
+                "producao_historico": 30,
+                "relatorios_mes": 5,
+                "exportacoes_mes": 2
+            },
+            PlanType.BASIC: {
+                "max_vacas": 50,
+                "producao_historico": 365,
+                "relatorios_mes": 50,
+                "exportacoes_mes": 20
+            },
+            PlanType.PRO: {
+                "max_vacas": -1,
+                "producao_historico": -1,
+                "relatorios_mes": -1,
+                "exportacoes_mes": -1
+            }
+        }
+        return limits.get(plan_type, {})
+```
+
+### 5. Middleware de Verificação de Limites
+
+```python
+# app/utils/subscription_middleware.py
+from fastapi import HTTPException, Depends
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.user import User
+from app.services.subscription_service import SubscriptionService
+from app.utils.dependencies import get_current_user
+
+def check_subscription_limit(resource: str):
+    def decorator(func):
+        def wrapper(
+            *args,
+            db: Session = Depends(get_db),
+            current_user: User = Depends(get_current_user),
+            **kwargs
+        ):
+            service = SubscriptionService(db)
+            
+            if not service.check_limits(current_user.id, resource):
+                raise HTTPException(
+                    status_code=403,
+                    detail=f"Subscription limit reached for {resource}"
+                )
+            
+            return func(*args, db=db, current_user=current_user, **kwargs)
+        return wrapper
+    return decorator
+```
+
 ## 📊 APIs REST
 
 ### 1. API de Vacas (app/routers/vacas.py)
@@ -451,10 +814,12 @@ from app.models.user import User
 from app.models.vaca import Vaca
 from app.schemas.vaca import VacaCreate, VacaUpdate, VacaResponse
 from app.utils.dependencies import get_current_user
+from app.utils.subscription_middleware import check_subscription_limit
 
 router = APIRouter(prefix="/vacas", tags=["vacas"])
 
 @router.post("/", response_model=VacaResponse)
+@check_subscription_limit("vacas")
 def create_vaca(
     vaca: VacaCreate,
     db: Session = Depends(get_db),
@@ -589,7 +954,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.database import engine, Base
-from app.routers import auth, users, vacas, producao, financeiro, reproducao, marketplace
+from app.routers import auth, users, vacas, producao, financeiro, reproducao, marketplace, subscriptions
 
 # Criar tabelas
 Base.metadata.create_all(bind=engine)
@@ -619,6 +984,7 @@ app.include_router(producao.router)
 app.include_router(financeiro.router)
 app.include_router(reproducao.router)
 app.include_router(marketplace.router)
+app.include_router(subscriptions.router)
 
 @app.get("/")
 def read_root():

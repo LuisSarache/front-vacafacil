@@ -21,7 +21,8 @@ import {
   Heart,
   FileText,
   Settings,
-  ShoppingCart
+  ShoppingCart,
+  Crown
 } from 'lucide-react';
  
 export const Sidebar = () => {
@@ -48,6 +49,7 @@ export const Sidebar = () => {
     { to: '/producao', label: 'Produção', icon: Milk },
     { to: '/financeiro', label: 'Financeiro', icon: DollarSign },
     { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart },
+    { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }

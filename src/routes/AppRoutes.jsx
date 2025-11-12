@@ -33,17 +33,35 @@ const Relatorios = lazy(() => import('../pages/Relatorios').then(m => ({ default
 const Configuracoes = lazy(() => import('../pages/Configuracoes').then(m => ({ default: m.Configuracoes })));
 const Marketplace = lazy(() => import('../pages/Marketplace').then(m => ({ default: m.Marketplace })));
 const CriarAnuncio = lazy(() => import('../pages/CriarAnuncio').then(m => ({ default: m.CriarAnuncio })));
+const Assinatura = lazy(() => import('../pages/Assinatura').then(m => ({ default: m.Assinatura })));
+const EscolherPlano = lazy(() => import('../pages/EscolherPlano').then(m => ({ default: m.EscolherPlano })));
  
 /* ==============================
    Componente de rota protegida
    ============================== */
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth(); // Obtém estado de autenticação e carregamento
+  const { isAuthenticated, loading: authLoading } = useAuth(); // Obtém estado de autenticação e carregamento
   const { isDark } = useTheme(); // Obtém estado do tema
+  const { isNewUser, loading: subLoading } = useSubscription();
+  const location = useLocation();
  
-  if (loading) return <LoadingSpinner size="lg" />; // Mostra spinner enquanto carrega
+  if (authLoading || subLoading) return <LoadingSpinner size="lg" />; // Mostra spinner enquanto carrega
   if (!isAuthenticated) return <Navigate to="/login" replace />; // Redireciona não autenticados para login
+  
+  // Se é novo usuário e não está na página de escolher plano, redireciona
+  if (isNewUser && location.pathname !== '/escolher-plano') {
+    return <Navigate to="/escolher-plano" replace />;
+  }
  
+  // Layout especial para página de escolher plano (sem sidebar)
+  if (location.pathname === '/escolher-plano') {
+    return (
+      <div className={`min-h-screen ${isDark ? 'dark' : ''}`}>
+        {children}
+      </div>
+    );
+  }
+  
   return (
     <div className={`min-h-screen flex dashboard-container ${isDark ? 'dark' : ''}`}>
       <Sidebar /> {/* Sidebar lateral sempre visível */}
@@ -210,6 +228,18 @@ export const AppRoutes = () => {
         <Route path="/marketplace/novo" element={
           <ProtectedRoute>
             <CriarAnuncio /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/assinatura" element={
+          <ProtectedRoute>
+            <Assinatura /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/escolher-plano" element={
+          <ProtectedRoute>
+            <EscolherPlano /> 
           </ProtectedRoute>
         } />
       </Routes>

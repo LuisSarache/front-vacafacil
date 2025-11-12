@@ -6,6 +6,7 @@ import { ProducaoProvider } from "./context/ProducaoContext";
 import { FinanceiroProvider } from "./context/FinanceiroContext";
 import { VacasProvider } from "./context/VacasContext";
 import { ReproducaoProvider } from "./context/ReproducaoContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 import { AppRoutes } from "./routes/AppRoutes";
 import { registerServiceWorker } from "./utils/pwa";
@@ -19,19 +20,21 @@ function App(){
     return(
         <ThemeProvider>
             <AuthProvider>
-                <VacasProvider>
-                    <ReproducaoProvider>
-                        <NotificationProvider>
-                            <ProducaoProvider>
-                                <FinanceiroProvider>
-                                    <KeyboardShortcuts />
-                                    <AppRoutes/>
-                                    <Toaster />
-                                </FinanceiroProvider>
-                            </ProducaoProvider>
-                        </NotificationProvider>
-                    </ReproducaoProvider>
-                </VacasProvider>
+                <SubscriptionProvider>
+                    <VacasProvider>
+                        <ReproducaoProvider>
+                            <NotificationProvider>
+                                <ProducaoProvider>
+                                    <FinanceiroProvider>
+                                        <KeyboardShortcuts />
+                                        <AppRoutes/>
+                                        <Toaster />
+                                    </FinanceiroProvider>
+                                </ProducaoProvider>
+                            </NotificationProvider>
+                        </ReproducaoProvider>
+                    </VacasProvider>
+                </SubscriptionProvider>
             </AuthProvider>
         </ThemeProvider>
     )

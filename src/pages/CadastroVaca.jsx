@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useVacas } from '../context/VacasContext';
+import { useSubscription } from '../context/SubscriptionContext';
 import { Card } from '../components/Card';
+import { LimitWarning } from '../components/LimitWarning';
 import { Button } from '../components/Button';
 import { FormField } from '../components/FormField';
 import { ToastManager } from '../components/ToastManager';
@@ -9,7 +11,8 @@ import { ArrowLeft, Save, Upload, Camera } from 'lucide-react';
 
 export const CadastroVaca = () => {
   const navigate = useNavigate();
-  const { addVaca } = useVacas();
+  const { addVaca, vacas } = useVacas();
+  const { checkLimit } = useSubscription();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     numero: '',
@@ -99,6 +102,12 @@ export const CadastroVaca = () => {
       ToastManager.error('Por favor, corrija os erros no formulário');
       return;
     }
+    
+    // Verificar limite de vacas
+    if (!checkLimit('vacas', vacas.length)) {
+      ToastManager.error('Limite de vacas atingido para seu plano atual');
+      return;
+    }
 
     setLoading(true);
     
@@ -116,6 +125,12 @@ export const CadastroVaca = () => {
 
   return (
     <div className="space-y-6">
+      <LimitWarning 
+        feature="vacas" 
+        currentUsage={vacas.length} 
+        action="cadastrar mais vacas"
+      />
+      
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Button 
