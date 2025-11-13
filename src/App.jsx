@@ -8,6 +8,7 @@ import { VacasProvider } from "./context/VacasContext";
 import { ReproducaoProvider } from "./context/ReproducaoContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AppRoutes } from "./routes/AppRoutes";
 import { registerServiceWorker } from "./utils/pwa";
 import { useEffect } from 'react';
@@ -26,7 +27,9 @@ function App(){
                             <NotificationProvider>
                                 <ProducaoProvider>
                                     <FinanceiroProvider>
-                                        <KeyboardShortcuts />
+                                        <ErrorBoundary>
+                                            <KeyboardShortcuts />
+                                        </ErrorBoundary>
                                         <AppRoutes/>
                                         <Toaster />
                                     </FinanceiroProvider>

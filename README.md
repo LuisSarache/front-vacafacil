@@ -235,13 +235,15 @@ front-vacafacil/
 │   │   ├── Skeleton.jsx
 │   │   ├── ThemeToggle.jsx
 │   │   ├── ToastManager.jsx
-│   │   ├── Tooltip.jsx
+│   │   ├── Tooltip.jsx              # Tooltips informativos
 │   │   ├── UserProfile.jsx          # Perfil do usuário
 │   │   ├── VaccinationCalendar.jsx  # Calendário de vacinação
-│   │   ├── VirtualList.jsx          # Lista virtual
+│   │   ├── VirtualScrolling.jsx     # Virtual scrolling
 │   │   ├── PlanCard.jsx             # Card de plano
 │   │   ├── SubscriptionStatus.jsx   # Status da assinatura
-│   │   └── LimitWarning.jsx         # Aviso de limite
+│   │   ├── LimitWarning.jsx         # Aviso de limite
+│   │   ├── DataBackup.jsx           # Backup de dados
+│   │   └── OnboardingTour.jsx       # Tour de onboarding
 │   ├── context/         # Context API - Estado Global
 │   │   ├── AuthContext.jsx          # Autenticação
 │   │   ├── FinanceiroContext.jsx    # Finanças

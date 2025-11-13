@@ -45,7 +45,7 @@ export const KeyboardShortcuts = () => {
       // Ctrl/Cmd + N para nova vaca
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
-        navigate('/rebanho/cadastrar');
+        navigate('/rebanho/novo');
         ToastManager.info('Cadastrar Nova Vaca');
       }
 

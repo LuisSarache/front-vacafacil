@@ -217,7 +217,7 @@ export const Rebanho = () => {
                       {vaca.raca}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-medium">
-                      {new Date(vaca.nascimento).toLocaleDateString('pt-BR')}
+                      {vaca.nascimento ? new Date(vaca.nascimento).toLocaleDateString('pt-BR') : 'Não informado'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(vaca.status)}`}>
@@ -277,7 +277,7 @@ export const Rebanho = () => {
           </div>
           <div className="text-sm text-gray-600">Em Lactação</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-            <div className="bg-green-600 h-2 rounded-full" style={{width: `${(vacas.filter(v => v.status === 'lactacao').length / vacas.length) * 100}%`}}></div>
+            <div className="bg-green-600 h-2 rounded-full" style={{width: `${vacas.length > 0 ? (vacas.filter(v => v.status === 'lactacao').length / vacas.length) * 100 : 0}%`}}></div>
           </div>
         </Card>
         <Card className="p-6 text-center hover:shadow-lg transition-all duration-300">
@@ -286,7 +286,7 @@ export const Rebanho = () => {
           </div>
           <div className="text-sm text-gray-600">Prenhas</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-            <div className="bg-blue-600 h-2 rounded-full" style={{width: `${(vacas.filter(v => v.status === 'prenha').length / vacas.length) * 100}%`}}></div>
+            <div className="bg-blue-600 h-2 rounded-full" style={{width: `${vacas.length > 0 ? (vacas.filter(v => v.status === 'prenha').length / vacas.length) * 100 : 0}%`}}></div>
           </div>
         </Card>
         <Card className="p-6 text-center hover:shadow-lg transition-all duration-300">
@@ -295,7 +295,7 @@ export const Rebanho = () => {
           </div>
           <div className="text-sm text-gray-600">Secas</div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-            <div className="bg-yellow-600 h-2 rounded-full" style={{width: `${(vacas.filter(v => v.status === 'seca').length / vacas.length) * 100}%`}}></div>
+            <div className="bg-yellow-600 h-2 rounded-full" style={{width: `${vacas.length > 0 ? (vacas.filter(v => v.status === 'seca').length / vacas.length) * 100 : 0}%`}}></div>
           </div>
         </Card>
       </div>

@@ -120,7 +120,7 @@ export const VacaDetalhes = () => {
             <div>
               <p className="text-sm text-medium/70">Idade</p>
               <p className="text-2xl font-bold text-dark">
-                {Math.floor((new Date() - new Date(vaca.nascimento)) / (365 * 24 * 60 * 60 * 1000))} anos
+                {vaca.nascimento ? Math.floor((new Date() - new Date(vaca.nascimento)) / (365 * 24 * 60 * 60 * 1000)) : 0} anos
               </p>
             </div>
             <Calendar className="w-8 h-8 text-purple-600" />
@@ -131,7 +131,7 @@ export const VacaDetalhes = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-medium/70">Peso</p>
-              <p className="text-2xl font-bold text-dark">{vaca.peso}kg</p>
+              <p className="text-2xl font-bold text-dark">{vaca.peso || 0}kg</p>
             </div>
             <Heart className="w-8 h-8 text-red-600" />
           </div>
@@ -154,16 +154,16 @@ export const VacaDetalhes = () => {
             <div className="flex justify-between">
               <span className="text-medium/70">Data de Nascimento:</span>
               <span className="font-medium text-dark">
-                {new Date(vaca.nascimento).toLocaleDateString('pt-BR')}
+                {vaca.nascimento ? new Date(vaca.nascimento).toLocaleDateString('pt-BR') : 'Não informado'}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-medium/70">Mãe:</span>
-              <span className="font-medium text-dark">{vaca.mae}</span>
+              <span className="font-medium text-dark">{vaca.mae || 'Não informado'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-medium/70">Pai:</span>
-              <span className="font-medium text-dark">{vaca.pai}</span>
+              <span className="font-medium text-dark">{vaca.pai || 'Não informado'}</span>
             </div>
           </div>
         </Card>
