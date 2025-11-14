@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ToastManager } from './ToastManager';
 
 export const KeyboardShortcuts = () => {
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -17,35 +15,35 @@ export const KeyboardShortcuts = () => {
       // Ctrl/Cmd + D para dashboard
       if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
         e.preventDefault();
-        navigate('/dashboard');
+        window.location.href = '/dashboard';
         ToastManager.info('Navegando para Dashboard');
       }
 
       // Ctrl/Cmd + R para rebanho
       if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
         e.preventDefault();
-        navigate('/rebanho');
+        window.location.href = '/rebanho';
         ToastManager.info('Navegando para Rebanho');
       }
 
       // Ctrl/Cmd + P para produção
       if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
         e.preventDefault();
-        navigate('/producao');
+        window.location.href = '/producao';
         ToastManager.info('Navegando para Produção');
       }
 
       // Ctrl/Cmd + F para financeiro
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
-        navigate('/financeiro');
+        window.location.href = '/financeiro';
         ToastManager.info('Navegando para Financeiro');
       }
 
       // Ctrl/Cmd + N para nova vaca
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
-        navigate('/rebanho/novo');
+        window.location.href = '/rebanho/novo';
         ToastManager.info('Cadastrar Nova Vaca');
       }
 
@@ -63,7 +61,7 @@ export const KeyboardShortcuts = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [navigate]);
+  }, []);
 
   return null;
 };

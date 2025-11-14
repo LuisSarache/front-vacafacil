@@ -75,7 +75,7 @@ pip install -r requirements.txt
 # Criar banco de dados
 psql -U postgres
 CREATE DATABASE vacafacil;
-CREATE USER vacafacil_user WITH PASSWORD 'sua_senha_aqui';
+CREATE USER vacafacil_user WITH PASSWORD '<DATABASE_PASSWORD>';
 GRANT ALL PRIVILEGES ON DATABASE vacafacil TO vacafacil_user;
 \q
 ```
@@ -151,10 +151,10 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Database
-    database_url: str = "postgresql://vacafacil_user:sua_senha_aqui@localhost/vacafacil"
+    database_url: str = "postgresql://vacafacil_user:<DATABASE_PASSWORD>@localhost/vacafacil"
     
     # JWT
-    secret_key: str = "sua_chave_secreta_super_segura_aqui"
+    secret_key: str = "<JWT_SECRET_KEY>"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     
@@ -1030,9 +1030,9 @@ def client():
 @pytest.fixture
 def test_user():
     return {
-        "email": "test@example.com",
-        "nome": "Test User",
-        "password": "testpass123"
+        "email": "<TEST_EMAIL>",
+        "nome": "<TEST_USER_NAME>",
+        "password": "<TEST_PASSWORD>"
     }
 ```
 
@@ -1090,7 +1090,7 @@ services:
     environment:
       POSTGRES_DB: vacafacil
       POSTGRES_USER: vacafacil_user
-      POSTGRES_PASSWORD: sua_senha_aqui
+      POSTGRES_PASSWORD: <DATABASE_PASSWORD>
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -1103,7 +1103,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://vacafacil_user:sua_senha_aqui@db/vacafacil
+      DATABASE_URL: postgresql://vacafacil_user:<DATABASE_PASSWORD>@db/vacafacil
     volumes:
       - ./app:/app/app
 

@@ -4,11 +4,13 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Card } from "../components/Card";
 import { ToastManager } from "../components/ToastManager";
+import { useTranslation } from "../utils/i18n";
 import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Clock, Users } from "lucide-react";
 import vargem from '../assets/vargem.png';
 import sozinha from '../assets/sozinha.png';
 
 export const Contact = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -97,7 +99,7 @@ export const Contact = () => {
             />
             {/* Campo de mensagem autoajustável */}
             <div className="flex flex-col">
-              <label className="text-dark mb-1 text-sm font-medium">Mensagem</label>
+              <label className="text-dark mb-1 text-sm font-medium">{t('Mensagem')}</label>
               <textarea
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}

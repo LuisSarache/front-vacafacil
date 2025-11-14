@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Card } from './Card';
 import { Button } from './Button';
 import { Badge } from './Badge';
@@ -138,7 +138,7 @@ export const VaccinationCalendar = ({ vacinas, onSchedule }) => {
             <span>Atrasado</span>
           </div>
         </div>
-        <Button size="sm" onClick={() => onSchedule?.()}>
+        <Button size="sm" onClick={useCallback(() => onSchedule?.(), [onSchedule])}>
           Agendar Vacinação
         </Button>
       </div>

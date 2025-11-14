@@ -6,10 +6,12 @@ import { Modal } from '../components/Modal';
 import { ToastManager } from '../components/ToastManager';
 import { useFinanceiro } from '../context/FinanceiroContext';
 import { exportToCSV } from '../utils/export';
+import { useTranslation } from '../utils/i18n';
 import { Plus, TrendingUp, TrendingDown, DollarSign, PieChart, Download, Trash2 } from 'lucide-react';
 
 export const Financeiro = () => {
   const { receitas, despesas, addReceita, addDespesa, deleteReceita, deleteDespesa, getTotalReceitas, getTotalDespesas, getLucro } = useFinanceiro();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('resumo');
   const [showModal, setShowModal] = useState(false);
   const [tipoTransacao, setTipoTransacao] = useState('receita');
@@ -340,7 +342,7 @@ export const Financeiro = () => {
             </button>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Descrição')}</label>
             <Input
               value={formData.descricao}
               onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
@@ -348,7 +350,7 @@ export const Financeiro = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Valor (R$)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Valor')} (R$)</label>
             <Input
               type="number"
               step="0.01"
@@ -358,7 +360,7 @@ export const Financeiro = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Data</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Data')}</label>
             <Input
               type="date"
               value={formData.data}
@@ -367,7 +369,7 @@ export const Financeiro = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Categoria')}</label>
             <select
               value={formData.categoria}
               onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}

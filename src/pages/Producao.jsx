@@ -7,10 +7,12 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { useProducao } from '../context/ProducaoContext';
 import { exportToCSV } from '../utils/export';
+import { useTranslation } from '../utils/i18n';
 import { Plus, Download, Calendar, TrendingUp, BarChart3, Target, Award } from 'lucide-react';
 
 export const Producao = () => {
   const { addRegistro } = useProducao();
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('tabela');
@@ -381,7 +383,7 @@ export const Producao = () => {
           setFormData({ vacaId: '', vacaNome: '', periodo: 'Manhã', quantidade: '' });
         }} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Vaca</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Vaca')}</label>
             <select
               value={formData.vacaId}
               onChange={(e) => {
@@ -399,7 +401,7 @@ export const Producao = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Período</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Período')}</label>
             <select
               value={formData.periodo}
               onChange={(e) => setFormData({ ...formData, periodo: e.target.value })}
@@ -410,7 +412,7 @@ export const Producao = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Quantidade (L)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Quantidade (L)')}</label>
             <Input
               type="number"
               step="0.1"

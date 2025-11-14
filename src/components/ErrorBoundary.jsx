@@ -7,6 +7,11 @@ export class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
+    this.handleReload = this.handleReload.bind(this);
+  }
+
+  handleReload() {
+    window.location.reload();
   }
 
   static getDerivedStateFromError(error) {
@@ -36,7 +41,7 @@ export class ErrorBoundary extends Component {
             </div>
 
             <Button
-              onClick={() => window.location.reload()}
+              onClick={this.handleReload}
               className="flex items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />

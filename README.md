@@ -332,7 +332,7 @@ npm run preview
 ```javascript
 // Usuário 1
 Email: admin@vacafacil.com
-Senha: 123456
+Senha:  
 
 // Usuário 2
 Email: maria@fazenda.com
@@ -424,14 +424,47 @@ Senha: 123456
 - ✅ Corrigido posicionamento do painel de notificações
 - ✅ Corrigido visibilidade de textos no dark mode
 
+## 🔒 Correções de Segurança (v2.1)
+
+- ✅ **CSRF Protection** - Service Worker e PWA utils protegidos
+- ✅ **XSS Prevention** - Sanitização de dados no DataBackup
+- ✅ **SSRF Protection** - Validação de URLs no Service Worker
+- ✅ **Dependency Security** - Substituída biblioteca xlsx vulnerável por exceljs
+- ✅ **Performance Fixes** - Corrigidos arrow functions em props React
+- ✅ **Internationalization** - Sistema i18n implementado
+- ✅ **Content Security Policy** - Headers de segurança adicionados
+- ✅ **Security Logging** - Sistema de monitoramento implementado
+- ✅ **Input Validation** - Validação e sanitização de entradas
+- ✅ **Rate Limiting** - Proteção contra ataques de força bruta
+- ✅ **Attack Detection** - Detecção de padrões maliciosos
+
 ## 🔒 Segurança
 
+### Autenticação
 - Hash de senhas com btoa + salt
 - Proteção contra timing attacks
-- Validação de inputs
-- Sanitização de dados
-- Rotas protegidas
-- Tratamento de erros seguro
+- JWT tokens seguros
+- Sessões protegidas
+
+### Proteção de Dados
+- Validação e sanitização de inputs
+- Proteção contra XSS e CSRF
+- Sanitização de uploads de arquivos
+- Validação de URLs e origens
+
+### Monitoramento
+- Sistema de logging de segurança
+- Detecção de atividades suspeitas
+- Rate limiting
+- Monitoramento de tentativas de ataque
+
+### Headers de Segurança
+- Content Security Policy (CSP)
+- X-Frame-Options: DENY
+- X-Content-Type-Options: nosniff
+- X-XSS-Protection
+- Referrer-Policy
+- Permissions-Policy
 
 ## 📝 Licença
 

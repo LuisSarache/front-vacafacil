@@ -4,10 +4,12 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { ToastManager } from '../components/ToastManager';
+import { useTranslation } from '../utils/i18n';
 import { ArrowLeft, Save } from 'lucide-react';
 
 export const CriarAnuncio = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     tipo: 'venda',
@@ -78,7 +80,7 @@ export const CriarAnuncio = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Raça *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('Raça')} *</label>
               <select
                 value={formData.raca}
                 onChange={(e) => setFormData({ ...formData, raca: e.target.value })}
@@ -133,7 +135,7 @@ export const CriarAnuncio = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Descrição *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('Descrição')} *</label>
             <textarea
               value={formData.descricao}
               onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}

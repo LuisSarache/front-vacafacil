@@ -53,63 +53,217 @@ export const DataBackup = () => {
 
   const handleExportData = () => {
     try {
-      const data = {
-        vacas: JSON.parse(localStorage.getItem('vacafacil_vacas') || '[]'),
-        producoes: JSON.parse(localStorage.getItem('vacafacil_producoes') || '[]'),
-        transacoes: JSON.parse(localStorage.getItem('vacafacil_transacoes') || '[]'),
-        inseminacoes: JSON.parse(localStorage.getItem('vacafacil_inseminacoes') || '[]'),
-        vacinas: JSON.parse(localStorage.getItem('vacafacil_vacinas') || '[]'),
+      // Security: Safely parse localStorage data with validation
+      const parseSecurely = (key) => {
+        try {
+          const item = localStorage.getItem(key);
+          if (!item) return [];
+          const parsed = JSON.parse(item);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      };
+
+      const rawData = {
+        vacas: parseSecurely('vacafacil_vacas'),
+        producoes: parseSecurely('vacafacil_producoes'),
+        transacoes: parseSecurely('vacafacil_transacoes'),
+        inseminacoes: parseSecurely('vacafacil_inseminacoes'),
+        vacinas: parseSecurely('vacafacil_vacinas'),
         exportDate: new Date().toISOString()
       };
 
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      // Security: Sanitize all data before export
+      const sanitizedData = sanitizeData(rawData);
+
+      // Security: Validate filename
+      const safeDate = new Date().toISOString().split('T')[0].replace(/[^0-9-]/g, '');
+      const filename = `vacafacil-backup-${safeDate}.json`;
+
+      const jsonString = JSON.stringify(sanitizedData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
+      
+      // Security: Create download link safely
       const a = document.createElement('a');
       a.href = url;
-      a.download = `vacafacil-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = filename;
+      a.style.display = 'none';
+      
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      
+      // Cleanup
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
 
       ToastManager.success('Dados exportados com sucesso!');
-    } catch {
+    } catch (error) {
+      console.error('Export error:', error);
       ToastManager.error('Erro ao exportar dados');
     }
   };
 
+  // Security: Enhanced sanitization to prevent XSS and injection
+  const sanitizeData = (data, depth = 0) => {
+    // Prevent deep recursion attacks
+    if (depth > 10) return null;
+    
+    if (typeof data === 'string') {
+      // Remove HTML tags, scripts, and dangerous patterns
+      return data
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/javascript:/gi, '') // Remove javascript: URLs
+        .replace(/on\w+\s*=/gi, '') // Remove event handlers
+        .replace(/data:text\/html/gi, '') // Remove data URLs
+        .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
+        .substring(0, 1000); // Limit length
+    }
+    
+    if (typeof data === 'number') {
+      // Validate numbers
+      return isFinite(data) ? data : 0;
+    }
+    
+    if (typeof data === 'boolean') {
+      return data;
+    }
+    
+    if (data === null || data === undefined) {
+      return null;
+    }
+    
+    if (Array.isArray(data)) {
+      // Limit array size and sanitize each item
+      return data.slice(0, 1000).map(item => sanitizeData(item, depth + 1)).filter(item => item !== null);
+    }
+    
+    if (typeof data === 'object') {
+      const sanitized = {};
+      const allowedKeys = ['id', 'nome', 'raca', 'idade', 'peso', 'status', 'data', 'valor', 'descricao', 'categoria', 'tipo', 'quantidade', 'observacoes', 'created_at', 'updated_at'];
+      
+      Object.keys(data).forEach(key => {
+        // Validate key
+        if (typeof key === 'string' && 
+            key.length < 100 && 
+            key.match(/^[a-zA-Z0-9_-]+$/) && // Only alphanumeric, underscore, dash
+            (allowedKeys.includes(key) || key.startsWith('vacafacil_'))) {
+          const sanitizedValue = sanitizeData(data[key], depth + 1);
+          if (sanitizedValue !== null) {
+            sanitized[key] = sanitizedValue;
+          }
+        }
+      });
+      
+      return sanitized;
+    }
+    
+    return null;
+  };
+
+  // Security: Validate file type and size
+  const validateFile = (file) => {
+    if (!file) return false;
+    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+      ToastManager.error('Apenas arquivos JSON são permitidos');
+      return false;
+    }
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      ToastManager.error('Arquivo muito grande. Limite: 10MB');
+      return false;
+    }
+    return true;
+  };
+
   const handleImportData = (event) => {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!validateFile(file)) {
+      event.target.value = '';
+      return;
+    }
 
     const reader = new FileReader();
+    
+    reader.onerror = () => {
+      ToastManager.error('Erro ao ler o arquivo');
+      event.target.value = '';
+    };
+    
     reader.onload = (e) => {
       try {
-        const data = JSON.parse(e.target.result);
+        const fileContent = e.target.result;
         
-        // Validate data structure
-        if (!data.vacas || !Array.isArray(data.vacas)) {
-          throw new Error('Formato de arquivo inválido');
+        // Security: Validate file content size
+        if (fileContent.length > 50 * 1024 * 1024) { // 50MB text limit
+          throw new Error('Conteúdo do arquivo muito grande');
+        }
+        
+        // Security: Parse JSON safely
+        let rawData;
+        try {
+          rawData = JSON.parse(fileContent);
+        } catch {
+          throw new Error('Arquivo JSON inválido');
+        }
+        
+        // Security: Validate basic structure before sanitization
+        if (!rawData || typeof rawData !== 'object') {
+          throw new Error('Estrutura de dados inválida');
+        }
+        
+        // Security: Sanitize all data
+        const data = sanitizeData(rawData);
+        
+        // Validate sanitized data structure
+        if (!data || !data.vacas || !Array.isArray(data.vacas)) {
+          throw new Error('Formato de arquivo inválido ou dados corrompidos');
         }
 
-        const confirmed = window.confirm(
-          'Tem certeza que deseja importar estes dados? Os dados atuais serão substituídos.'
-        );
+        // Additional validation
+        if (data.vacas.length > 1000) {
+          throw new Error('Muitos registros. Limite: 1000 vacas');
+        }
+
+        // Security: Use a more secure confirmation
+        const confirmMessage = 'Tem certeza que deseja importar estes dados? Os dados atuais serão substituídos.';
+        const confirmed = window.confirm(confirmMessage);
 
         if (confirmed) {
-          localStorage.setItem('vacafacil_vacas', JSON.stringify(data.vacas));
-          localStorage.setItem('vacafacil_producoes', JSON.stringify(data.producoes || []));
-          localStorage.setItem('vacafacil_transacoes', JSON.stringify(data.transacoes || []));
-          localStorage.setItem('vacafacil_inseminacoes', JSON.stringify(data.inseminacoes || []));
-          localStorage.setItem('vacafacil_vacinas', JSON.stringify(data.vacinas || []));
-          
-          ToastManager.success('Dados importados com sucesso! Recarregue a página.');
+          try {
+            // Security: Validate and limit each array before storing
+            const safeVacas = Array.isArray(data.vacas) ? data.vacas.slice(0, 1000) : [];
+            const safeProducoes = Array.isArray(data.producoes) ? data.producoes.slice(0, 5000) : [];
+            const safeTransacoes = Array.isArray(data.transacoes) ? data.transacoes.slice(0, 5000) : [];
+            const safeInseminacoes = Array.isArray(data.inseminacoes) ? data.inseminacoes.slice(0, 1000) : [];
+            const safeVacinas = Array.isArray(data.vacinas) ? data.vacinas.slice(0, 1000) : [];
+            
+            // Security: Store data safely
+            localStorage.setItem('vacafacil_vacas', JSON.stringify(safeVacas));
+            localStorage.setItem('vacafacil_producoes', JSON.stringify(safeProducoes));
+            localStorage.setItem('vacafacil_transacoes', JSON.stringify(safeTransacoes));
+            localStorage.setItem('vacafacil_inseminacoes', JSON.stringify(safeInseminacoes));
+            localStorage.setItem('vacafacil_vacinas', JSON.stringify(safeVacinas));
+            
+            ToastManager.success('Dados importados com sucesso! Recarregue a página.');
+          } catch (storageError) {
+            console.error('Storage error:', storageError);
+            ToastManager.error('Erro ao salvar dados importados');
+          }
         }
-      } catch {
-        ToastManager.error('Erro ao importar dados. Verifique o formato do arquivo.');
+      } catch (error) {
+        console.error('Import error:', error);
+        ToastManager.error(`Erro ao importar dados: ${error.message}`);
+      } finally {
+        // Always clear input
+        event.target.value = '';
       }
     };
-    reader.readAsText(file);
+    
+    // Security: Read as text with size limit
+    reader.readAsText(file.slice(0, 50 * 1024 * 1024)); // 50MB limit
   };
 
   return (

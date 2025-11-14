@@ -37,29 +37,87 @@ export const isStandalone = () => {
 
 export const promptInstall = () => {
   let deferredPrompt;
+  let isInstallHandled = false;
   
-  window.addEventListener('beforeinstallprompt', (e) => {
+  // Security: Only allow one install prompt handler
+  if (window.__installPromptHandlerRegistered) {
+    return;
+  }
+  window.__installPromptHandlerRegistered = true;
+  
+  const handleInstallPrompt = (e) => {
+    // Security: Validate event origin and trust
+    if (!e.isTrusted || isInstallHandled) {
+      return;
+    }
+    
+    // Security: Validate event source
+    if (e.origin && e.origin !== window.location.origin) {
+      return;
+    }
+    
     e.preventDefault();
     deferredPrompt = e;
+    isInstallHandled = true;
     
-    // Show install button
-    const installButton = document.getElementById('install-button');
-    if (installButton) {
+    // Security: Create secure install button handler
+    const createSecureInstallHandler = () => {
+      const installButton = document.getElementById('install-button');
+      if (!installButton) return;
+      
+      // Security: Validate button integrity
+      if (!installButton.dataset || installButton.dataset.trusted !== 'true') {
+        return;
+      }
+      
       installButton.style.display = 'block';
-      installButton.addEventListener('click', () => {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-          }
-          deferredPrompt = null;
-        });
-      });
-    }
-  });
+      
+      const handleInstallClick = (clickEvent) => {
+        // Security: Validate click event
+        if (!clickEvent.isTrusted || !deferredPrompt) {
+          return;
+        }
+        
+        // Security: Prevent multiple executions
+        installButton.removeEventListener('click', handleInstallClick);
+        installButton.disabled = true;
+        
+        try {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt');
+            }
+            deferredPrompt = null;
+            installButton.style.display = 'none';
+          }).catch((error) => {
+            console.error('Install prompt error:', error);
+            deferredPrompt = null;
+            installButton.disabled = false;
+          });
+        } catch (error) {
+          console.error('Install prompt failed:', error);
+          installButton.disabled = false;
+        }
+      };
+      
+      installButton.addEventListener('click', handleInstallClick, { once: true });
+    };
+    
+    // Security: Delay handler creation to prevent race conditions
+    setTimeout(createSecureInstallHandler, 100);
+  };
+  
+  window.addEventListener('beforeinstallprompt', handleInstallPrompt, { once: true });
 };
 
 export const enableOfflineMode = () => {
+  // Security: Validate cache API availability
+  if (!('caches' in window) || !('serviceWorker' in navigator)) {
+    console.warn('Cache API or Service Worker not supported');
+    return;
+  }
+  
   const CACHE_NAME = 'vacafacil-v1';
   const urlsToCache = [
     '/',
@@ -68,9 +126,23 @@ export const enableOfflineMode = () => {
     '/logo.png'
   ];
   
-  // Cache resources
-  if ('caches' in window) {
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache));
-  }
+  // Security: Validate URLs before caching
+  const validUrls = urlsToCache.filter(url => {
+    try {
+      new URL(url, window.location.origin);
+      return true;
+    } catch {
+      console.warn('Invalid URL for caching:', url);
+      return false;
+    }
+  });
+  
+  // Cache resources with error handling
+  caches.open(CACHE_NAME)
+    .then(cache => {
+      return cache.addAll(validUrls);
+    })
+    .catch(error => {
+      console.error('Failed to cache resources:', error);
+    });
 };

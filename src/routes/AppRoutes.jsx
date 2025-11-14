@@ -5,6 +5,8 @@ import { lazy, Suspense } from 'react';
 // Importa contextos
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useSubscription } from '../context/SubscriptionContext';
+import { useLocation } from 'react-router-dom';
  
 // Componentes reutilizáveis
 import { Sidebar } from '../components/Sidebar';
