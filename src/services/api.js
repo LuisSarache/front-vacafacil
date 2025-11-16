@@ -1,10 +1,16 @@
+<<<<<<< Updated upstream
 // 🔗 Serviço de API para conectar com o Backend VacaFácil
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+=======
+// Configuração da API para conectar com backend do Render
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-vacafacil.onrender.com';
+>>>>>>> Stashed changes
 
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
     this.token = localStorage.getItem('token');
+<<<<<<< Updated upstream
     this.csrfToken = this.generateCSRFToken();
   }
 
@@ -29,6 +35,19 @@ class ApiService {
         'Content-Type': 'application/json',
         'X-CSRF-Token': this.csrfToken,
         ...(this.token && { Authorization: `Bearer ${this.token}` }),
+=======
+  }
+
+  // Método base para requisições
+  async request(endpoint, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(this.token && { Authorization: `Bearer ${this.token}` }),
+        ...options.headers,
+>>>>>>> Stashed changes
       },
       ...options,
     };
@@ -37,6 +56,7 @@ class ApiService {
       const response = await fetch(url, config);
       
       if (!response.ok) {
+<<<<<<< Updated upstream
         // Token expirado - tentar renovar
         if (response.status === 401 && this.token && endpoint !== '/auth/refresh') {
           try {
@@ -69,15 +89,24 @@ class ApiService {
         }
         
         throw new Error(errorData.detail || errorData.message || `HTTP error! status: ${response.status}`);
+=======
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+>>>>>>> Stashed changes
       }
       
       return await response.json();
     } catch (error) {
+<<<<<<< Updated upstream
       console.error(`API Error [${endpoint}]:`, error);
+=======
+      console.error('API Request Error:', error);
+>>>>>>> Stashed changes
       throw error;
     }
   }
 
+<<<<<<< Updated upstream
   // 🔄 Renovar token
   async refreshToken() {
     const response = await fetch(`${this.baseURL}/auth/refresh`, {
@@ -125,29 +154,46 @@ class ApiService {
       throw new Error('Origem não autorizada');
     }
     
+=======
+  // Autenticação
+  async login(email, password) {
+>>>>>>> Stashed changes
     const formData = new FormData();
     formData.append('username', email);
     formData.append('password', password);
     
     const response = await fetch(`${this.baseURL}/auth/login`, {
       method: 'POST',
+<<<<<<< Updated upstream
       headers: {
         'X-CSRF-Token': this.csrfToken,
       },
+=======
+>>>>>>> Stashed changes
       body: formData,
     });
     
     if (!response.ok) {
+<<<<<<< Updated upstream
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.detail || 'Erro no login');
     }
     
     const data = await response.json();
     this.setToken(data.access_token);
+=======
+      throw new Error('Credenciais inválidas');
+    }
+    
+    const data = await response.json();
+    this.token = data.access_token;
+    localStorage.setItem('token', this.token);
+>>>>>>> Stashed changes
     return data;
   }
 
   async register(userData) {
+<<<<<<< Updated upstream
     // Mapear campos do frontend (inglês) para backend (português)
     const mappedData = {
       email: userData.email,
@@ -181,6 +227,23 @@ class ApiService {
     };
     const queryString = new URLSearchParams(defaultParams).toString();
     return this.request(`/vacas/?${queryString}`);
+=======
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  }
+
+  async logout() {
+    this.token = null;
+    localStorage.removeItem('token');
+  }
+
+  // Vacas
+  async getVacas(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/vacas?${queryString}`);
+>>>>>>> Stashed changes
   }
 
   async getVaca(id) {
@@ -188,7 +251,11 @@ class ApiService {
   }
 
   async createVaca(vaca) {
+<<<<<<< Updated upstream
     return this.request('/vacas/', {
+=======
+    return this.request('/vacas', {
+>>>>>>> Stashed changes
       method: 'POST',
       body: JSON.stringify(vaca),
     });
@@ -207,6 +274,7 @@ class ApiService {
     });
   }
 
+<<<<<<< Updated upstream
   // 📷 Upload de imagem da vaca
   async uploadVacaImage(vacaId, imageFile) {
     const formData = new FormData();
@@ -237,11 +305,22 @@ class ApiService {
 
   async createProducao(producao) {
     return this.request('/producao/', {
+=======
+  // Produção
+  async getProducoes(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/producao?${queryString}`);
+  }
+
+  async createProducao(producao) {
+    return this.request('/producao', {
+>>>>>>> Stashed changes
       method: 'POST',
       body: JSON.stringify(producao),
     });
   }
 
+<<<<<<< Updated upstream
   async updateProducao(id, producao) {
     return this.request(`/producao/${id}`, {
       method: 'PUT',
@@ -340,6 +419,30 @@ class ApiService {
     return this.request('/subscriptions/subscribe', {
       method: 'POST',
       body: JSON.stringify({ plan_id: planoId }),
+=======
+  // Financeiro
+  async getTransacoes(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/financeiro?${queryString}`);
+  }
+
+  async createTransacao(transacao) {
+    return this.request('/financeiro', {
+      method: 'POST',
+      body: JSON.stringify(transacao),
+    });
+  }
+
+  // Assinatura
+  async getPlans() {
+    return this.request('/subscriptions/plans');
+  }
+
+  async subscribe(planData) {
+    return this.request('/subscriptions/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(planData),
+>>>>>>> Stashed changes
     });
   }
 
@@ -347,12 +450,23 @@ class ApiService {
     return this.request('/subscriptions/status');
   }
 
+<<<<<<< Updated upstream
+=======
+  async upgradeSubscription(planType) {
+    return this.request('/subscriptions/upgrade', {
+      method: 'PUT',
+      body: JSON.stringify({ plan_type: planType }),
+    });
+  }
+
+>>>>>>> Stashed changes
   async cancelSubscription() {
     return this.request('/subscriptions/cancel', {
       method: 'DELETE',
     });
   }
 
+<<<<<<< Updated upstream
   // 📊 RELATÓRIOS
   async getRelatorioProducao(params = {}) {
     const queryString = new URLSearchParams(params).toString();
@@ -403,4 +517,55 @@ export const useRealApi = () => {
   return apiService;
 };
 
+=======
+  async getUsageLimits() {
+    return this.request('/subscriptions/usage');
+  }
+
+  // Reprodução
+  async getInseminacoes(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/reproducao/inseminacoes?${queryString}`);
+  }
+
+  async createInseminacao(inseminacao) {
+    return this.request('/reproducao/inseminacoes', {
+      method: 'POST',
+      body: JSON.stringify(inseminacao),
+    });
+  }
+
+  async getVacinas(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/reproducao/vacinas?${queryString}`);
+  }
+
+  async createVacina(vacina) {
+    return this.request('/reproducao/vacinas', {
+      method: 'POST',
+      body: JSON.stringify(vacina),
+    });
+  }
+
+  // Marketplace
+  async getAnuncios(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/marketplace?${queryString}`);
+  }
+
+  async createAnuncio(anuncio) {
+    return this.request('/marketplace', {
+      method: 'POST',
+      body: JSON.stringify(anuncio),
+    });
+  }
+
+  // Health check
+  async healthCheck() {
+    return this.request('/health');
+  }
+}
+
+export const apiService = new ApiService();
+>>>>>>> Stashed changes
 export default apiService;

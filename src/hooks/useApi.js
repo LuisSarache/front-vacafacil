@@ -2,12 +2,18 @@ import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 import { ToastManager } from '../components/ToastManager';
 
+<<<<<<< Updated upstream
 // 🔄 Hook para requisições da API com loading e error handling
 export const useApi = (apiCall, dependencies = []) => {
+=======
+// Hook para requisições GET com cache
+export const useApi = (endpoint, params = {}, dependencies = []) => {
+>>>>>>> Stashed changes
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+<<<<<<< Updated upstream
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -56,11 +62,53 @@ export const useFinanceiroApi = () => {
       setDespesas(despesasData);
     } catch (error) {
       ToastManager.error('Erro ao carregar dados financeiros');
+=======
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const result = await apiService.request(endpoint, { 
+          method: 'GET',
+          ...params 
+        });
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+        ToastManager.error(`Erro ao carregar dados: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, dependencies);
+
+  return { data, loading, error, refetch: () => fetchData() };
+};
+
+// Hook para mutations (POST, PUT, DELETE)
+export const useMutation = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const mutate = async (endpoint, options = {}) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await apiService.request(endpoint, options);
+      return { success: true, data: result };
+    } catch (err) {
+      setError(err.message);
+      ToastManager.error(`Erro na operação: ${err.message}`);
+      return { success: false, error: err.message };
+>>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
   };
 
+<<<<<<< Updated upstream
   useEffect(() => {
     fetchFinanceiro();
   }, []);
@@ -169,11 +217,30 @@ export const useSearch = () => {
     } catch (error) {
       ToastManager.error('Erro na busca');
       setResults([]);
+=======
+  return { mutate, loading, error };
+};
+
+// Hook específico para autenticação
+export const useAuth = () => {
+  const [loading, setLoading] = useState(false);
+
+  const login = async (email, password) => {
+    try {
+      setLoading(true);
+      const result = await apiService.login(email, password);
+      ToastManager.success('Login realizado com sucesso!');
+      return { success: true, data: result };
+    } catch (err) {
+      ToastManager.error(`Erro no login: ${err.message}`);
+      return { success: false, error: err.message };
+>>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
   };
 
+<<<<<<< Updated upstream
   return { results, loading, search };
 };
 
@@ -194,11 +261,23 @@ export const useSubscription = () => {
       setPlanos(planosData);
     } catch (error) {
       ToastManager.error('Erro ao carregar dados da assinatura');
+=======
+  const register = async (userData) => {
+    try {
+      setLoading(true);
+      const result = await apiService.register(userData);
+      ToastManager.success('Cadastro realizado com sucesso!');
+      return { success: true, data: result };
+    } catch (err) {
+      ToastManager.error(`Erro no cadastro: ${err.message}`);
+      return { success: false, error: err.message };
+>>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
   };
 
+<<<<<<< Updated upstream
   useEffect(() => {
     fetchData();
   }, []);
@@ -233,4 +312,12 @@ export const useSubscription = () => {
     cancel,
     refetch: fetchData
   };
+=======
+  const logout = () => {
+    apiService.logout();
+    ToastManager.info('Logout realizado com sucesso!');
+  };
+
+  return { login, register, logout, loading };
+>>>>>>> Stashed changes
 };

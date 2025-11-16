@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { apiService } from '../services/api';
+import { ToastManager } from '../components/ToastManager';
 
 const AuthContext = createContext();
 
@@ -39,6 +41,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
+<<<<<<< Updated upstream
   // Listener para mudanças no localStorage
   useEffect(() => {
     const handleStorageChange = () => {
@@ -50,21 +53,49 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (userData, token) => {
+=======
+  const login = async (email, password) => {
+    setLoading(true);
+>>>>>>> Stashed changes
     try {
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(userData));
+      const result = await apiService.login(email, password);
+      
+      // Buscar dados do usuário
+      const userData = await apiService.request('/auth/me');
+      
       setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      ToastManager.success(`Bem-vindo, ${userData.name}!`);
+      return { success: true };
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      throw error;
+      ToastManager.error(error.message);
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (userData) => {
+    setLoading(true);
+    try {
+      await apiService.register(userData);
+      ToastManager.success('Cadastro realizado com sucesso!');
+      return { success: true };
+    } catch (error) {
+      ToastManager.error(error.message);
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = () => {
     try {
-      localStorage.removeItem('token');
+      apiService.logout();
       localStorage.removeItem('user');
       setUser(null);
+      ToastManager.info('Logout realizado com sucesso!');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
@@ -72,7 +103,7 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = !!user;
 
-  const value = { user, login, logout, loading, isAuthenticated };
+  const value = { user, login, register, logout, loading, isAuthenticated };
 
   return (
     <AuthContext.Provider value={value}>

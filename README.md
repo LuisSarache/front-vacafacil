@@ -301,21 +301,31 @@ front-vacafacil/
 
 ## 🚀 Como Executar
 
-### Pré-requisitos
+### 🌐 Acesso Online
+- **Frontend:** https://front-vacafacil.vercel.app
+- **Backend:** https://backend-vacafacil.onrender.com
+
+### 💻 Desenvolvimento Local
+
+#### Pré-requisitos
 - Node.js 18+
 - npm ou yarn
 
-### Instalação
+#### Instalação
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/front-vacafacil.git
+git clone https://github.com/LuisSarache/front-vacafacil.git
 
 # Entre na pasta
 cd front-vacafacil
 
 # Instale as dependências
 npm install
+
+# Configure as variáveis de ambiente
+cp .env.example .env
+# Edite o .env com suas configurações
 
 # Execute em desenvolvimento
 npm run dev
