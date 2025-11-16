@@ -7,12 +7,7 @@ import { FinanceiroProvider } from "./context/FinanceiroContext";
 import { VacasProvider } from "./context/VacasContext";
 import { ReproducaoProvider } from "./context/ReproducaoContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
-<<<<<<< Updated upstream
-=======
-import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { ApiStatus } from "./components/ApiStatus";
->>>>>>> Stashed changes
 import { AppRoutes } from "./routes/AppRoutes";
 import { registerServiceWorker } from "./utils/pwa";
 import { useEffect } from 'react';
@@ -42,14 +37,9 @@ function App(){
                             <NotificationProvider>
                                 <ProducaoProvider>
                                     <FinanceiroProvider>
-<<<<<<< Updated upstream
-=======
                                         <ErrorBoundary>
-                                            <KeyboardShortcuts />
+                                            <AppRoutes/>
                                         </ErrorBoundary>
-                                        <ApiStatus />
->>>>>>> Stashed changes
-                                        <AppRoutes/>
                                         <Toaster />
                                     </FinanceiroProvider>
                                 </ProducaoProvider>

@@ -41,7 +41,6 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-<<<<<<< Updated upstream
   // Listener para mudanças no localStorage
   useEffect(() => {
     const handleStorageChange = () => {
@@ -52,11 +51,8 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const login = async (userData, token) => {
-=======
   const login = async (email, password) => {
     setLoading(true);
->>>>>>> Stashed changes
     try {
       const result = await apiService.login(email, password);
       
