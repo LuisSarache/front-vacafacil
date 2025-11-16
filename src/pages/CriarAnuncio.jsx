@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -22,6 +22,10 @@ export const CriarAnuncio = () => {
     telefone: '',
     descricao: ''
   });
+
+  const handleInputChange = useCallback((field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +56,7 @@ export const CriarAnuncio = () => {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => setFormData({ ...formData, tipo: 'venda' })}
+              onClick={() => handleInputChange('tipo', 'venda')}
               className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
                 formData.tipo === 'venda' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
               }`}
@@ -61,7 +65,7 @@ export const CriarAnuncio = () => {
             </button>
             <button
               type="button"
-              onClick={() => setFormData({ ...formData, tipo: 'compra' })}
+              onClick={() => handleInputChange('tipo', 'compra')}
               className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
                 formData.tipo === 'compra' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
               }`}
@@ -73,7 +77,7 @@ export const CriarAnuncio = () => {
           <Input
             label="Título do Anúncio"
             value={formData.titulo}
-            onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+            onChange={(e) => handleInputChange('titulo', e.target.value)}
             placeholder="Ex: Vaca Holandesa - Alta Produção"
             required
           />
@@ -83,7 +87,7 @@ export const CriarAnuncio = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('Raça')} *</label>
               <select
                 value={formData.raca}
-                onChange={(e) => setFormData({ ...formData, raca: e.target.value })}
+                onChange={(e) => handleInputChange('raca', e.target.value)}
                 className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent bg-white text-dark"
                 required
               >
@@ -98,7 +102,7 @@ export const CriarAnuncio = () => {
               label="Idade (anos)"
               type="number"
               value={formData.idade}
-              onChange={(e) => setFormData({ ...formData, idade: e.target.value })}
+              onChange={(e) => handleInputChange('idade', e.target.value)}
             />
           </div>
 
@@ -107,13 +111,13 @@ export const CriarAnuncio = () => {
               label="Produção Média (L/dia)"
               type="number"
               value={formData.producaoMedia}
-              onChange={(e) => setFormData({ ...formData, producaoMedia: e.target.value })}
+              onChange={(e) => handleInputChange('producaoMedia', e.target.value)}
             />
             <Input
               label="Preço (R$)"
               type="number"
               value={formData.preco}
-              onChange={(e) => setFormData({ ...formData, preco: e.target.value })}
+              onChange={(e) => handleInputChange('preco', e.target.value)}
               required
             />
           </div>
@@ -121,7 +125,7 @@ export const CriarAnuncio = () => {
           <Input
             label="Localização"
             value={formData.localizacao}
-            onChange={(e) => setFormData({ ...formData, localizacao: e.target.value })}
+            onChange={(e) => handleInputChange('localizacao', e.target.value)}
             placeholder="Cidade/Estado"
             required
           />
@@ -129,7 +133,7 @@ export const CriarAnuncio = () => {
           <Input
             label="Telefone"
             value={formData.telefone}
-            onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+            onChange={(e) => handleInputChange('telefone', e.target.value)}
             placeholder="(00) 00000-0000"
             required
           />
@@ -138,7 +142,7 @@ export const CriarAnuncio = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('Descrição')} *</label>
             <textarea
               value={formData.descricao}
-              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+              onChange={(e) => handleInputChange('descricao', e.target.value)}
               rows={4}
               className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent bg-white text-dark"
               placeholder="Descreva as características do animal..."

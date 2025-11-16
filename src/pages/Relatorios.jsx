@@ -27,10 +27,10 @@ export const Relatorios = () => {
       doc.text('Resumo de Produção:', 20, 75);
       
       doc.setFontSize(11);
-      doc.text(`Total do Período: ${dadosProducao.totalPeriodo}L`, 25, 90);
-      doc.text(`Média Diária: ${dadosProducao.mediaDiaria}L`, 25, 100);
-      doc.text(`Melhor Dia: ${dadosProducao.melhorDia.producao}L (${dadosProducao.melhorDia.data})`, 25, 110);
-      doc.text(`Menor Produção: ${dadosProducao.piorDia.producao}L (${dadosProducao.piorDia.data})`, 25, 120);
+      doc.text(`Total do Período: ${dadosProducao?.totalPeriodo || 0}L`, 25, 90);
+      doc.text(`Média Diária: ${dadosProducao?.mediaDiaria || 0}L`, 25, 100);
+      doc.text(`Melhor Dia: ${dadosProducao?.melhorDia?.producao || 0}L (${dadosProducao?.melhorDia?.data || 'N/A'})`, 25, 110);
+      doc.text(`Menor Produção: ${dadosProducao?.piorDia?.producao || 0}L (${dadosProducao?.piorDia?.data || 'N/A'})`, 25, 120);
       
       // Ranking table
       doc.setFontSize(14);
@@ -49,8 +49,9 @@ export const Relatorios = () => {
       
       doc.save(`relatorio-producao-${selectedPeriod}-${new Date().toISOString().split('T')[0]}.pdf`);
       ToastManager.success('Relatório PDF gerado com sucesso!');
-    } catch {
-      ToastManager.error('Erro ao gerar relatório PDF');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      ToastManager.error(`Erro ao gerar relatório PDF: ${error.message || 'Erro desconhecido'}`);
     }
   };
 
@@ -84,8 +85,9 @@ export const Relatorios = () => {
       } else {
         ToastManager.error('Erro ao gerar relatório Excel');
       }
-    } catch {
-      ToastManager.error('Erro ao gerar relatório Excel');
+    } catch (error) {
+      console.error('Erro ao gerar Excel:', error);
+      ToastManager.error(`Erro ao gerar relatório Excel: ${error.message || 'Erro desconhecido'}`);
     }
   };
 
@@ -96,19 +98,28 @@ export const Relatorios = () => {
     { id: 'reproducao', nome: 'Indicadores de Reprodução', icon: FileText }
   ];
 
-  const dadosProducao = {
-    totalPeriodo: 2450,
-    mediaDiaria: 85,
-    melhorDia: { data: '15/01/2024', producao: 95 },
-    piorDia: { data: '08/01/2024', producao: 72 }
+  const getDadosProducao = () => {
+    // TODO: Integrar com dados reais da API
+    return {
+      totalPeriodo: 2450,
+      mediaDiaria: 85,
+      melhorDia: { data: '15/01/2024', producao: 95 },
+      piorDia: { data: '08/01/2024', producao: 72 }
+    };
   };
 
-  const rankingVacas = [
-    { posicao: 1, vaca: 'Mimosa #001', producao: 750, media: 25 },
-    { posicao: 2, vaca: 'Bonita #003', producao: 660, media: 22 },
-    { posicao: 3, vaca: 'Flor #004', producao: 600, media: 20 },
-    { posicao: 4, vaca: 'Estrela #002', producao: 540, media: 18 }
-  ];
+  const getRankingVacas = () => {
+    // TODO: Integrar com dados reais da API
+    return [
+      { posicao: 1, vaca: 'Mimosa #001', producao: 750, media: 25 },
+      { posicao: 2, vaca: 'Bonita #003', producao: 660, media: 22 },
+      { posicao: 3, vaca: 'Flor #004', producao: 600, media: 20 },
+      { posicao: 4, vaca: 'Estrela #002', producao: 540, media: 18 }
+    ];
+  };
+
+  const dadosProducao = getDadosProducao();
+  const rankingVacas = getRankingVacas();
 
   return (
     <div className="space-y-6">

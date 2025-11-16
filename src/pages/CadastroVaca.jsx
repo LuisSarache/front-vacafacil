@@ -38,6 +38,9 @@ export const CadastroVaca = () => {
         setFotoPreview(reader.result);
         setFormData(prev => ({ ...prev, foto: reader.result }));
       };
+      reader.onerror = () => {
+        ToastManager.error('Erro ao carregar a imagem. Tente novamente.');
+      };
       reader.readAsDataURL(file);
     }
   };
@@ -116,8 +119,9 @@ export const CadastroVaca = () => {
       addVaca({ ...formData, producaoMedia: 0 });
       ToastManager.success('Vaca cadastrada com sucesso!');
       navigate('/rebanho');
-    } catch {
-      ToastManager.error('Erro ao cadastrar vaca. Tente novamente.');
+    } catch (error) {
+      console.error('Erro ao cadastrar vaca:', error);
+      ToastManager.error(`Erro ao cadastrar vaca: ${error.message || 'Tente novamente.'}`);
     } finally {
       setLoading(false);
     }

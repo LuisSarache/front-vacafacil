@@ -24,12 +24,17 @@ export const Producao = () => {
     quantidade: ''
   });
 
-  const producaoData = [
-    { vaca: 'Mimosa #001', manha: 12, tarde: 13, total: 25 },
-    { vaca: 'Estrela #002', manha: 8, tarde: 10, total: 18 },
-    { vaca: 'Bonita #003', manha: 11, tarde: 11, total: 22 },
-    { vaca: 'Flor #004', manha: 9, tarde: 11, total: 20 }
-  ];
+  const getProducaoData = () => {
+    // TODO: Integrar com dados reais da API
+    return [
+      { vaca: 'Mimosa #001', manha: 12, tarde: 13, total: 25 },
+      { vaca: 'Estrela #002', manha: 8, tarde: 10, total: 18 },
+      { vaca: 'Bonita #003', manha: 11, tarde: 11, total: 22 },
+      { vaca: 'Flor #004', manha: 9, tarde: 11, total: 20 }
+    ];
+  };
+
+  const producaoData = getProducaoData();
 
   const totalDia = producaoData.reduce((sum, item) => sum + item.total, 0);
 

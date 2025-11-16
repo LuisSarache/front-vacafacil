@@ -1,18 +1,19 @@
 // Importação de rotas do React Router
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
  
 // Importa contextos
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useSubscription } from '../context/SubscriptionContext';
-import { useLocation } from 'react-router-dom';
  
 // Componentes reutilizáveis
 import { Sidebar } from '../components/Sidebar';
 import { PublicNavbar } from '../components/PublicNavbar';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ScrollToTop } from '../components/ScrollToTop';
+import { KeyboardShortcuts } from '../components/KeyboardShortcuts';
+import { FeatureRoute } from '../components/FeatureRoute';
  
 // Páginas públicas
 const Home = lazy(() => import('../pages/Home').then(m => ({ default: m.Home })));
@@ -78,14 +79,17 @@ const ProtectedRoute = ({ children }) => {
    Componente de rota pública
    ============================== */
 export const PublicRoute = ({ children, fullWidth = false }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isNewUser, loading: subLoading } = useSubscription();
 
   // Enquanto os dados do usuário estão sendo carregados, mostra spinner
-  if (loading) return <LoadingSpinner size="lg" />;
+  if (authLoading || subLoading) {
+    return <LoadingSpinner size="lg" />;
+  }
 
-  // Se o usuário já está logado, redireciona para o dashboard
+  // Se usuário está autenticado, redireciona para a página apropriada
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={isNewUser ? "/escolher-plano" : "/dashboard"} replace />;
   }
 
   // Usuário não logado pode acessar a página pública
@@ -112,6 +116,7 @@ export const AppRoutes = () => {
   return (
     <Router>
       <ScrollToTop />
+      <KeyboardShortcuts />
       <Suspense fallback={<LoadingSpinner size="lg" />}>
       <Routes>
  
@@ -149,7 +154,7 @@ export const AppRoutes = () => {
             <Login />
           </PublicRoute>
         } />
-       
+        
         <Route path="/register" element={
           <PublicRoute>
             <Register />
@@ -223,13 +228,17 @@ export const AppRoutes = () => {
         
         <Route path="/marketplace" element={
           <ProtectedRoute>
-            <Marketplace /> 
+            <FeatureRoute feature="marketplace" featureName="Marketplace">
+              <Marketplace /> 
+            </FeatureRoute>
           </ProtectedRoute>
         } />
         
         <Route path="/marketplace/novo" element={
           <ProtectedRoute>
-            <CriarAnuncio /> 
+            <FeatureRoute feature="marketplace" featureName="Marketplace">
+              <CriarAnuncio /> 
+            </FeatureRoute>
           </ProtectedRoute>
         } />
         

@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSubscription } from '../context/SubscriptionContext';
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationPanel } from './NotificationPanel';
 import {
@@ -31,6 +32,7 @@ export const Sidebar = () => {
  
   // Pega usuário logado e função de logout do contexto
   const { user, logout } = useAuth();
+  const { hasFeature } = useSubscription();
  
   // Hooks do React Router
   const navigate = useNavigate(); // navegação programática
@@ -43,17 +45,25 @@ export const Sidebar = () => {
   };
  
   // 📌 Links de navegação do VacaFácil
-  const navLinks = [
+  const allNavLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
     { to: '/rebanho', label: 'Rebanho', icon: Users },
     { to: '/producao', label: 'Produção', icon: Milk },
     { to: '/financeiro', label: 'Financeiro', icon: DollarSign },
-    { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart },
+    { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart, requiresFeature: 'marketplace' },
     { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }
   ];
+
+  // Filtrar links baseado no plano do usuário
+  const navLinks = allNavLinks.filter(link => {
+    if (link.requiresFeature) {
+      return hasFeature(link.requiresFeature);
+    }
+    return true;
+  });
  
   // 📌 Função para verificar se o link é o atual
   const isActive = (path) => location.pathname === path;
@@ -130,22 +140,30 @@ export const Sidebar = () => {
                 <li key={link.to}>
                   <Link
                     to={link.to}
-                    // Estilo muda se o link for o ativo
                     className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
                       isActive(link.to)
-                        ? 'bg-white/20  text-white' // ativo: fundo claro + texto branco
-                        : 'text-white/70 hover:text-white hover:bg-white/10' // inativo: texto cinza, hover melhora contraste
+                        ? 'bg-white/20  text-white'
+                        : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
-                    onClick={() => setIsOpen(false)} // Fecha menu mobile ao clicar
+                    onClick={() => setIsOpen(false)}
                   >
-                    {/* Ícone do link */}
                     <link.icon size={20} />
-                    {/* Nome do link */}
                     <span>{link.label}</span>
                   </Link>
                 </li>
               ))}
             </ul>
+            
+            {/* Links bloqueados (mostrar com cadeado) */}
+            {allNavLinks.filter(link => link.requiresFeature && !hasFeature(link.requiresFeature)).map((link) => (
+              <div key={link.to} className="mt-2">
+                <div className="flex items-center space-x-3 px-4 py-3 rounded-xl text-white/40 cursor-not-allowed">
+                  <link.icon size={20} />
+                  <span>{link.label}</span>
+                  <Crown size={14} className="ml-auto" />
+                </div>
+              </div>
+            ))}
           </nav>
  
           {/* 📌 Botão de Logout */}

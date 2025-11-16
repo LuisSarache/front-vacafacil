@@ -25,7 +25,9 @@ export const EscolherPlano = () => {
         ToastManager.error(result.error || 'Erro ao processar plano');
       }
     } catch (error) {
-      ToastManager.error('Erro inesperado. Tente novamente.');
+      console.error('Erro ao selecionar plano:', error);
+      const errorMessage = error?.message || 'Erro inesperado. Tente novamente.';
+      ToastManager.error(errorMessage);
     } finally {
       setLoading(false);
     }

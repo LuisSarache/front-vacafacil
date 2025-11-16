@@ -5,6 +5,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { InteractiveChart } from '../components/InteractiveChart';
 import { SubscriptionStatus } from '../components/SubscriptionStatus';
+import { DebugPanel } from '../components/DebugPanel';
 import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw, Bell } from 'lucide-react';
 
 export const Dashboard = () => {
@@ -206,6 +207,9 @@ export const Dashboard = () => {
           </div>
         </Card>
       </div>
+
+      {/* Debug Panel - Remover em produção */}
+      <DebugPanel />
     </div>
   );
 };

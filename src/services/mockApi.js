@@ -9,7 +9,19 @@ const hashPassword = (password) => {
 };
 
 const verifyPassword = (password, hash) => {
-  return hashPassword(password) === hash;
+  const computedHash = hashPassword(password);
+  
+  // Proteção contra timing attack - comparação de tempo constante
+  if (computedHash.length !== hash.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < computedHash.length; i++) {
+    result |= computedHash.charCodeAt(i) ^ hash.charCodeAt(i);
+  }
+  
+  return result === 0;
 };
 
 const getStorageData = (key, defaultData) => {

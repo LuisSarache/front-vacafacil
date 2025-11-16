@@ -186,10 +186,10 @@ export const SubscriptionProvider = ({ children }) => {
 
   const simulatePayment = async (plan, method) => {
     // Simular delay de pagamento
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Simular sucesso (95% de chance)
-    if (Math.random() > 0.05) {
+    // Simular sucesso (99% de chance para desenvolvimento)
+    if (Math.random() > 0.01) {
       return {
         success: true,
         transactionId: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`

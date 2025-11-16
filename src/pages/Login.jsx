@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import { mockApi } from "../services/mockApi";
+import { apiService } from "../services/api";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
@@ -34,13 +34,21 @@ export const Login = () => {
     setLoading(true);
 
     try {
-      const { user, token } = await mockApi.login(
+      const response = await apiService.login(
         formData.email,
         formData.password
       );
-      await login(user, token);
+      const { access_token: token } = response;
+      
+      // Backend não retorna user no login, precisamos buscar
+      apiService.setToken(token);
+      const userData = await apiService.getCurrentUser();
+      
+      await login(userData, token);
       ToastManager.success("Login realizado com sucesso!");
-      navigate("/dashboard");
+      
+      await new Promise(resolve => setTimeout(resolve, 200));
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       ToastManager.error(error.message || "Erro ao fazer login");
     } finally {

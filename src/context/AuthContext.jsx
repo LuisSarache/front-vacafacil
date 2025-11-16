@@ -14,11 +14,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  // Função para carregar usuário do localStorage
+  const loadUserFromStorage = () => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
 
-    if (token && userData) {
+    if (token && userData && userData !== 'undefined') {
       try {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser);
@@ -26,9 +27,26 @@ export function AuthProvider({ children }) {
         console.error('Erro ao carregar dados do usuário:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        setUser(null);
       }
+    } else {
+      setUser(null);
     }
+  };
+
+  useEffect(() => {
+    loadUserFromStorage();
     setLoading(false);
+  }, []);
+
+  // Listener para mudanças no localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      loadUserFromStorage();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const login = async (userData, token) => {

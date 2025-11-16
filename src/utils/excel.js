@@ -1,5 +1,3 @@
-import ExcelJS from 'exceljs';
-
 // Security: Sanitize data to prevent injection
 const sanitizeValue = (value) => {
   if (typeof value === 'string') {
@@ -12,11 +10,28 @@ const sanitizeValue = (value) => {
   return value;
 };
 
+// Convert data to CSV format that Excel can open
+const convertToCSV = (data) => {
+  if (data.length === 0) return '';
+  
+  const headers = Object.keys(data[0]);
+  const csvContent = [
+    headers.join(','),
+    ...data.map(row => 
+      headers.map(header => {
+        const value = sanitizeValue(row[header] || '');
+        // Escape quotes and wrap in quotes if contains comma
+        const stringValue = String(value).replace(/"/g, '""');
+        return stringValue.includes(',') ? `"${stringValue}"` : stringValue;
+      }).join(',')
+    )
+  ].join('\n');
+  
+  return csvContent;
+};
+
 export const exportToExcel = async (data, filename, sheetName = 'Dados') => {
   try {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet(sheetName);
-    
     if (data.length === 0) {
       throw new Error('Nenhum dado para exportar');
     }
@@ -30,40 +45,13 @@ export const exportToExcel = async (data, filename, sheetName = 'Dados') => {
       return sanitizedRow;
     });
     
-    // Add headers
-    const headers = Object.keys(sanitizedData[0]);
-    worksheet.addRow(headers);
-    
-    // Style headers
-    const headerRow = worksheet.getRow(1);
-    headerRow.font = { bold: true };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFE0E0E0' }
-    };
-    
-    // Add data rows
-    sanitizedData.forEach(row => {
-      const values = headers.map(header => row[header]);
-      worksheet.addRow(values);
-    });
-    
-    // Auto-fit columns
-    worksheet.columns.forEach(column => {
-      column.width = Math.max(column.width || 0, 15);
-    });
-    
-    // Generate buffer and download
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { 
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-    });
+    const csvContent = convertToCSV(sanitizedData);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${filename}.xlsx`;
+    a.download = `${filename}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -78,12 +66,10 @@ export const exportToExcel = async (data, filename, sheetName = 'Dados') => {
 
 export const exportMultipleSheets = async (sheets, filename) => {
   try {
-    const workbook = new ExcelJS.Workbook();
+    let combinedContent = '';
     
     for (const { data, name } of sheets) {
       if (data.length === 0) continue;
-      
-      const worksheet = workbook.addWorksheet(name);
       
       // Security: Sanitize data
       const sanitizedData = data.map(row => {
@@ -94,41 +80,16 @@ export const exportMultipleSheets = async (sheets, filename) => {
         return sanitizedRow;
       });
       
-      // Add headers
-      const headers = Object.keys(sanitizedData[0]);
-      worksheet.addRow(headers);
-      
-      // Style headers
-      const headerRow = worksheet.getRow(1);
-      headerRow.font = { bold: true };
-      headerRow.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FFE0E0E0' }
-      };
-      
-      // Add data rows
-      sanitizedData.forEach(row => {
-        const values = headers.map(header => row[header]);
-        worksheet.addRow(values);
-      });
-      
-      // Auto-fit columns
-      worksheet.columns.forEach(column => {
-        column.width = Math.max(column.width || 0, 15);
-      });
+      combinedContent += `\n\n=== ${name} ===\n`;
+      combinedContent += convertToCSV(sanitizedData);
     }
     
-    // Generate buffer and download
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { 
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-    });
+    const blob = new Blob([combinedContent], { type: 'text/csv;charset=utf-8;' });
     
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${filename}.xlsx`;
+    a.download = `${filename}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

@@ -24,12 +24,17 @@ export const VacaDetalhes = () => {
     );
   }
 
-  const producaoHistorico = [
-    { data: '2024-01-20', quantidade: 26, periodo: 'Manhã' },
-    { data: '2024-01-20', quantidade: 24, periodo: 'Tarde' },
-    { data: '2024-01-19', quantidade: 25, periodo: 'Manhã' },
-    { data: '2024-01-19', quantidade: 23, periodo: 'Tarde' }
-  ];
+  const getProducaoHistorico = () => {
+    // TODO: Integrar com dados reais da API
+    return [
+      { data: '2024-01-20', quantidade: 26, periodo: 'Manhã' },
+      { data: '2024-01-20', quantidade: 24, periodo: 'Tarde' },
+      { data: '2024-01-19', quantidade: 25, periodo: 'Manhã' },
+      { data: '2024-01-19', quantidade: 23, periodo: 'Tarde' }
+    ];
+  };
+
+  const producaoHistorico = getProducaoHistorico();
 
   const handleDelete = async () => {
     if (!window.confirm(`Tem certeza que deseja remover ${vaca.nome}?`)) return;

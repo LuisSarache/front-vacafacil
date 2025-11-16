@@ -255,7 +255,11 @@ export const DataBackup = () => {
         }
       } catch (error) {
         console.error('Import error:', error);
-        ToastManager.error(`Erro ao importar dados: ${error.message}`);
+        // Security: Sanitize error message to prevent XSS
+        const safeErrorMessage = typeof error.message === 'string' 
+          ? error.message.replace(/<[^>]*>/g, '').substring(0, 100)
+          : 'Erro desconhecido';
+        ToastManager.error(`Erro ao importar dados: ${safeErrorMessage}`);
       } finally {
         // Always clear input
         event.target.value = '';
@@ -331,7 +335,7 @@ export const DataBackup = () => {
                   {new Date(backup.date).toLocaleDateString('pt-BR')}
                 </div>
                 <div className="text-sm text-gray-500">
-                  {backup.size} • {backup.type}
+                  {typeof backup.size === 'string' ? backup.size.replace(/<[^>]*>/g, '').substring(0, 20) : 'N/A'} • {typeof backup.type === 'string' ? backup.type.replace(/<[^>]*>/g, '').substring(0, 20) : 'N/A'}
                 </div>
               </div>
               <Button

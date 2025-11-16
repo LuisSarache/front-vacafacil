@@ -7,15 +7,24 @@ import { FinanceiroProvider } from "./context/FinanceiroContext";
 import { VacasProvider } from "./context/VacasContext";
 import { ReproducaoProvider } from "./context/ReproducaoContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
-import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
-import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AppRoutes } from "./routes/AppRoutes";
 import { registerServiceWorker } from "./utils/pwa";
 import { useEffect } from 'react';
 
 function App(){
     useEffect(() => {
-        registerServiceWorker();
+        // Temporariamente desabilitado para debug do backend
+        // registerServiceWorker();
+        
+        // Desregistrar Service Worker existente
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    registration.unregister();
+                    console.log('Service Worker desregistrado');
+                });
+            });
+        }
     }, []);
 
     return(
@@ -27,9 +36,6 @@ function App(){
                             <NotificationProvider>
                                 <ProducaoProvider>
                                     <FinanceiroProvider>
-                                        <ErrorBoundary>
-                                            <KeyboardShortcuts />
-                                        </ErrorBoundary>
                                         <AppRoutes/>
                                         <Toaster />
                                     </FinanceiroProvider>

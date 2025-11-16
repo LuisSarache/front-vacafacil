@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import { mockApi } from "../services/mockApi";
+import { apiService } from "../services/api";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Input } from "../components/Input";
@@ -60,10 +60,21 @@ export const Register = () => {
     
     setLoading(true);
     try {
-      const { user, token } = await mockApi.register(formData);
-      await login(user, token);
+      await apiService.register(formData);
+      
+      // Fazer login após o registro
+      const loginResponse = await apiService.login(formData.email, formData.password);
+      const { access_token: token } = loginResponse;
+      
+      // Buscar dados do usuário
+      apiService.setToken(token);
+      const userData = await apiService.getCurrentUser();
+      
+      await login(userData, token);
       ToastManager.success("Conta criada com sucesso!");
-      navigate("/dashboard");
+      
+      await new Promise(resolve => setTimeout(resolve, 200));
+      navigate("/escolher-plano", { replace: true });
     } catch (error) {
       ToastManager.error(error.message);
     } finally {
