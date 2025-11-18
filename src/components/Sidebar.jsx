@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useSubscription } from '../context/SubscriptionContext';
-import { ThemeToggle } from './ThemeToggle';
 import { NotificationPanel } from './NotificationPanel';
 import {
   Menu,
@@ -40,8 +39,9 @@ export const Sidebar = () => {
  
   // 📌 Função para fazer logout
   const handleLogout = () => {
+    setIsOpen(false);   // fecha o menu mobile
     logout();           // limpa o contexto
-    navigate('/login'); // redireciona para página de login
+    navigate('/', { replace: true }); // redireciona para home
   };
  
   // 📌 Links de navegação do VacaFácil
@@ -50,10 +50,10 @@ export const Sidebar = () => {
     { to: '/rebanho', label: 'Rebanho', icon: Users },
     { to: '/producao', label: 'Produção', icon: Milk },
     { to: '/financeiro', label: 'Financeiro', icon: DollarSign },
-    { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart, requiresFeature: 'marketplace' },
-    { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
+    { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart, requiresFeature: 'marketplace' },
+    { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }
   ];
 
@@ -130,11 +130,10 @@ export const Sidebar = () => {
               </div>
               <NotificationPanel />
             </div>
-            <ThemeToggle />
           </div>
  
           {/* 📌 Navegação (lista de links) */}
-          <nav className="flex-1 p-4">
+          <nav className="flex-1 p-4 overflow-y-auto">
             <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={link.to}>
@@ -142,7 +141,7 @@ export const Sidebar = () => {
                     to={link.to}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
                       isActive(link.to)
-                        ? 'bg-white/20  text-white'
+                        ? 'bg-white/20 text-white'
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
                     onClick={() => setIsOpen(false)}
@@ -152,18 +151,18 @@ export const Sidebar = () => {
                   </Link>
                 </li>
               ))}
+              
+              {/* Links bloqueados (mostrar com cadeado) */}
+              {allNavLinks.filter(link => link.requiresFeature && !hasFeature(link.requiresFeature)).map((link) => (
+                <li key={`blocked-${link.to}`}>
+                  <div className="flex items-center space-x-3 px-4 py-3 rounded-xl text-white/40 cursor-not-allowed">
+                    <link.icon size={20} />
+                    <span>{link.label}</span>
+                    <Crown size={14} className="ml-auto" />
+                  </div>
+                </li>
+              ))}
             </ul>
-            
-            {/* Links bloqueados (mostrar com cadeado) */}
-            {allNavLinks.filter(link => link.requiresFeature && !hasFeature(link.requiresFeature)).map((link) => (
-              <div key={link.to} className="mt-2">
-                <div className="flex items-center space-x-3 px-4 py-3 rounded-xl text-white/40 cursor-not-allowed">
-                  <link.icon size={20} />
-                  <span>{link.label}</span>
-                  <Crown size={14} className="ml-auto" />
-                </div>
-              </div>
-            ))}
           </nav>
  
           {/* 📌 Botão de Logout */}

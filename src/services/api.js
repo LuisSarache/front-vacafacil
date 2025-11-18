@@ -171,6 +171,11 @@ class ApiService {
     return this.request('/users/me');
   }
 
+  logout() {
+    this.removeToken();
+    localStorage.removeItem('user');
+  }
+
   // 🐄 VACAS
   async getVacas(params = {}) {
     // Suporte para paginação e filtros

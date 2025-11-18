@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { apiService } from "../services/api";
 import { Button } from "../components/Button";
@@ -8,9 +8,10 @@ import { Card } from "../components/Card";
 import { Input } from "../components/Input";
 import { ToastManager } from "../components/ToastManager";
 import { validateEmail, validatePassword, validateRequired } from "../utils/validation";
-import { Zap, Shield, BarChart3, HeadphonesIcon } from "lucide-react";
+import { Zap, Shield, BarChart3, HeadphonesIcon, ArrowRight, ArrowLeft, User, Building } from "lucide-react";
 
 export const Register = () => {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,28 +31,34 @@ export const Register = () => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const validateStep1 = () => {
     if (!validateRequired(formData.name)) {
       ToastManager.error("Nome é obrigatório");
-      return;
+      return false;
     }
-    
     if (!validateEmail(formData.email)) {
       ToastManager.error("E-mail inválido");
-      return;
+      return false;
     }
-    
     if (!validatePassword(formData.password)) {
       ToastManager.error("Senha deve ter no mínimo 6 caracteres");
-      return;
+      return false;
     }
-    
     if (formData.password !== formData.confirmPassword) {
       ToastManager.error("Senhas não coincidem");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep1()) {
+      setStep(2);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
     if (!validateRequired(formData.farmName)) {
       ToastManager.error("Nome da fazenda é obrigatório");
@@ -61,20 +68,29 @@ export const Register = () => {
     setLoading(true);
     try {
       await apiService.register(formData);
-      
-      // Fazer login após o registro
-      const loginResponse = await apiService.login(formData.email, formData.password);
-      const { access_token: token } = loginResponse;
-      
-      // Buscar dados do usuário
-      apiService.setToken(token);
-      const userData = await apiService.getCurrentUser();
-      
-      await login(userData, token);
       ToastManager.success("Conta criada com sucesso!");
       
-      await new Promise(resolve => setTimeout(resolve, 200));
-      navigate("/escolher-plano", { replace: true });
+      // Aguardar um pouco para o backend processar
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Fazer login após o registro
+      try {
+        const loginResponse = await apiService.login(formData.email, formData.password);
+        const { access_token: token } = loginResponse;
+        
+        // Buscar dados do usuário
+        apiService.setToken(token);
+        const userData = await apiService.getCurrentUser();
+        
+        await login(userData, token);
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        navigate("/escolher-plano", { replace: true });
+      } catch (loginError) {
+        // Se o login automático falhar, redireciona para página de login
+        ToastManager.info("Faça login com suas credenciais");
+        navigate("/login", { replace: true });
+      }
     } catch (error) {
       ToastManager.error(error.message);
     } finally {
@@ -89,25 +105,18 @@ export const Register = () => {
     { icon: HeadphonesIcon, text: "Suporte especializado", delay: 0.9 }
   ];
 
-  const formFields = [
-    [
-      { name: "name", label: "Nome completo", placeholder: "Seu nome completo", required: true },
-      { name: "cpfCnpj", label: "CPF ou CNPJ", placeholder: "000.000.000-00" }
-    ],
-    [
-      { name: "email", label: "E-mail", type: "email", placeholder: "seu@email.com", required: true, fullWidth: true }
-    ],
-    [
-      { name: "farmName", label: "Nome da Fazenda", placeholder: "Nome da sua propriedade", required: true },
-      { name: "location", label: "Localização", placeholder: "Cidade/Estado" }
-    ],
-    [
-      { name: "phone", label: "Telefone", type: "tel", placeholder: "(11) 99999-9999", fullWidth: true }
-    ],
-    [
-      { name: "password", label: "Senha", type: "password", placeholder: "Mínimo 6 caracteres", required: true },
-      { name: "confirmPassword", label: "Confirme a senha", type: "password", placeholder: "Digite novamente", required: true }
-    ]
+  const step1Fields = [
+    { name: "name", label: "Nome completo", placeholder: "Seu nome completo", required: true, icon: User },
+    { name: "email", label: "E-mail", type: "email", placeholder: "seu@email.com", required: true },
+    { name: "password", label: "Senha", type: "password", placeholder: "Mínimo 6 caracteres", required: true },
+    { name: "confirmPassword", label: "Confirme a senha", type: "password", placeholder: "Digite novamente", required: true }
+  ];
+
+  const step2Fields = [
+    { name: "farmName", label: "Nome da Fazenda", placeholder: "Nome da sua propriedade", required: true, icon: Building },
+    { name: "location", label: "Localização", placeholder: "Cidade/Estado" },
+    { name: "phone", label: "Telefone", type: "tel", placeholder: "(11) 99999-9999" },
+    { name: "cpfCnpj", label: "CPF ou CNPJ", placeholder: "000.000.000-00" }
   ];
 
   return (
@@ -174,6 +183,17 @@ export const Register = () => {
               VacaFácil
             </motion.h2>
             <p className="text-gray-600">Crie sua conta gratuita</p>
+            
+            {/* Progress Indicator */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <div className={`h-2 w-20 rounded-full transition-all duration-300 ${
+                step === 1 ? 'bg-dark' : 'bg-dark/30'
+              }`} />
+              <div className={`h-2 w-20 rounded-full transition-all duration-300 ${
+                step === 2 ? 'bg-dark' : 'bg-gray-300'
+              }`} />
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Etapa {step} de 2</p>
           </motion.div>
 
           <motion.div
@@ -183,22 +203,33 @@ export const Register = () => {
             whileHover={{ y: -5 }}
           >
             <Card className="p-6 bg-white/90 backdrop-blur-sm shadow-xl border border-gray-200/50">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {formFields.map((fieldGroup, groupIndex) => (
-                  <motion.div
-                    key={groupIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.6 + (groupIndex * 0.1) }}
-                    className={fieldGroup[0]?.fullWidth ? "w-full" : "grid grid-cols-1 sm:grid-cols-2 gap-4"}
+              <AnimatePresence mode="wait">
+                {step === 1 ? (
+                  <motion.form
+                    key="step1"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3 }}
+                    onSubmit={(e) => { e.preventDefault(); handleNextStep(); }}
+                    className="space-y-5"
                   >
-                    {fieldGroup.map((field, fieldIndex) => (
+                    <div className="mb-6">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 bg-dark/10 rounded-lg flex items-center justify-center">
+                          <User className="w-5 h-5 text-dark" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-dark">Dados Pessoais</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">Crie suas credenciais de acesso</p>
+                    </div>
+
+                    {step1Fields.map((field, index) => (
                       <motion.div
                         key={field.name}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3, delay: 0.7 + (groupIndex * 0.1) + (fieldIndex * 0.05) }}
-                        className={field.fullWidth ? "col-span-full" : ""}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
                       >
                         <Input
                           label={field.label}
@@ -210,28 +241,67 @@ export const Register = () => {
                         />
                       </motion.div>
                     ))}
-                  </motion.div>
-                ))}
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button type="submit" loading={loading} className="w-full">
-                    {loading ? "Criando conta..." : "Criar Conta Gratuita"}
-                  </Button>
-                </motion.div>
-              </form>
+                    <Button type="submit" className="w-full">
+                      Próximo <ArrowRight className="ml-2" size={18} />
+                    </Button>
+                  </motion.form>
+                ) : (
+                  <motion.form
+                    key="step2"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3 }}
+                    onSubmit={handleSubmit}
+                    className="space-y-5"
+                  >
+                    <div className="mb-6">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 bg-dark/10 rounded-lg flex items-center justify-center">
+                          <Building className="w-5 h-5 text-dark" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-dark">Dados da Fazenda</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">Informações sobre sua propriedade</p>
+                    </div>
 
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1.2 }}
-                className="mt-6 text-center"
-              >
+                    {step2Fields.map((field, index) => (
+                      <motion.div
+                        key={field.name}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                      >
+                        <Input
+                          label={field.label}
+                          type={field.type || "text"}
+                          value={formData[field.name]}
+                          onChange={handleInputChange(field.name)}
+                          placeholder={field.placeholder}
+                          required={field.required}
+                        />
+                      </motion.div>
+                    ))}
+
+                    <div className="flex gap-3">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => setStep(1)}
+                        className="flex-1"
+                      >
+                        <ArrowLeft className="mr-2" size={18} /> Voltar
+                      </Button>
+                      <Button type="submit" loading={loading} className="flex-1">
+                        {loading ? "Criando..." : "Criar Conta"}
+                      </Button>
+                    </div>
+                  </motion.form>
+                )}
+              </AnimatePresence>
+
+              <div className="mt-6 text-center">
                 <p className="text-gray-600 mb-2">Já possui conta?</p>
                 <Link 
                   to="/login" 
@@ -239,7 +309,7 @@ export const Register = () => {
                 >
                   Fazer login
                 </Link>
-              </motion.div>
+              </div>
             </Card>
           </motion.div>
         </motion.div>

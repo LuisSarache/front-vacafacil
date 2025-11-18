@@ -88,9 +88,9 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     try {
+      setUser(null);
       apiService.logout();
       localStorage.removeItem('user');
-      setUser(null);
       ToastManager.info('Logout realizado com sucesso!');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);

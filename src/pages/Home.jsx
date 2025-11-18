@@ -69,31 +69,31 @@ export const Home = () => {
             loading="eager"
             decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
         </div>
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white drop-shadow-lg mb-4 sm:mb-6">
+        <div className="max-w-5xl mx-auto relative z-10 px-4">
+          <div className="backdrop-blur-sm bg-black/20 rounded-3xl p-8 sm:p-12">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white drop-shadow-2xl mb-4 sm:mb-6">
               VacaFácil
             </h1>
 
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-white/90 drop-shadow-md mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white drop-shadow-xl mb-6">
               Tecnologia Simples para o Campo
             </h2>
 
-            <p className="text-lg sm:text-xl text-white/80 drop-shadow-md mb-8 max-w-3xl mx-auto leading-relaxed px-4">
+            <p className="text-lg sm:text-xl text-white drop-shadow-lg mb-8 max-w-3xl mx-auto leading-relaxed">
               Desenvolvemos uma plataforma digital que transforma a gestão de fazendas leiteiras,
               tornando o controle mais fácil, eficiente e lucrativo para produtores rurais.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto shadow-2xl">
                   Começar Agora
                 </Button>
               </Link>
               <a href="#como-funciona" className="w-full sm:w-auto">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto shadow-2xl">
                   Como Funciona
                 </Button>
               </a>
