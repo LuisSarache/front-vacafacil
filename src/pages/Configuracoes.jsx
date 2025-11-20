@@ -5,18 +5,20 @@ import { Input } from '../components/Input';
 import { ToastManager } from '../components/ToastManager';
 import { DataBackup } from '../components/DataBackup';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { Save, User, Bell, DollarSign, Wifi, Shield, Moon, Sun } from 'lucide-react';
 
 export const Configuracoes = () => {
   const { isDark, toggleTheme } = useTheme();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('perfil');
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
     // Perfil
-    nomeFazenda: 'Fazenda São José',
-    proprietario: 'João Silva',
-    email: 'joao@fazenda.com',
-    telefone: '(11) 99999-9999',
+    nomeFazenda: user?.fazenda || '',
+    proprietario: user?.nome || user?.name || '',
+    email: user?.email || '',
+    telefone: user?.telefone || user?.phone || '',
     
     // Preços
     precoLeite: 2.50,
