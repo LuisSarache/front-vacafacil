@@ -8,6 +8,7 @@ import { VacasProvider } from "./context/VacasContext";
 import { ReproducaoProvider } from "./context/ReproducaoContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { ApiStatus } from "./components/ApiStatus";
 import { AppRoutes } from "./routes/AppRoutes";
 import { registerServiceWorker } from "./utils/pwa";
 import { useEffect } from 'react';
@@ -38,6 +39,7 @@ function App(){
                                 <ProducaoProvider>
                                     <FinanceiroProvider>
                                         <ErrorBoundary>
+                                            <ApiStatus />
                                             <AppRoutes/>
                                         </ErrorBoundary>
                                         <Toaster />

@@ -3,8 +3,13 @@ import { apiService } from '../services/api';
 import { ToastManager } from '../components/ToastManager';
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // 🔄 Hook para requisições da API com loading e error handling
 export const useApi = (apiCall, dependencies = []) => {
+=======
+// Hook para requisições GET com cache
+export const useApi = (endpoint, params = {}, dependencies = []) => {
+>>>>>>> Stashed changes
 =======
 // Hook para requisições GET com cache
 export const useApi = (endpoint, params = {}, dependencies = []) => {
@@ -13,6 +18,7 @@ export const useApi = (endpoint, params = {}, dependencies = []) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   const fetchData = async () => {
     try {
@@ -63,6 +69,8 @@ export const useFinanceiroApi = () => {
     } catch (error) {
       ToastManager.error('Erro ao carregar dados financeiros');
 =======
+=======
+>>>>>>> Stashed changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,12 +110,16 @@ export const useMutation = () => {
       setError(err.message);
       ToastManager.error(`Erro na operação: ${err.message}`);
       return { success: false, error: err.message };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
   };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   useEffect(() => {
     fetchFinanceiro();
@@ -218,6 +230,8 @@ export const useSearch = () => {
       ToastManager.error('Erro na busca');
       setResults([]);
 =======
+=======
+>>>>>>> Stashed changes
   return { mutate, loading, error };
 };
 
@@ -234,12 +248,16 @@ export const useAuth = () => {
     } catch (err) {
       ToastManager.error(`Erro no login: ${err.message}`);
       return { success: false, error: err.message };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
   };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   return { results, loading, search };
 };
@@ -262,6 +280,8 @@ export const useSubscription = () => {
     } catch (error) {
       ToastManager.error('Erro ao carregar dados da assinatura');
 =======
+=======
+>>>>>>> Stashed changes
   const register = async (userData) => {
     try {
       setLoading(true);
@@ -271,12 +291,16 @@ export const useSubscription = () => {
     } catch (err) {
       ToastManager.error(`Erro no cadastro: ${err.message}`);
       return { success: false, error: err.message };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
   };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   useEffect(() => {
     fetchData();
@@ -313,11 +337,16 @@ export const useSubscription = () => {
     refetch: fetchData
   };
 =======
+=======
+>>>>>>> Stashed changes
   const logout = () => {
     apiService.logout();
     ToastManager.info('Logout realizado com sucesso!');
   };
 
   return { login, register, logout, loading };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 };
