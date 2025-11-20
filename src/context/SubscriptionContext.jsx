@@ -99,27 +99,44 @@ export const SubscriptionProvider = ({ children }) => {
   const loadUserSubscription = () => {
     try {
       const savedSubscription = localStorage.getItem(`subscription_${user.id}`);
-      if (savedSubscription) {
+      if (savedSubscription && savedSubscription !== 'null') {
         const sub = JSON.parse(savedSubscription);
         // Verificar se não expirou
         if (sub.expiresAt && new Date(sub.expiresAt) < new Date()) {
           // Expirou, voltar para gratuito
-          setSubscription({
+          const freeSub = {
             ...plans.free,
             userId: user.id,
             startDate: new Date().toISOString(),
             status: 'active'
-          });
+          };
+          setSubscription(freeSub);
+          localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
         } else {
           setSubscription(sub);
         }
       } else {
-        // Novo usuário, sem plano definido ainda
-        setSubscription(null);
+        // Novo usuário, atribuir plano gratuito automaticamente
+        const freeSub = {
+          ...plans.free,
+          userId: user.id,
+          startDate: new Date().toISOString(),
+          status: 'active'
+        };
+        setSubscription(freeSub);
+        localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
       }
     } catch (error) {
       console.error('Erro ao carregar assinatura:', error);
-      setSubscription(null);
+      // Em caso de erro, atribuir plano gratuito
+      const freeSub = {
+        ...plans.free,
+        userId: user.id,
+        startDate: new Date().toISOString(),
+        status: 'active'
+      };
+      setSubscription(freeSub);
+      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
     } finally {
       setLoading(false);
     }

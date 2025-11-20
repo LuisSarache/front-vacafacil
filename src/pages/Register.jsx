@@ -8,7 +8,7 @@ import { Card } from "../components/Card";
 import { Input } from "../components/Input";
 import { ToastManager } from "../components/ToastManager";
 import { validateEmail, validatePassword, validateRequired } from "../utils/validation";
-import { Zap, Shield, BarChart3, HeadphonesIcon, ArrowRight, ArrowLeft, User, Building } from "lucide-react";
+import { Zap, Shield, BarChart3, HeadphonesIcon, ArrowRight, ArrowLeft, User, Building, Check } from "lucide-react";
 
 export const Register = () => {
   const [step, setStep] = useState(1);
@@ -179,18 +179,44 @@ export const Register = () => {
             >
               VacaFácil
             </motion.h2>
-            <p className="text-gray-600">Crie sua conta gratuita</p>
+            <p className="text-gray-600 mb-6">Crie sua conta gratuita</p>
             
-            {/* Progress Indicator */}
-            <div className="flex items-center justify-center gap-2 mt-6">
-              <div className={`h-2 w-20 rounded-full transition-all duration-300 ${
-                step === 1 ? 'bg-dark' : 'bg-dark/30'
-              }`} />
-              <div className={`h-2 w-20 rounded-full transition-all duration-300 ${
+            {/* Progress Steps */}
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <button
+                onClick={() => setStep(1)}
+                className="flex items-center gap-2 group cursor-pointer"
+              >
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  step === 1 ? 'bg-dark text-white' : 
+                  step > 1 ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'
+                }`}>
+                  {step > 1 ? <Check size={20} /> : '1'}
+                </div>
+                <span className={`text-sm font-medium hidden sm:block ${
+                  step === 1 ? 'text-dark' : 'text-gray-500'
+                }`}>Dados Pessoais</span>
+              </button>
+              
+              <div className={`h-0.5 w-12 transition-all ${
                 step === 2 ? 'bg-dark' : 'bg-gray-300'
               }`} />
+              
+              <button
+                onClick={() => step > 1 && setStep(2)}
+                className="flex items-center gap-2 group cursor-pointer"
+                disabled={step < 2}
+              >
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  step === 2 ? 'bg-dark text-white' : 'bg-gray-200 text-gray-500'
+                }`}>
+                  2
+                </div>
+                <span className={`text-sm font-medium hidden sm:block ${
+                  step === 2 ? 'text-dark' : 'text-gray-500'
+                }`}>Dados da Fazenda</span>
+              </button>
             </div>
-            <p className="text-sm text-gray-500 mt-2">Etapa {step} de 2</p>
           </motion.div>
 
           <motion.div
@@ -199,7 +225,7 @@ export const Register = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             whileHover={{ y: -5 }}
           >
-            <Card className="p-6 bg-white/90 backdrop-blur-sm shadow-xl border border-gray-200/50">
+            <Card className="p-8 bg-white shadow-2xl border-0">
               <AnimatePresence mode="wait">
                 {step === 1 ? (
                   <motion.form
@@ -209,16 +235,14 @@ export const Register = () => {
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.3 }}
                     onSubmit={(e) => { e.preventDefault(); handleNextStep(); }}
-                    className="space-y-5"
+                    className="space-y-6"
                   >
-                    <div className="mb-6">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 bg-dark/10 rounded-lg flex items-center justify-center">
-                          <User className="w-5 h-5 text-dark" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-dark">Dados Pessoais</h3>
+                    <div className="text-center mb-8">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4">
+                        <User className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-sm text-gray-600">Crie suas credenciais de acesso</p>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Dados Pessoais</h3>
+                      <p className="text-gray-600">Crie suas credenciais de acesso</p>
                     </div>
 
                     {step1Fields.map((field, index) => (
@@ -239,8 +263,8 @@ export const Register = () => {
                       </motion.div>
                     ))}
 
-                    <Button type="submit" className="w-full">
-                      Próximo <ArrowRight className="ml-2" size={18} />
+                    <Button type="submit" size="lg" className="w-full mt-8">
+                      Continuar <ArrowRight className="ml-2" size={18} />
                     </Button>
                   </motion.form>
                 ) : (
@@ -251,16 +275,14 @@ export const Register = () => {
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.3 }}
                     onSubmit={handleSubmit}
-                    className="space-y-5"
+                    className="space-y-6"
                   >
-                    <div className="mb-6">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 bg-dark/10 rounded-lg flex items-center justify-center">
-                          <Building className="w-5 h-5 text-dark" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-dark">Dados da Fazenda</h3>
+                    <div className="text-center mb-8">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mb-4">
+                        <Building className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-sm text-gray-600">Informações sobre sua propriedade</p>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Dados da Fazenda</h3>
+                      <p className="text-gray-600">Informações sobre sua propriedade</p>
                     </div>
 
                     {step2Fields.map((field, index) => (
@@ -281,16 +303,17 @@ export const Register = () => {
                       </motion.div>
                     ))}
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 mt-8">
                       <Button
                         type="button"
                         variant="secondary"
                         onClick={() => setStep(1)}
+                        size="lg"
                         className="flex-1"
                       >
                         <ArrowLeft className="mr-2" size={18} /> Voltar
                       </Button>
-                      <Button type="submit" loading={loading} className="flex-1">
+                      <Button type="submit" loading={loading} size="lg" className="flex-1">
                         {loading ? "Criando..." : "Criar Conta"}
                       </Button>
                     </div>

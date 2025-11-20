@@ -8,19 +8,20 @@ export const Button = ({
   ...props // Captura outras props (ex: onClick, type, etc.)
 }) => {
   // Classes base aplicadas em todos os botões
-  const baseClasses = 'font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const baseClasses = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center';
   
   // Estilos de acordo com o tipo de botão
   const variants = {
-    primary: 'bg-dark text-white hover:bg-medium hover:text-white focus:ring-medium shadow-lg hover:shadow-xl', // Botão principal
-    secondary: 'bg-transparent border-2 border-dark text-dark hover:bg-medium hover:text-white focus:ring-medium' // Botão secundário
+    primary: 'bg-dark text-white hover:bg-medium focus:ring-medium shadow-md hover:shadow-lg',
+    secondary: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-300 shadow-sm',
+    outline: 'bg-transparent border-2 border-dark text-dark hover:bg-dark hover:text-white focus:ring-medium'
   };
   
   // Tamanhos disponíveis para o botão
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm', // Pequeno
-    md: 'px-4 py-2 text-base', // Médio (padrão)
-    lg: 'px-6 py-3 text-lg' // Grande
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-5 py-2.5 text-base'
   };
 
   return (

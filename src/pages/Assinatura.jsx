@@ -13,7 +13,13 @@ export const Assinatura = () => {
   const [cancelLoading, setCancelLoading] = useState(false);
 
   const handleUpgrade = async (planId) => {
-    return await upgradePlan(planId);
+    const result = await upgradePlan(planId);
+    if (result.success) {
+      ToastManager.success(`Plano ${plans[planId].name} ativado com sucesso!`);
+    } else {
+      ToastManager.error(result.error || 'Erro ao processar pagamento');
+    }
+    return result;
   };
 
   const handleCancel = async () => {
