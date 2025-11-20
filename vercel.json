@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm ci --legacy-peer-deps && npm run build",
-  "installCommand": "npm ci --legacy-peer-deps",
+  "buildCommand": "npm install --force && npm run build",
+  "installCommand": "npm install --force",
   "rewrites": [
     {
       "source": "/(.*)",
