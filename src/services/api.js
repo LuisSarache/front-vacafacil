@@ -17,13 +17,6 @@ class ApiService {
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
     
-    // 🛡️ Proteção CSRF
-    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method)) {
-      if (!this.validateOrigin()) {
-        throw new Error('Origem não autorizada');
-      }
-    }
-    
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -127,10 +120,6 @@ class ApiService {
 
   // 🔐 AUTENTICAÇÃO
   async login(email, password) {
-    if (!this.validateOrigin()) {
-      throw new Error('Origem não autorizada');
-    }
-    
     const params = new URLSearchParams();
     params.append('username', email);
     params.append('password', password);
