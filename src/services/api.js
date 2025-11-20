@@ -124,29 +124,44 @@ class ApiService {
     params.append('username', email);
     params.append('password', password);
     
-    console.log('🔐 Login attempt:', { email, url: `${this.baseURL}/auth/login` });
-    
-    const response = await fetch(`${this.baseURL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRF-Token': this.csrfToken,
-      },
-      body: params,
+    console.log('🔐 Login attempt:', { 
+      email, 
+      url: `${this.baseURL}/auth/login`,
+      backend: this.baseURL 
     });
     
-    console.log('📡 Response status:', response.status);
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('❌ Login error:', errorData);
-      throw new Error(errorData.detail || 'Erro no login');
+    try {
+      const response = await fetch(`${this.baseURL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-Token': this.csrfToken,
+        },
+        body: params,
+      });
+      
+      console.log('📡 Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('❌ Login error:', errorData);
+        
+        // Se backend não responder, pode estar offline
+        if (response.status === 0 || response.status >= 500) {
+          throw new Error('Backend offline ou inacessível. Tente novamente em alguns segundos.');
+        }
+        
+        throw new Error(errorData.detail || 'Email ou senha incorretos');
+      }
+      
+      const data = await response.json();
+      console.log('✅ Login success');
+      this.setToken(data.access_token);
+      return data;
+    } catch (error) {
+      console.error('🔴 Login failed:', error);
+      throw error;
     }
-    
-    const data = await response.json();
-    console.log('✅ Login success');
-    this.setToken(data.access_token);
-    return data;
   }
 
   async register(userData) {

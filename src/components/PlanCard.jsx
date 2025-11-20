@@ -14,14 +14,9 @@ export const PlanCard = ({ plan, isCurrentPlan = false, onUpgrade }) => {
     
     setLoading(true);
     try {
-      const result = await onUpgrade(plan.id);
-      if (result.success) {
-        ToastManager.success(`Plano ${plan.name} ativado com sucesso!`);
-      } else {
-        ToastManager.error(result.error || 'Erro ao processar pagamento');
-      }
+      await onUpgrade(plan.id);
     } catch (error) {
-      ToastManager.error('Erro inesperado. Tente novamente.');
+      console.error('Erro ao fazer upgrade:', error);
     } finally {
       setLoading(false);
     }
