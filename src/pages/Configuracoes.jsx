@@ -45,9 +45,10 @@ export const Configuracoes = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      ToastManager.success('Configurações salvas com sucesso!');
-    } catch {
+      // TODO: Implementar endpoint de atualização de configurações no backend
+      // await apiService.updateSettings(settings);
+      ToastManager.info('Função em desenvolvimento. Conecte ao backend para salvar.');
+    } catch (error) {
       ToastManager.error('Erro ao salvar configurações');
     } finally {
       setLoading(false);
