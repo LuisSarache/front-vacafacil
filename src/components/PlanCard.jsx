@@ -1,22 +1,43 @@
 import { useState } from 'react';
-import { Check, Crown, Zap, Star } from 'lucide-react';
+import { Check, Crown, Zap, Star, CreditCard } from 'lucide-react';
 import { Button } from './Button';
 import { Card } from './Card';
+import { PaymentSimulator } from './PaymentSimulator';
 import { useSubscription } from '../context/SubscriptionContext';
 import { ToastManager } from './ToastManager';
 
 export const PlanCard = ({ plan, isCurrentPlan = false, onUpgrade }) => {
   const [loading, setLoading] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   const { subscription } = useSubscription();
 
   const handleUpgrade = async () => {
     if (isCurrentPlan) return;
     
+    // Se for plano gratuito, ativa direto
+    if (plan.id === 'free') {
+      setLoading(true);
+      try {
+        await onUpgrade(plan.id);
+      } catch (error) {
+        console.error('Erro ao fazer upgrade:', error);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    
+    // Se for plano pago, abre simulador de pagamento
+    setShowPayment(true);
+  };
+
+  const handlePaymentSuccess = async () => {
+    setShowPayment(false);
     setLoading(true);
     try {
       await onUpgrade(plan.id);
     } catch (error) {
-      console.error('Erro ao fazer upgrade:', error);
+      console.error('Erro ao ativar plano:', error);
     } finally {
       setLoading(false);
     }
@@ -74,7 +95,16 @@ export const PlanCard = ({ plan, isCurrentPlan = false, onUpgrade }) => {
   };
 
   return (
-    <Card className={`relative p-6 ${getBorderColor()} transition-all duration-200 hover:shadow-lg`}>
+    <>
+      {showPayment && (
+        <PaymentSimulator
+          plan={plan}
+          onSuccess={handlePaymentSuccess}
+          onCancel={() => setShowPayment(false)}
+        />
+      )}
+      
+      <Card className={`relative p-6 ${getBorderColor()} transition-all duration-200 hover:shadow-lg`}>
       {isCurrentPlan && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
           <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -132,7 +162,7 @@ export const PlanCard = ({ plan, isCurrentPlan = false, onUpgrade }) => {
       >
         {isCurrentPlan ? 'Plano Atual' : 
          plan.id === 'free' ? 'Usar Gratuito' : 
-         `Assinar ${plan.name}`}
+         <><CreditCard className="w-4 h-4 mr-2 inline" />{`Assinar ${plan.name}`}</>}
       </Button>
 
       {plan.id !== 'free' && (
@@ -141,5 +171,6 @@ export const PlanCard = ({ plan, isCurrentPlan = false, onUpgrade }) => {
         </p>
       )}
     </Card>
+    </>
   );
 };
