@@ -38,6 +38,10 @@ const Marketplace = lazy(() => import('../pages/Marketplace').then(m => ({ defau
 const CriarAnuncio = lazy(() => import('../pages/CriarAnuncio').then(m => ({ default: m.CriarAnuncio })));
 const Assinatura = lazy(() => import('../pages/Assinatura').then(m => ({ default: m.Assinatura })));
 const EscolherPlano = lazy(() => import('../pages/EscolherPlano').then(m => ({ default: m.EscolherPlano })));
+const ForgotPassword = lazy(() => import('../pages/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
+const ResetPassword = lazy(() => import('../pages/ResetPassword').then(m => ({ default: m.ResetPassword })));
+const ChatList = lazy(() => import('../pages/ChatList').then(m => ({ default: m.ChatList })));
+const ChatRoom = lazy(() => import('../pages/ChatRoom').then(m => ({ default: m.ChatRoom })));
  
 /* ==============================
    Componente de rota protegida
@@ -160,6 +164,18 @@ export const AppRoutes = () => {
             <Register />
           </PublicRoute>
         } />
+        
+        <Route path="/forgot-password" element={
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        } />
+        
+        <Route path="/reset-password" element={
+          <PublicRoute>
+            <ResetPassword />
+          </PublicRoute>
+        } />
 
        
         {/* ==============================
@@ -251,6 +267,22 @@ export const AppRoutes = () => {
         <Route path="/escolher-plano" element={
           <ProtectedRoute>
             <EscolherPlano /> 
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/marketplace/chat" element={
+          <ProtectedRoute>
+            <FeatureRoute feature="marketplace" featureName="Chat do Marketplace">
+              <ChatList /> 
+            </FeatureRoute>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/marketplace/chat/:id" element={
+          <ProtectedRoute>
+            <FeatureRoute feature="marketplace" featureName="Chat do Marketplace">
+              <ChatRoom /> 
+            </FeatureRoute>
           </ProtectedRoute>
         } />
       </Routes>

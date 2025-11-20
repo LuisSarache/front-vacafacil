@@ -22,7 +22,8 @@ import {
   FileText,
   Settings,
   ShoppingCart,
-  Crown
+  Crown,
+  MessageCircle
 } from 'lucide-react';
  
 export const Sidebar = () => {
@@ -53,6 +54,7 @@ export const Sidebar = () => {
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
     { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart, requiresFeature: 'marketplace' },
+    { to: '/marketplace/chat', label: 'Chat', icon: MessageCircle, requiresFeature: 'marketplace' },
     { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }
   ];

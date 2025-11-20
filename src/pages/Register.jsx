@@ -78,16 +78,13 @@ export const Register = () => {
         const loginResponse = await apiService.login(formData.email, formData.password);
         const { access_token: token } = loginResponse;
         
-        // Buscar dados do usuário
         apiService.setToken(token);
         const userData = await apiService.getCurrentUser();
         
-        await login(userData, token);
+        localStorage.setItem('user', JSON.stringify(userData));
         
-        await new Promise(resolve => setTimeout(resolve, 200));
-        navigate("/escolher-plano", { replace: true });
+        window.location.href = '/escolher-plano';
       } catch (loginError) {
-        // Se o login automático falhar, redireciona para página de login
         ToastManager.info("Faça login com suas credenciais");
         navigate("/login", { replace: true });
       }

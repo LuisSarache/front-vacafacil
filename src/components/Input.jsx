@@ -7,6 +7,13 @@ export const Input = ({ label, type = 'text', error, className = '', id, ...prop
   const inputType = isPassword && showPassword ? 'text' : type;
   const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
   const errorId = error ? `${inputId}-error` : undefined;
+  
+  const getAutocomplete = () => {
+    if (props.autoComplete) return props.autoComplete;
+    if (type === 'email') return 'email';
+    if (type === 'password') return 'current-password';
+    return undefined;
+  };
 
   return (
     <div className="space-y-1">
@@ -22,6 +29,7 @@ export const Input = ({ label, type = 'text', error, className = '', id, ...prop
           className={`w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors ${error ? 'border-red-500' : ''} ${className}`}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={errorId}
+          autoComplete={getAutocomplete()}
           {...props}
         />
         {isPassword && (

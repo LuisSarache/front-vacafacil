@@ -125,24 +125,31 @@ class ApiService {
       throw new Error('Origem não autorizada');
     }
     
-    const formData = new FormData();
-    formData.append('username', email);
-    formData.append('password', password);
+    const params = new URLSearchParams();
+    params.append('username', email);
+    params.append('password', password);
+    
+    console.log('🔐 Login attempt:', { email, url: `${this.baseURL}/auth/login` });
     
     const response = await fetch(`${this.baseURL}/auth/login`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
         'X-CSRF-Token': this.csrfToken,
       },
-      body: formData,
+      body: params,
     });
+    
+    console.log('📡 Response status:', response.status);
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.error('❌ Login error:', errorData);
       throw new Error(errorData.detail || 'Erro no login');
     }
     
     const data = await response.json();
+    console.log('✅ Login success');
     this.setToken(data.access_token);
     return data;
   }

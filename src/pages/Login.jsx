@@ -7,14 +7,14 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { ToastManager } from "../components/ToastManager";
-import { PasswordRecovery } from "../components/PasswordRecovery";
+
 import { validateEmail, validatePassword } from "../utils/validation";
 import { Shield, BarChart3, Users } from "lucide-react";
 
 export const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [showRecovery, setShowRecovery] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -40,17 +40,18 @@ export const Login = () => {
       );
       const { access_token: token } = response;
       
-      // Backend não retorna user no login, precisamos buscar
       apiService.setToken(token);
       const userData = await apiService.getCurrentUser();
       
-      await login(userData, token);
+      localStorage.setItem('user', JSON.stringify(userData));
       ToastManager.success("Login realizado com sucesso!");
       
-      await new Promise(resolve => setTimeout(resolve, 200));
-      navigate("/dashboard", { replace: true });
+      window.location.href = '/dashboard';
     } catch (error) {
-      ToastManager.error(error.message || "Erro ao fazer login");
+      const errorMsg = error.message?.includes('401') || error.message?.includes('Unauthorized')
+        ? "E-mail ou senha incorretos. Registre um novo usuário se necessário."
+        : error.message || "Erro ao fazer login";
+      ToastManager.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -185,13 +186,12 @@ export const Login = () => {
                 transition={{ duration: 0.5, delay: 0.9 }}
                 className="mt-6 text-center space-y-3"
               >
-                <button
-                  type="button"
-                  onClick={() => setShowRecovery(true)}
-                  className="text-sm text-gray-600 hover:text-dark transition-colors duration-300 hover:underline"
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-gray-600 hover:text-dark transition-colors duration-300 hover:underline block"
                 >
                   Esqueceu sua senha?
-                </button>
+                </Link>
                 <div>
                   <p className="text-gray-600 mb-2">Não possui conta?</p>
                   <Link 
@@ -206,11 +206,7 @@ export const Login = () => {
           </motion.div>
         </motion.div>
       </div>
-      
-      <PasswordRecovery 
-        isOpen={showRecovery} 
-        onClose={() => setShowRecovery(false)} 
-      />
+
     </div>
   );
 };

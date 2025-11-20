@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Badge } from '../components/Badge';
 import { ToastManager } from '../components/ToastManager';
-import { Search, Filter, ShoppingCart, DollarSign, MapPin, Calendar, Milk, PlusCircle } from 'lucide-react';
+import { chatService } from '../services/chatService';
+import { Search, Filter, ShoppingCart, DollarSign, MapPin, Calendar, Milk, PlusCircle, MessageCircle } from 'lucide-react';
 
 export const Marketplace = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRaca, setFilterRaca] = useState('todas');
   const [filterTipo, setFilterTipo] = useState('todos');
@@ -246,7 +249,22 @@ export const Marketplace = () => {
                 <p className="text-xs text-medium/70">Anunciante</p>
                 <p className="text-sm font-medium text-dark">{anuncio.vendedor}</p>
               </div>
-              <Button size="sm" onClick={() => ToastManager.info(`Contato: ${anuncio.telefone}`)}>
+              <Button 
+                size="sm" 
+                onClick={async () => {
+                  try {
+                    const conversation = await chatService.createConversation(
+                      anuncio.id, 
+                      anuncio.vendedor,
+                      anuncio.localizacao
+                    );
+                    navigate(`/marketplace/chat/${conversation.id}`);
+                  } catch (error) {
+                    ToastManager.error('Erro ao iniciar conversa');
+                  }
+                }}
+              >
+                <MessageCircle className="w-4 h-4 mr-1" />
                 Entrar em Contato
               </Button>
             </div>

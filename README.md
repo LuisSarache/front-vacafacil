@@ -340,16 +340,21 @@ npm run preview
 ## 👥 Usuários de Teste
 
 ```javascript
-// Usuário 1
-Email: admin@vacafacil.com
-Senha:  
-
-// Usuário 2
-Email: maria@fazenda.com
+// Criar novo usuário de teste:
+Email: teste@vacafacil.com
+Nome: Teste
 Senha: 123456
+Telefone: 11999999999
+Fazenda: Fazenda Teste
+
+// Usuários existentes no banco:
+Email: vitorafon007@gmail.com
+Email: frontend@test.com
+Email: cacau@test.com
+// (Use a senha que você cadastrou)
 ```
 
-**Nota:** Estes são usuários de teste. Em produção, use senhas fortes e únicas.
+**Nota:** Registre um novo usuário ou use a senha correta dos usuários existentes.
 
 ## 🎨 Paleta de Cores
 
