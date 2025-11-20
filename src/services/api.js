@@ -115,7 +115,13 @@ class ApiService {
 
   // 🛡️ Validar origem da requisição
   validateOrigin() {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://vacafacil.com'];
+    const allowedOrigins = [
+      'http://localhost:5173', 
+      'http://localhost:3000',
+      'http://localhost:5174',
+      'https://vacafacil.com',
+      'https://front-vacafacil.vercel.app'
+    ];
     return allowedOrigins.includes(window.location.origin);
   }
 
@@ -401,6 +407,14 @@ class ApiService {
   async markNotificationAsRead(id) {
     return this.request(`/notifications/${id}/read`, {
       method: 'PUT',
+    });
+  }
+
+  // 📧 CONTATO
+  async sendContactMessage(data) {
+    return this.request('/contact', {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
   }
 }
