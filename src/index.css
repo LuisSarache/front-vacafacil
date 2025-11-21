@@ -108,10 +108,10 @@ body {
 .dashboard-container .text-medium { color: var(--color-medium); }
 .dashboard-container .text-accent { color: var(--color-accent); }
 .dashboard-container .text-gray-900 { color: #111827; }
-.dashboard-container .text-gray-600 { color: #4b5563; }
-.dashboard-container .text-gray-700 { color: #374151; }
-.dashboard-container .text-gray-800 { color: #1f2937; }
-.dashboard-container .text-gray-500 { color: #6b7280; }
+.dashboard-container .text-gray-600 { color: #374151; }
+.dashboard-container .text-gray-700 { color: #1f2937; }
+.dashboard-container .text-gray-800 { color: #111827; }
+.dashboard-container .text-gray-500 { color: #4b5563; }
 
 /* ==============================
    DASHBOARD - MODO ESCURO

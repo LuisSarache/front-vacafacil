@@ -74,7 +74,7 @@ export const Dashboard = () => {
         <Card className="glassmorphism-light p-6 hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-medium/70">Produção Hoje</p>
+              <p className="text-sm text-gray-700">Produção Hoje</p>
               <p className="text-2xl font-bold text-dark">{dashboardData.producaoHoje}L</p>
               <p className="text-xs text-green-600 mt-1">+5% vs ontem</p>
             </div>
@@ -87,7 +87,7 @@ export const Dashboard = () => {
         <Card className="glassmorphism-light p-6 hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-medium/70">Vacas em Lactação</p>
+              <p className="text-sm text-gray-700">Vacas em Lactação</p>
               <p className="text-2xl font-bold text-dark">{dashboardData.vacasLactacao}</p>
               <p className="text-xs text-blue-600 mt-1">de 52 total</p>
             </div>
@@ -100,7 +100,7 @@ export const Dashboard = () => {
         <Card className="glassmorphism-light p-6 hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-medium/70">Lucro do Mês</p>
+              <p className="text-sm text-gray-700">Lucro do Mês</p>
               <p className="text-2xl font-bold text-dark">R$ {dashboardData.lucroMes.toLocaleString()}</p>
               <p className="text-xs text-green-600 mt-1">Margem: 47.5%</p>
             </div>
@@ -113,7 +113,7 @@ export const Dashboard = () => {
         <Card className="glassmorphism-light p-6 hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-medium/70">Alertas</p>
+              <p className="text-sm text-gray-700">Alertas</p>
               <p className="text-2xl font-bold text-dark">{dashboardData.alertas}</p>
               <p className="text-xs text-red-600 mt-1">Requer atenção</p>
             </div>
@@ -144,7 +144,7 @@ export const Dashboard = () => {
                 </div>
                 <div>
                   <span className="font-medium text-red-800">{alerta.tipo}</span>
-                  <p className="text-sm text-medium">{alerta.vaca}</p>
+                  <p className="text-sm text-gray-700">{alerta.vaca}</p>
                 </div>
               </div>
               <div className="text-right">
@@ -184,7 +184,7 @@ export const Dashboard = () => {
               <Calendar className="w-5 h-5 text-blue-600 mr-3" />
               <div className="flex-1">
                 <p className="font-medium text-dark">Inseminação</p>
-                <p className="text-sm text-medium">Vaca #234 • Hoje 14:00</p>
+                <p className="text-sm text-gray-700">Vaca #234 • Hoje 14:00</p>
               </div>
               <Button size="sm" onClick={() => ToastManager.info('Agendamento em desenvolvimento')}>Marcar</Button>
             </div>
@@ -192,7 +192,7 @@ export const Dashboard = () => {
               <Calendar className="w-5 h-5 text-green-600 mr-3" />
               <div className="flex-1">
                 <p className="font-medium text-dark">Vacinação</p>
-                <p className="text-sm text-medium">Lote A • Amanhã 08:00</p>
+                <p className="text-sm text-gray-700">Lote A • Amanhã 08:00</p>
               </div>
               <Button size="sm" onClick={() => ToastManager.info('Agendamento em desenvolvimento')}>Marcar</Button>
             </div>
@@ -200,7 +200,7 @@ export const Dashboard = () => {
               <Calendar className="w-5 h-5 text-purple-600 mr-3" />
               <div className="flex-1">
                 <p className="font-medium text-dark">Secagem</p>
-                <p className="text-sm text-medium">Estrela #089 • Em 3 dias</p>
+                <p className="text-sm text-gray-700">Estrela #089 • Em 3 dias</p>
               </div>
               <Button size="sm" onClick={() => ToastManager.info('Agendamento em desenvolvimento')}>Marcar</Button>
             </div>
