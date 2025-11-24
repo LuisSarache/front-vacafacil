@@ -72,7 +72,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         onClick={onCancel}
       >
       <motion.div
@@ -89,7 +89,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
                 <CreditCard className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900">Pagamento Simulado</h3>
+                <h3 className="text-xl font-bold text-white">Pagamento Simulado</h3>
                 <p className="text-sm text-gray-500">Plano {plan?.name}</p>
               </div>
             </div>
@@ -110,7 +110,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Número do Cartão
               </label>
               <Input
@@ -123,7 +123,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Nome no Cartão
               </label>
               <Input
@@ -136,7 +136,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   Validade
                 </label>
                 <Input
@@ -148,7 +148,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   CVV
                 </label>
                 <Input
@@ -195,10 +195,10 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
           </form>
 
           <div className="mt-6 p-3 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-600 text-center">
+            <p className="text-xs text-white text-center">
               🔒 Pagamento 100% seguro e criptografado
             </p>
-            <p className="text-xs text-gray-500 text-center mt-1">
+            <p className="text-xs text-white text-center mt-1">
               Este é um ambiente de simulação. Nenhum valor será cobrado.
             </p>
           </div>
