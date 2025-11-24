@@ -25,7 +25,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
 
   const handleInputChange = (field, value) => {
     let formattedValue = value;
-    
+
     if (field === 'number') {
       formattedValue = formatCardNumber(value.replace(/\D/g, '').slice(0, 16));
     } else if (field === 'expiry') {
@@ -33,27 +33,27 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
     } else if (field === 'cvv') {
       formattedValue = value.replace(/\D/g, '').slice(0, 3);
     }
-    
+
     setCardData(prev => ({ ...prev, [field]: formattedValue }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!cardData.number || !cardData.name || !cardData.expiry || !cardData.cvv) {
       ToastManager.error('Preencha todos os campos');
       return;
     }
 
     setLoading(true);
-    
+
     try {
       // Simular processamento de pagamento
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Simular sucesso (90% de chance)
       const success = Math.random() > 0.1;
-      
+
       if (success) {
         ToastManager.success('Pagamento aprovado!');
         onSuccess();
@@ -68,13 +68,13 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      onClick={onCancel}
-    >
+        <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
+        onClick={onCancel}
+      >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
