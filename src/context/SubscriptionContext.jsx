@@ -256,7 +256,7 @@ export const SubscriptionProvider = ({ children }) => {
     isPro: subscription?.id === 'pro',
     isBasic: subscription?.id === 'basic',
     isFree: subscription?.id === 'free',
-    isNewUser: subscription === null && !loading
+    isNewUser: false // Sempre false pois atribuímos plano gratuito automaticamente
   };
 
   return (

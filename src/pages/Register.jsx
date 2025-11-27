@@ -12,6 +12,7 @@ import { Zap, Shield, BarChart3, HeadphonesIcon, ArrowRight, ArrowLeft, User, Bu
 
 export const Register = () => {
   const [step, setStep] = useState(1);
+  const [step1Completed, setStep1Completed] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -53,6 +54,7 @@ export const Register = () => {
 
   const handleNextStep = () => {
     if (validateStep1()) {
+      setStep1Completed(true);
       setStep(2);
     }
   };
@@ -89,7 +91,10 @@ export const Register = () => {
         navigate("/login", { replace: true });
       }
     } catch (error) {
-      ToastManager.error(error.message);
+      const errorMessage = error.message.includes('já em uso') || error.message.includes('already exists') 
+        ? 'Email já registrado' 
+        : error.message;
+      ToastManager.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -189,9 +194,9 @@ export const Register = () => {
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                   step === 1 ? 'bg-dark text-white' : 
-                  step > 1 ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'
+                  step1Completed ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'
                 }`}>
-                  {step > 1 ? <Check size={20} /> : '1'}
+                  {step1Completed ? <Check size={20} /> : '1'}
                 </div>
                 <span className={`text-sm font-medium hidden sm:block ${
                   step === 1 ? 'text-dark' : 'text-gray-500'
@@ -203,9 +208,8 @@ export const Register = () => {
               }`} />
               
               <button
-                onClick={() => step > 1 && setStep(2)}
+                onClick={() => setStep(2)}
                 className="flex items-center gap-2 group cursor-pointer"
-                disabled={step < 2}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                   step === 2 ? 'bg-dark text-white' : 'bg-gray-200 text-gray-500'
@@ -238,8 +242,8 @@ export const Register = () => {
                     className="space-y-6"
                   >
                     <div className="text-center mb-8">
-                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4">
-                        <User className="w-8 h-8 text-white" />
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
+                        <User className="w-8 h-8 text-green-700" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Dados Pessoais</h3>
                       <p className="text-gray-600">Crie suas credenciais de acesso</p>
@@ -263,9 +267,20 @@ export const Register = () => {
                       </motion.div>
                     ))}
 
-                    <Button type="submit" size="lg" className="w-full mt-8">
-                      Continuar <ArrowRight className="ml-2" size={18} />
-                    </Button>
+                    <div className="flex gap-3 mt-8">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => setStep(2)}
+                        size="lg"
+                        className="flex-1"
+                      >
+                        Pular <ArrowRight className="ml-2" size={18} />
+                      </Button>
+                      <Button type="submit" size="lg" className="flex-1">
+                        Continuar <ArrowRight className="ml-2" size={18} />
+                      </Button>
+                    </div>
                   </motion.form>
                 ) : (
                   <motion.form
@@ -278,8 +293,8 @@ export const Register = () => {
                     className="space-y-6"
                   >
                     <div className="text-center mb-8">
-                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mb-4">
-                        <Building className="w-8 h-8 text-white" />
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
+                        <Building className="w-8 h-8 text-green-700" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Dados da Fazenda</h3>
                       <p className="text-gray-600">Informações sobre sua propriedade</p>

@@ -26,7 +26,7 @@ export const Input = ({ label, type = 'text', error, className = '', id, ...prop
         <input
           id={inputId}
           type={inputType}
-          className={`w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors ${error ? 'border-red-500' : ''} ${className}`}
+          className={`w-full px-3 py-2 bg-white border-2 border-gray-400 rounded-lg text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors ${error ? 'border-red-500' : ''} ${className}`}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={errorId}
           autoComplete={getAutocomplete()}
