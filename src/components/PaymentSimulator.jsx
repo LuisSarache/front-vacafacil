@@ -88,13 +88,8 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
                 <CreditCard className="w-6 h-6 text-green-700" />
               </div>
               <div>
-<<<<<<< Updated upstream
                 <h3 className="text-xl font-bold text-white">Pagamento Simulado</h3>
                 <p className="text-sm text-gray-500">Plano {plan?.name}</p>
-=======
-                <h3 className="text-xl font-bold text-gray-900">Pagamento</h3>
-                <p className="text-sm text-gray-600">Plano {plan?.name}</p>
->>>>>>> Stashed changes
               </div>
             </div>
             <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
@@ -114,11 +109,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-<<<<<<< Updated upstream
               <label className="block text-sm font-medium text-white mb-2">
-=======
-              <label className="block text-sm font-medium text-gray-700 mb-1">
->>>>>>> Stashed changes
                 Número do Cartão
               </label>
               <Input
@@ -131,11 +122,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
             </div>
 
             <div>
-<<<<<<< Updated upstream
               <label className="block text-sm font-medium text-white mb-2">
-=======
-              <label className="block text-sm font-medium text-gray-700 mb-1">
->>>>>>> Stashed changes
                 Nome no Cartão
               </label>
               <Input
@@ -148,11 +135,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-<<<<<<< Updated upstream
                 <label className="block text-sm font-medium text-white mb-2">
-=======
-                <label className="block text-sm font-medium text-gray-700 mb-1">
->>>>>>> Stashed changes
                   Validade
                 </label>
                 <Input
@@ -164,11 +147,7 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
                 />
               </div>
               <div>
-<<<<<<< Updated upstream
                 <label className="block text-sm font-medium text-white mb-2">
-=======
-                <label className="block text-sm font-medium text-gray-700 mb-1">
->>>>>>> Stashed changes
                   CVV
                 </label>
                 <Input
@@ -214,7 +193,6 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
             </div>
           </form>
 
-<<<<<<< Updated upstream
           <div className="mt-6 p-3 bg-gray-50 rounded-lg">
             <p className="text-xs text-white text-center">
               🔒 Pagamento 100% seguro e criptografado
@@ -222,15 +200,6 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
             <p className="text-xs text-white text-center mt-1">
               Este é um ambiente de simulação. Nenhum valor será cobrado.
             </p>
-=======
-          <div className="mt-4 p-3 bg-green-50 rounded-lg">
-            <div className="flex items-center justify-center gap-2 text-green-700">
-              <Lock className="w-4 h-4" />
-              <p className="text-xs">
-                Pagamento seguro • Ambiente de simulação
-              </p>
-            </div>
->>>>>>> Stashed changes
           </div>
         </Card>
       </motion.div>
