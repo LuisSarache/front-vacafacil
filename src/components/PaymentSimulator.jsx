@@ -57,10 +57,10 @@ export const PaymentSimulator = ({ plan, onSuccess, onCancel }) => {
         ToastManager.success('Pagamento aprovado!');
         onSuccess();
       } else {
-        ToastManager.error('Pagamento recusado. Tente outro cartão.');
+        throw new Error('Pagamento recusado');
       }
-    } catch (error) {
-      ToastManager.error('Erro ao processar pagamento');
+    } catch {
+      ToastManager.error('Pagamento recusado. Tente outro cartão.');
     } finally {
       setLoading(false);
     }

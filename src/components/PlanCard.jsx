@@ -44,31 +44,25 @@ export const PlanCard = ({ plan, isCurrentPlan = false, onUpgrade }) => {
   };
 
   const getPlanIcon = () => {
-    switch (plan.id) {
-      case 'free': return <Star className="w-6 h-6" />;
-      case 'basic': return <Zap className="w-6 h-6" />;
-      case 'pro': return <Crown className="w-6 h-6" />;
-      default: return <Star className="w-6 h-6" />;
-    }
+    if (plan.id === 'free') return <Star className="w-6 h-6" />;
+    if (plan.id === 'basic') return <Zap className="w-6 h-6" />;
+    if (plan.id === 'pro') return <Crown className="w-6 h-6" />;
+    return <Star className="w-6 h-6" />;
   };
 
   const getPlanColor = () => {
-    switch (plan.id) {
-      case 'free': return 'text-gray-600';
-      case 'basic': return 'text-blue-600';
-      case 'pro': return 'text-purple-600';
-      default: return 'text-gray-600';
-    }
+    if (plan.id === 'free') return 'text-gray-600';
+    if (plan.id === 'basic') return 'text-blue-600';
+    if (plan.id === 'pro') return 'text-purple-600';
+    return 'text-gray-600';
   };
 
   const getBorderColor = () => {
     if (isCurrentPlan) return 'border-green-500 ring-2 ring-green-200';
-    switch (plan.id) {
-      case 'free': return 'border-gray-200';
-      case 'basic': return 'border-blue-200';
-      case 'pro': return 'border-purple-200';
-      default: return 'border-gray-200';
-    }
+    if (plan.id === 'free') return 'border-gray-200';
+    if (plan.id === 'basic') return 'border-blue-200';
+    if (plan.id === 'pro') return 'border-purple-200';
+    return 'border-gray-200';
   };
 
   const formatFeature = (key, value) => {

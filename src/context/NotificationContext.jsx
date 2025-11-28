@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { apiService } from '../services/api';
 
 const NotificationContext = createContext();
 
@@ -14,27 +15,26 @@ export function NotificationProvider({ children }) {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
+  const loadNotifications = async () => {
     try {
+      const data = await apiService.getNotifications();
+      setNotifications(data);
+      setUnreadCount(data.filter(n => !n.read).length);
+      localStorage.setItem('notifications', JSON.stringify(data));
+    } catch (error) {
+      console.error('Erro ao carregar notificações da API:', error);
       const saved = localStorage.getItem('notifications');
       if (saved) {
         const parsed = JSON.parse(saved);
         setNotifications(parsed);
         setUnreadCount(parsed.filter(n => !n.read).length);
       }
-    } catch (error) {
-      console.error('Erro ao carregar notificações:', error);
     }
+  };
 
-    const interval = setInterval(() => {
-      addNotification({
-        type: 'info',
-        title: 'Lembrete',
-        message: 'Verificar produção de leite',
-        timestamp: new Date().toISOString()
-      });
-    }, 300000);
-
+  useEffect(() => {
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 60000); // Atualizar a cada 1 min
     return () => clearInterval(interval);
   }, []);
 
@@ -54,15 +54,20 @@ export function NotificationProvider({ children }) {
     setUnreadCount(prev => prev + 1);
   };
 
-  const markAsRead = (id) => {
-    setNotifications(prev => {
-      const updated = prev.map(n => 
-        n.id === id ? { ...n, read: true } : n
-      );
-      localStorage.setItem('notifications', JSON.stringify(updated));
-      return updated;
-    });
-    setUnreadCount(prev => Math.max(0, prev - 1));
+  const markAsRead = async (id) => {
+    try {
+      await apiService.markNotificationAsRead(id);
+      setNotifications(prev => {
+        const updated = prev.map(n => 
+          n.id === id ? { ...n, read: true } : n
+        );
+        localStorage.setItem('notifications', JSON.stringify(updated));
+        return updated;
+      });
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Erro ao marcar notificação como lida:', error);
+    }
   };
 
   const markAllAsRead = () => {
@@ -102,7 +107,8 @@ export function NotificationProvider({ children }) {
       markAsRead,
       markAllAsRead,
       deleteNotification,
-      clearAll
+      clearAll,
+      refresh: loadNotifications
     }}>
       {children}
     </NotificationContext.Provider>

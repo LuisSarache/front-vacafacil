@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { apiService } from '../services/api';
+import { ToastManager } from '../components/ToastManager';
 
 const SubscriptionContext = createContext();
 
@@ -96,27 +98,18 @@ export const SubscriptionProvider = ({ children }) => {
     }
   }, [user]);
 
-  const loadUserSubscription = () => {
+  const loadUserSubscription = async () => {
+    setLoading(true);
     try {
-      const savedSubscription = localStorage.getItem(`subscription_${user.id}`);
-      if (savedSubscription && savedSubscription !== 'null') {
-        const sub = JSON.parse(savedSubscription);
-        // Verificar se não expirou
-        if (sub.expiresAt && new Date(sub.expiresAt) < new Date()) {
-          // Expirou, voltar para gratuito
-          const freeSub = {
-            ...plans.free,
-            userId: user.id,
-            startDate: new Date().toISOString(),
-            status: 'active'
-          };
-          setSubscription(freeSub);
-          localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
-        } else {
-          setSubscription(sub);
-        }
+      const data = await apiService.getSubscriptionStatus();
+      setSubscription(data);
+      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(data));
+    } catch (error) {
+      console.error('Erro ao carregar assinatura da API:', error);
+      const saved = localStorage.getItem(`subscription_${user.id}`);
+      if (saved) {
+        setSubscription(JSON.parse(saved));
       } else {
-        // Novo usuário, atribuir plano gratuito automaticamente
         const freeSub = {
           ...plans.free,
           userId: user.id,
@@ -124,54 +117,22 @@ export const SubscriptionProvider = ({ children }) => {
           status: 'active'
         };
         setSubscription(freeSub);
-        localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
       }
-    } catch (error) {
-      console.error('Erro ao carregar assinatura:', error);
-      // Em caso de erro, atribuir plano gratuito
-      const freeSub = {
-        ...plans.free,
-        userId: user.id,
-        startDate: new Date().toISOString(),
-        status: 'active'
-      };
-      setSubscription(freeSub);
-      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
     } finally {
       setLoading(false);
     }
   };
 
-  const upgradePlan = async (planId, paymentMethod = 'mock') => {
+  const upgradePlan = async (planId) => {
     try {
       setLoading(true);
-      
-      const plan = plans[planId];
-      if (!plan) throw new Error('Plano não encontrado');
-
-      // Simular pagamento
-      const paymentResult = await simulatePayment(plan, paymentMethod);
-      
-      if (paymentResult.success) {
-        const newSubscription = {
-          ...plan,
-          userId: user.id,
-          startDate: new Date().toISOString(),
-          expiresAt: planId === 'free' ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'active',
-          paymentMethod,
-          transactionId: paymentResult.transactionId
-        };
-
-        setSubscription(newSubscription);
-        localStorage.setItem(`subscription_${user.id}`, JSON.stringify(newSubscription));
-        
-        return { success: true, subscription: newSubscription };
-      } else {
-        throw new Error(paymentResult.error);
-      }
+      const data = await apiService.subscribe(planId);
+      setSubscription(data);
+      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(data));
+      ToastManager.success('Plano atualizado com sucesso!');
+      return { success: true, subscription: data };
     } catch (error) {
-      console.error('Erro ao fazer upgrade:', error);
+      ToastManager.error(error.message || 'Erro ao atualizar plano');
       return { success: false, error: error.message };
     } finally {
       setLoading(false);
@@ -181,41 +142,22 @@ export const SubscriptionProvider = ({ children }) => {
   const cancelSubscription = async () => {
     try {
       setLoading(true);
-      
-      // Manter até o fim do período pago
-      const updatedSubscription = {
-        ...subscription,
-        status: 'cancelled',
-        cancelledAt: new Date().toISOString()
+      await apiService.cancelSubscription();
+      const freeSub = {
+        ...plans.free,
+        userId: user.id,
+        startDate: new Date().toISOString(),
+        status: 'active'
       };
-
-      setSubscription(updatedSubscription);
-      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(updatedSubscription));
-      
+      setSubscription(freeSub);
+      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(freeSub));
+      ToastManager.success('Assinatura cancelada com sucesso!');
       return { success: true };
     } catch (error) {
-      console.error('Erro ao cancelar assinatura:', error);
+      ToastManager.error(error.message || 'Erro ao cancelar assinatura');
       return { success: false, error: error.message };
     } finally {
       setLoading(false);
-    }
-  };
-
-  const simulatePayment = async (plan, method) => {
-    // Simular delay de pagamento
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Simular sucesso (99% de chance para desenvolvimento)
-    if (Math.random() > 0.01) {
-      return {
-        success: true,
-        transactionId: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-      };
-    } else {
-      return {
-        success: false,
-        error: 'Pagamento recusado. Tente outro cartão.'
-      };
     }
   };
 

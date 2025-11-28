@@ -3,6 +3,7 @@ import { Card } from './Card';
 import { Button } from './Button';
 import { ToastManager } from './ToastManager';
 import { Download, Upload, Database, Calendar, AlertCircle } from 'lucide-react';
+import { sanitizeData, sanitizeString, validateFile as validateFileUtil } from '../utils/sanitize';
 
 export const DataBackup = () => {
   const [loading, setLoading] = useState(false);
@@ -107,72 +108,16 @@ export const DataBackup = () => {
     }
   };
 
-  // Security: Enhanced sanitization to prevent XSS and injection
-  const sanitizeData = (data, depth = 0) => {
-    // Prevent deep recursion attacks
-    if (depth > 10) return null;
-    
-    if (typeof data === 'string') {
-      // Remove HTML tags, scripts, and dangerous patterns
-      return data
-        .replace(/<[^>]*>/g, '') // Remove HTML tags
-        .replace(/javascript:/gi, '') // Remove javascript: URLs
-        .replace(/on\w+\s*=/gi, '') // Remove event handlers
-        .replace(/data:text\/html/gi, '') // Remove data URLs
-        .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
-        .substring(0, 1000); // Limit length
-    }
-    
-    if (typeof data === 'number') {
-      // Validate numbers
-      return isFinite(data) ? data : 0;
-    }
-    
-    if (typeof data === 'boolean') {
-      return data;
-    }
-    
-    if (data === null || data === undefined) {
-      return null;
-    }
-    
-    if (Array.isArray(data)) {
-      // Limit array size and sanitize each item
-      return data.slice(0, 1000).map(item => sanitizeData(item, depth + 1)).filter(item => item !== null);
-    }
-    
-    if (typeof data === 'object') {
-      const sanitized = {};
-      const allowedKeys = ['id', 'nome', 'raca', 'idade', 'peso', 'status', 'data', 'valor', 'descricao', 'categoria', 'tipo', 'quantidade', 'observacoes', 'created_at', 'updated_at'];
-      
-      Object.keys(data).forEach(key => {
-        // Validate key
-        if (typeof key === 'string' && 
-            key.length < 100 && 
-            key.match(/^[a-zA-Z0-9_-]+$/) && // Only alphanumeric, underscore, dash
-            (allowedKeys.includes(key) || key.startsWith('vacafacil_'))) {
-          const sanitizedValue = sanitizeData(data[key], depth + 1);
-          if (sanitizedValue !== null) {
-            sanitized[key] = sanitizedValue;
-          }
-        }
-      });
-      
-      return sanitized;
-    }
-    
-    return null;
-  };
-
   // Security: Validate file type and size
   const validateFile = (file) => {
-    if (!file) return false;
-    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
-      ToastManager.error('Apenas arquivos JSON são permitidos');
-      return false;
-    }
-    if (file.size > 10 * 1024 * 1024) { // 10MB limit
-      ToastManager.error('Arquivo muito grande. Limite: 10MB');
+    const result = validateFileUtil(file, {
+      allowedTypes: ['application/json'],
+      allowedExtensions: ['.json'],
+      maxSize: 10 * 1024 * 1024
+    });
+    
+    if (!result.valid) {
+      ToastManager.error(result.error);
       return false;
     }
     return true;
@@ -256,9 +201,7 @@ export const DataBackup = () => {
       } catch (error) {
         console.error('Import error:', error);
         // Security: Sanitize error message to prevent XSS
-        const safeErrorMessage = typeof error.message === 'string' 
-          ? error.message.replace(/<[^>]*>/g, '').substring(0, 100)
-          : 'Erro desconhecido';
+        const safeErrorMessage = sanitizeString(error.message || 'Erro desconhecido', 100);
         ToastManager.error(`Erro ao importar dados: ${safeErrorMessage}`);
       } finally {
         // Always clear input
@@ -335,7 +278,7 @@ export const DataBackup = () => {
                   {new Date(backup.date).toLocaleDateString('pt-BR')}
                 </div>
                 <div className="text-sm text-gray-500">
-                  {typeof backup.size === 'string' ? backup.size.replace(/<[^>]*>/g, '').substring(0, 20) : 'N/A'} • {typeof backup.type === 'string' ? backup.type.replace(/<[^>]*>/g, '').substring(0, 20) : 'N/A'}
+                  {sanitizeString(backup.size || 'N/A', 20)} • {sanitizeString(backup.type || 'N/A', 20)}
                 </div>
               </div>
               <Button

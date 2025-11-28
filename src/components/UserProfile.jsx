@@ -25,14 +25,29 @@ export const UserProfile = ({ isOpen, onClose }) => {
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePhoto(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Validar tipo e tamanho
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      ToastManager.error('Apenas imagens JPG, PNG ou WEBP são permitidas');
+      return;
     }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      ToastManager.error('Imagem muito grande. Máximo: 5MB');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfilePhoto(reader.result);
+    };
+    reader.onerror = () => {
+      ToastManager.error('Erro ao carregar imagem');
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSaveProfile = async () => {

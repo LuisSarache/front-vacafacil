@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { apiService } from '../services/api';
+import { ToastManager } from '../components/ToastManager';
 
 const VacasContext = createContext();
 
@@ -12,58 +14,57 @@ export function useVacas() {
 
 export function VacasProvider({ children }) {
   const [vacas, setVacas] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const loadVacas = async () => {
+    setLoading(true);
+    try {
+      const data = await apiService.getVacas();
+      setVacas(data);
+      localStorage.setItem('vacas', JSON.stringify(data));
+    } catch (error) {
+      console.error('Erro ao carregar vacas da API:', error);
+      const saved = localStorage.getItem('vacas');
+      if (saved) setVacas(JSON.parse(saved));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('vacas');
-      if (saved) {
-        setVacas(JSON.parse(saved));
-      } else {
-        const mockVacas = [
-          { id: 1, numero: '001', nome: 'Mimosa', raca: 'Holandesa', nascimento: '2020-03-15', status: 'lactacao', producaoMedia: 25, peso: 550, mae: 'Estrela #002', pai: 'Touro Campeão' },
-          { id: 2, numero: '002', nome: 'Estrela', raca: 'Jersey', nascimento: '2019-08-22', status: 'seca', producaoMedia: 18, peso: 480, mae: 'Bonita #003', pai: 'Touro Elite' },
-          { id: 3, numero: '003', nome: 'Bonita', raca: 'Holandesa', nascimento: '2021-01-10', status: 'prenha', producaoMedia: 22, peso: 520, mae: 'Flor #004', pai: 'Touro Master' },
-          { id: 4, numero: '004', nome: 'Flor', raca: 'Gir', nascimento: '2020-11-05', status: 'lactacao', producaoMedia: 20, peso: 500, mae: 'Rosa #005', pai: 'Touro Premium' }
-        ];
-        setVacas(mockVacas);
-        localStorage.setItem('vacas', JSON.stringify(mockVacas));
-      }
-    } catch (error) {
-      console.error('Erro ao carregar vacas:', error);
-    }
+    loadVacas();
   }, []);
 
-  const addVaca = (vaca) => {
+  const addVaca = async (vaca) => {
     try {
-      const nova = { id: Date.now(), ...vaca };
-      const updated = [...vacas, nova];
-      setVacas(updated);
-      localStorage.setItem('vacas', JSON.stringify(updated));
+      const nova = await apiService.createVaca(vaca);
+      setVacas(prev => [...prev, nova]);
+      ToastManager.success('Vaca cadastrada com sucesso!');
       return nova;
     } catch (error) {
-      console.error('Erro ao adicionar vaca:', error);
+      ToastManager.error(error.message || 'Erro ao cadastrar vaca');
       throw error;
     }
   };
 
-  const updateVaca = (id, data) => {
+  const updateVaca = async (id, data) => {
     try {
-      const updated = vacas.map(v => v.id === Number(id) ? { ...v, ...data } : v);
-      setVacas(updated);
-      localStorage.setItem('vacas', JSON.stringify(updated));
+      const updated = await apiService.updateVaca(id, data);
+      setVacas(prev => prev.map(v => v.id === Number(id) ? updated : v));
+      ToastManager.success('Vaca atualizada com sucesso!');
     } catch (error) {
-      console.error('Erro ao atualizar vaca:', error);
+      ToastManager.error(error.message || 'Erro ao atualizar vaca');
       throw error;
     }
   };
 
-  const deleteVaca = (id) => {
+  const deleteVaca = async (id) => {
     try {
-      const updated = vacas.filter(v => v.id !== Number(id));
-      setVacas(updated);
-      localStorage.setItem('vacas', JSON.stringify(updated));
+      await apiService.deleteVaca(id);
+      setVacas(prev => prev.filter(v => v.id !== Number(id)));
+      ToastManager.success('Vaca removida com sucesso!');
     } catch (error) {
-      console.error('Erro ao deletar vaca:', error);
+      ToastManager.error(error.message || 'Erro ao remover vaca');
       throw error;
     }
   };
@@ -73,7 +74,7 @@ export function VacasProvider({ children }) {
   };
 
   return (
-    <VacasContext.Provider value={{ vacas, addVaca, updateVaca, deleteVaca, getVacaById }}>
+    <VacasContext.Provider value={{ vacas, addVaca, updateVaca, deleteVaca, getVacaById, loading, refresh: loadVacas }}>
       {children}
     </VacasContext.Provider>
   );

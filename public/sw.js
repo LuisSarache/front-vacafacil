@@ -1,5 +1,11 @@
 const CACHE_NAME = 'vacafacil-v1';
-const ALLOWED_ORIGINS = ['https://vacafacil.com', 'http://localhost:5173', 'http://localhost:3000', 'http://localhost:5000'];
+const ALLOWED_ORIGINS = [
+  'https://vacafacil.com', 
+  'http://localhost:5173', 
+  'http://localhost:3000', 
+  'http://localhost:5000',
+  'https://front-vacafacil.vercel.app'
+];
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
@@ -92,34 +98,41 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Skip Service Worker completely for backend API requests
-  const requestUrl = new URL(event.request.url);
-  const isBackendRequest = requestUrl.origin === 'http://localhost:5000';
-  
-  if (isBackendRequest) {
-    // Let backend requests pass through without any Service Worker interference
-    return;
-  }
+  try {
+    // Skip Service Worker completely for backend API requests
+    const requestUrl = new URL(event.request.url);
+    const isBackendRequest = requestUrl.origin === 'http://localhost:5000' || 
+                             requestUrl.origin === 'https://backend-vacafacil.onrender.com';
+    
+    if (isBackendRequest) {
+      // Let backend requests pass through without any Service Worker interference
+      return;
+    }
 
-  if (!isRequestSafe(event.request)) {
-    event.respondWith(new Response('Forbidden', { status: 403 }));
-    return;
-  }
+    if (!isRequestSafe(event.request)) {
+      event.respondWith(new Response('Forbidden', { status: 403 }));
+      return;
+    }
 
-  const requestOrigin = event.request.headers.get('Origin');
-  if (requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin) && requestOrigin !== self.location.origin) {
-    event.respondWith(new Response('Invalid origin', { status: 403 }));
-    return;
-  }
+    const requestOrigin = event.request.headers.get('Origin');
+    if (requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin) && requestOrigin !== self.location.origin) {
+      event.respondWith(new Response('Invalid origin', { status: 403 }));
+      return;
+    }
 
-  // CSRF validation for non-backend requests only
-  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(event.request.method)) {
-    // Temporarily disabled for debug
-    // const csrfToken = event.request.headers.get('X-CSRF-Token');
-    // if (!csrfToken) {
-    //   event.respondWith(new Response('CSRF token required', { status: 403 }));
-    //   return;
-    // }
+    // CSRF validation for state-changing requests
+    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(event.request.method)) {
+      const csrfToken = event.request.headers.get('X-CSRF-Token');
+      // Validar apenas se não for requisição de autenticação
+      if (!csrfToken && !requestUrl.pathname.includes('/auth/')) {
+        event.respondWith(new Response('CSRF token required', { status: 403 }));
+        return;
+      }
+    }
+  } catch (error) {
+    console.error('Service Worker fetch error:', error);
+    event.respondWith(new Response('Service Worker Error', { status: 500 }));
+    return;
   }
 
   event.respondWith(

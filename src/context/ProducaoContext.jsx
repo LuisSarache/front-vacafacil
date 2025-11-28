@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { apiService } from '../services/api';
+import { ToastManager } from '../components/ToastManager';
 
 const ProducaoContext = createContext();
 
@@ -12,40 +14,48 @@ export function useProducao() {
 
 export function ProducaoProvider({ children }) {
   const [registros, setRegistros] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const loadProducao = async () => {
+    setLoading(true);
     try {
-      const saved = localStorage.getItem('producao_registros');
-      if (saved) {
-        setRegistros(JSON.parse(saved));
-      } else {
-        const mockData = [
-          { id: 1, vacaId: 1, vacaNome: 'Mimosa #001', data: '2024-01-20', periodo: 'Manhã', quantidade: 26 },
-          { id: 2, vacaId: 1, vacaNome: 'Mimosa #001', data: '2024-01-20', periodo: 'Tarde', quantidade: 24 },
-          { id: 3, vacaId: 2, vacaNome: 'Estrela #002', data: '2024-01-20', periodo: 'Manhã', quantidade: 18 }
-        ];
-        setRegistros(mockData);
-        localStorage.setItem('producao_registros', JSON.stringify(mockData));
-      }
+      const data = await apiService.getProducao();
+      setRegistros(data);
+      localStorage.setItem('producao_registros', JSON.stringify(data));
     } catch (error) {
-      console.error('Erro ao carregar produção:', error);
+      console.error('Erro ao carregar produção da API:', error);
+      const saved = localStorage.getItem('producao_registros');
+      if (saved) setRegistros(JSON.parse(saved));
+    } finally {
+      setLoading(false);
     }
-  }, []);
-
-  const addRegistro = (registro) => {
-    const newRegistro = {
-      id: Date.now(),
-      ...registro
-    };
-    const updated = [...registros, newRegistro];
-    setRegistros(updated);
-    localStorage.setItem('producao_registros', JSON.stringify(updated));
   };
 
-  const deleteRegistro = (id) => {
-    const updated = registros.filter(r => r.id !== id);
-    setRegistros(updated);
-    localStorage.setItem('producao_registros', JSON.stringify(updated));
+  useEffect(() => {
+    loadProducao();
+  }, []);
+
+  const addRegistro = async (registro) => {
+    try {
+      const newRegistro = await apiService.createProducao(registro);
+      setRegistros(prev => [...prev, newRegistro]);
+      ToastManager.success('Produção registrada com sucesso!');
+      return newRegistro;
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao registrar produção');
+      throw error;
+    }
+  };
+
+  const deleteRegistro = async (id) => {
+    try {
+      await apiService.deleteProducao(id);
+      setRegistros(prev => prev.filter(r => r.id !== id));
+      ToastManager.success('Registro removido com sucesso!');
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao remover registro');
+      throw error;
+    }
   };
 
   const getProducaoPorVaca = (vacaId) => {
@@ -65,7 +75,9 @@ export function ProducaoProvider({ children }) {
       addRegistro,
       deleteRegistro,
       getProducaoPorVaca,
-      getProducaoPorPeriodo
+      getProducaoPorPeriodo,
+      loading,
+      refresh: loadProducao
     }}>
       {children}
     </ProducaoContext.Provider>

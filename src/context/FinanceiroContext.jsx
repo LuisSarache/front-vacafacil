@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { apiService } from '../services/api';
+import { ToastManager } from '../components/ToastManager';
 
 const FinanceiroContext = createContext();
 
@@ -13,70 +15,78 @@ export function useFinanceiro() {
 export function FinanceiroProvider({ children }) {
   const [receitas, setReceitas] = useState([]);
   const [despesas, setDespesas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const loadFinanceiro = async () => {
+    setLoading(true);
     try {
+      const [receitasData, despesasData] = await Promise.all([
+        apiService.getReceitas(),
+        apiService.getDespesas()
+      ]);
+      setReceitas(receitasData);
+      setDespesas(despesasData);
+      localStorage.setItem('financeiro_receitas', JSON.stringify(receitasData));
+      localStorage.setItem('financeiro_despesas', JSON.stringify(despesasData));
+    } catch (error) {
+      console.error('Erro ao carregar financeiro da API:', error);
       const savedReceitas = localStorage.getItem('financeiro_receitas');
       const savedDespesas = localStorage.getItem('financeiro_despesas');
-      
       if (savedReceitas) setReceitas(JSON.parse(savedReceitas));
-      else {
-        const mockReceitas = [
-          { id: 1, descricao: 'Venda de Leite', valor: 2500, data: '2024-01-20', categoria: 'Venda' },
-          { id: 2, descricao: 'Venda de Bezerro', valor: 1500, data: '2024-01-15', categoria: 'Venda' }
-        ];
-        setReceitas(mockReceitas);
-        localStorage.setItem('financeiro_receitas', JSON.stringify(mockReceitas));
-      }
-
       if (savedDespesas) setDespesas(JSON.parse(savedDespesas));
-      else {
-        const mockDespesas = [
-          { id: 1, descricao: 'Ração', valor: 800, data: '2024-01-18', categoria: 'Alimentação' },
-          { id: 2, descricao: 'Veterinário', valor: 300, data: '2024-01-10', categoria: 'Saúde' }
-        ];
-        setDespesas(mockDespesas);
-        localStorage.setItem('financeiro_despesas', JSON.stringify(mockDespesas));
-      }
-    } catch (error) {
-      console.error('Erro ao carregar dados financeiros:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    loadFinanceiro();
   }, []);
 
-  const addReceita = (receita) => {
+  const addReceita = async (receita) => {
     try {
-      const nova = { id: Date.now(), ...receita };
-      const updated = [...receitas, nova];
-      setReceitas(updated);
-      localStorage.setItem('financeiro_receitas', JSON.stringify(updated));
+      const nova = await apiService.createReceita(receita);
+      setReceitas(prev => [...prev, nova]);
+      ToastManager.success('Receita adicionada com sucesso!');
+      return nova;
     } catch (error) {
-      console.error('Erro ao adicionar receita:', error);
+      ToastManager.error(error.message || 'Erro ao adicionar receita');
       throw error;
     }
   };
 
-  const addDespesa = (despesa) => {
+  const addDespesa = async (despesa) => {
     try {
-      const nova = { id: Date.now(), ...despesa };
-      const updated = [...despesas, nova];
-      setDespesas(updated);
-      localStorage.setItem('financeiro_despesas', JSON.stringify(updated));
+      const nova = await apiService.createDespesa(despesa);
+      setDespesas(prev => [...prev, nova]);
+      ToastManager.success('Despesa adicionada com sucesso!');
+      return nova;
     } catch (error) {
-      console.error('Erro ao adicionar despesa:', error);
+      ToastManager.error(error.message || 'Erro ao adicionar despesa');
       throw error;
     }
   };
 
-  const deleteReceita = (id) => {
-    const updated = receitas.filter(r => r.id !== id);
-    setReceitas(updated);
-    localStorage.setItem('financeiro_receitas', JSON.stringify(updated));
+  const deleteReceita = async (id) => {
+    try {
+      await apiService.deleteReceita(id);
+      setReceitas(prev => prev.filter(r => r.id !== id));
+      ToastManager.success('Receita removida com sucesso!');
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao remover receita');
+      throw error;
+    }
   };
 
-  const deleteDespesa = (id) => {
-    const updated = despesas.filter(d => d.id !== id);
-    setDespesas(updated);
-    localStorage.setItem('financeiro_despesas', JSON.stringify(updated));
+  const deleteDespesa = async (id) => {
+    try {
+      await apiService.deleteDespesa(id);
+      setDespesas(prev => prev.filter(d => d.id !== id));
+      ToastManager.success('Despesa removida com sucesso!');
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao remover despesa');
+      throw error;
+    }
   };
 
   const getTotalReceitas = () => receitas.reduce((sum, r) => sum + parseFloat(r.valor), 0);
@@ -93,7 +103,9 @@ export function FinanceiroProvider({ children }) {
       deleteDespesa,
       getTotalReceitas,
       getTotalDespesas,
-      getLucro
+      getLucro,
+      loading,
+      refresh: loadFinanceiro
     }}>
       {children}
     </FinanceiroContext.Provider>

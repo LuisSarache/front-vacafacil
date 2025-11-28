@@ -1,21 +1,39 @@
 // 🔗 Serviço de API para conectar com o Backend VacaFácil
+import { isValidUrl, generateCSRFToken, validateOrigin } from '../utils/sanitize';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5174',
+  'https://vacafacil.com',
+  'https://front-vacafacil.vercel.app'
+];
 
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
-    this.token = localStorage.getItem('token');
-    this.csrfToken = this.generateCSRFToken();
+    this.token = this.getToken();
+    this.csrfToken = generateCSRFToken();
   }
 
-  // 🛡️ Gerar token CSRF
-  generateCSRFToken() {
-    return btoa(Math.random().toString(36) + Date.now().toString(36));
+  // 🔐 Obter token de forma segura
+  getToken() {
+    try {
+      return sessionStorage.getItem('token') || null;
+    } catch {
+      return null;
+    }
   }
 
   // 🛠️ Método base para requisições
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+    
+    // Valida URL antes de fazer requisição
+    if (!isValidUrl(url, [this.baseURL])) {
+      throw new Error('URL inválida ou não permitida');
+    }
     
     const config = {
       headers: {
@@ -23,6 +41,7 @@ class ApiService {
         'X-CSRF-Token': this.csrfToken,
         ...(this.token && { Authorization: `Bearer ${this.token}` }),
       },
+      credentials: 'same-origin',
       ...options,
     };
 
@@ -90,15 +109,28 @@ class ApiService {
     return data;
   }
 
-  // 🔐 Gerenciar token
+  // 🔐 Gerenciar token de forma segura
   setToken(token) {
     this.token = token;
-    localStorage.setItem('token', token);
+    try {
+      // Usar sessionStorage ao invés de localStorage para tokens
+      sessionStorage.setItem('token', token);
+      // Manter backup em localStorage apenas para persistência entre sessões
+      localStorage.setItem('token_backup', token);
+    } catch (error) {
+      console.error('Erro ao salvar token:', error);
+    }
   }
 
   removeToken() {
     this.token = null;
-    localStorage.removeItem('token');
+    try {
+      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
+      localStorage.removeItem('token_backup');
+    } catch (error) {
+      console.error('Erro ao remover token:', error);
+    }
   }
 
   handleUnauthorized() {
@@ -108,14 +140,7 @@ class ApiService {
 
   // 🛡️ Validar origem da requisição
   validateOrigin() {
-    const allowedOrigins = [
-      'http://localhost:5173', 
-      'http://localhost:3000',
-      'http://localhost:5174',
-      'https://vacafacil.com',
-      'https://front-vacafacil.vercel.app'
-    ];
-    return allowedOrigins.includes(window.location.origin);
+    return validateOrigin(ALLOWED_ORIGINS);
   }
 
   // 🔐 AUTENTICAÇÃO
@@ -231,10 +256,17 @@ class ApiService {
 
   // 📷 Upload de imagem da vaca
   async uploadVacaImage(vacaId, imageFile) {
+    const url = `${this.baseURL}/vacas/${vacaId}/upload-image`;
+    
+    // Valida URL
+    if (!isValidUrl(url, [this.baseURL])) {
+      throw new Error('URL inválida');
+    }
+    
     const formData = new FormData();
     formData.append('file', imageFile);
     
-    const response = await fetch(`${this.baseURL}/vacas/${vacaId}/upload-image`, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -391,6 +423,41 @@ class ApiService {
     return this.request(`/relatorios/rebanho?${queryString}`);
   }
 
+  // 📄 Gerar relatórios PDF/Excel no backend
+  async gerarRelatorioPDF(tipo, params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(`${this.baseURL}/relatorios/${tipo}/pdf?${queryString}`, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`,
+        'X-CSRF-Token': this.csrfToken,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Erro ao gerar relatório PDF');
+    }
+    
+    const blob = await response.blob();
+    return blob;
+  }
+
+  async gerarRelatorioExcel(tipo, params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(`${this.baseURL}/relatorios/${tipo}/excel?${queryString}`, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`,
+        'X-CSRF-Token': this.csrfToken,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Erro ao gerar relatório Excel');
+    }
+    
+    const blob = await response.blob();
+    return blob;
+  }
+
   // 🔍 BUSCA
   async search(query, filters = {}) {
     const params = { q: query, ...filters };
@@ -411,6 +478,19 @@ class ApiService {
   async markNotificationAsRead(id) {
     return this.request(`/notifications/${id}/read`, {
       method: 'PUT',
+    });
+  }
+
+  async sendNotification(userId, data) {
+    return this.request('/notifications/send', {
+      method: 'POST',
+      body: JSON.stringify({ user_id: userId, ...data }),
+    });
+  }
+
+  async deleteNotification(id) {
+    return this.request(`/notifications/${id}`, {
+      method: 'DELETE',
     });
   }
 

@@ -16,9 +16,9 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Função para carregar usuário do localStorage
+  // Função para carregar usuário do storage
   const loadUserFromStorage = () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
     const userData = localStorage.getItem('user');
 
     if (token && userData && userData !== 'undefined') {
@@ -27,7 +27,9 @@ export function AuthProvider({ children }) {
         setUser(parsedUser);
       } catch (error) {
         console.error('Erro ao carregar dados do usuário:', error);
+        sessionStorage.removeItem('token');
         localStorage.removeItem('token');
+        localStorage.removeItem('token_backup');
         localStorage.removeItem('user');
         setUser(null);
       }

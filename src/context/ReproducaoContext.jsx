@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { apiService } from '../services/api';
+import { ToastManager } from '../components/ToastManager';
 
 const ReproducaoContext = createContext();
 
@@ -15,38 +17,73 @@ export const ReproducaoProvider = ({ children }) => {
   const [inseminacoes, setInseminacoes] = useLocalStorage('vacafacil_inseminacoes', []);
   const [vacinas, setVacinas] = useLocalStorage('vacafacil_vacinas', []);
   const [partos, setPartos] = useLocalStorage('vacafacil_partos', []);
+  const [loading, setLoading] = useState(false);
 
-  const adicionarInseminacao = (inseminacao) => {
-    const novaInseminacao = {
-      id: Date.now(),
-      ...inseminacao,
-      data: new Date().toISOString().split('T')[0],
-      status: 'aguardando',
-      proximaVerificacao: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    };
-    setInseminacoes(prev => [...prev, novaInseminacao]);
-    return novaInseminacao;
+  const loadReproducao = async () => {
+    setLoading(true);
+    try {
+      const data = await apiService.getReproducao();
+      if (data.inseminacoes) setInseminacoes(data.inseminacoes);
+      if (data.vacinas) setVacinas(data.vacinas);
+      if (data.partos) setPartos(data.partos);
+    } catch (error) {
+      console.error('Erro ao carregar reprodução da API:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const adicionarVacina = (vacina) => {
-    const novaVacina = {
-      id: Date.now(),
-      ...vacina,
-      dataAplicacao: new Date().toISOString().split('T')[0],
-      proximaDose: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    };
-    setVacinas(prev => [...prev, novaVacina]);
-    return novaVacina;
+  useEffect(() => {
+    loadReproducao();
+  }, []);
+
+  const adicionarInseminacao = async (inseminacao) => {
+    try {
+      const novaInseminacao = await apiService.createReproducao({
+        ...inseminacao,
+        tipo: 'inseminacao',
+        data: new Date().toISOString().split('T')[0],
+        status: 'aguardando'
+      });
+      setInseminacoes(prev => [...prev, novaInseminacao]);
+      ToastManager.success('Inseminação registrada com sucesso!');
+      return novaInseminacao;
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao registrar inseminação');
+      throw error;
+    }
   };
 
-  const adicionarParto = (parto) => {
-    const novoParto = {
-      id: Date.now(),
-      ...parto,
-      dataParto: new Date().toISOString().split('T')[0]
-    };
-    setPartos(prev => [...prev, novoParto]);
-    return novoParto;
+  const adicionarVacina = async (vacina) => {
+    try {
+      const novaVacina = await apiService.createReproducao({
+        ...vacina,
+        tipo: 'vacina',
+        dataAplicacao: new Date().toISOString().split('T')[0]
+      });
+      setVacinas(prev => [...prev, novaVacina]);
+      ToastManager.success('Vacina registrada com sucesso!');
+      return novaVacina;
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao registrar vacina');
+      throw error;
+    }
+  };
+
+  const adicionarParto = async (parto) => {
+    try {
+      const novoParto = await apiService.createReproducao({
+        ...parto,
+        tipo: 'parto',
+        dataParto: new Date().toISOString().split('T')[0]
+      });
+      setPartos(prev => [...prev, novoParto]);
+      ToastManager.success('Parto registrado com sucesso!');
+      return novoParto;
+    } catch (error) {
+      ToastManager.error(error.message || 'Erro ao registrar parto');
+      throw error;
+    }
   };
 
   const confirmarPrenhez = (inseminacaoId) => {
@@ -77,7 +114,9 @@ export const ReproducaoProvider = ({ children }) => {
     adicionarParto,
     confirmarPrenhez,
     getVacinasVencidas,
-    getVacasPrenhas
+    getVacasPrenhas,
+    loading,
+    refresh: loadReproducao
   };
 
   return (
