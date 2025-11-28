@@ -5,6 +5,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { ToastManager } from '../components/ToastManager';
+import ImageUpload from '../components/ImageUpload';
 import { validateRequired } from '../utils/validation';
 import { ArrowLeft, Save } from 'lucide-react';
 
@@ -74,9 +75,11 @@ export const EditarVaca = () => {
         <h1 className="text-3xl font-bold text-dark">Editar Vaca</h1>
       </div>
 
-      <Card className="glassmorphism p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card className="glassmorphism p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Número *
@@ -164,34 +167,47 @@ export const EditarVaca = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observações
-            </label>
-            <textarea
-              value={formData.observacoes}
-              onChange={(e) => handleChange('observacoes', e.target.value)}
-              rows={4}
-              className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent bg-white text-dark"
-              placeholder="Informações adicionais sobre a vaca..."
-            />
-          </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Observações
+                </label>
+                <textarea
+                  value={formData.observacoes}
+                  onChange={(e) => handleChange('observacoes', e.target.value)}
+                  rows={4}
+                  className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent bg-white text-dark"
+                  placeholder="Informações adicionais sobre a vaca..."
+                />
+              </div>
 
-          <div className="flex gap-3 justify-end">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => navigate(`/rebanho/${id}`)}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" loading={loading}>
-              <Save className="w-4 h-4 mr-2" />
-              Salvar Alterações
-            </Button>
-          </div>
-        </form>
-      </Card>
+              <div className="flex gap-3 justify-end">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => navigate(`/rebanho/${id}`)}
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" loading={loading}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar Alterações
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+
+        <div>
+          <Card className="glassmorphism p-6">
+            <h3 className="text-lg font-semibold text-dark mb-4">Foto da Vaca</h3>
+            <ImageUpload
+              vacaId={id}
+              currentImage={formData.foto}
+              onUploadSuccess={(url) => handleChange('foto', url)}
+            />
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };

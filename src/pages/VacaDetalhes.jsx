@@ -96,6 +96,19 @@ export const VacaDetalhes = () => {
         </div>
       </div>
 
+      {/* Foto da Vaca */}
+      {vaca.foto && (
+        <Card className="glassmorphism p-6">
+          <div className="flex justify-center">
+            <img 
+              src={vaca.foto} 
+              alt={vaca.nome}
+              className="w-full max-w-md h-64 object-cover rounded-lg shadow-lg"
+            />
+          </div>
+        </Card>
+      )}
+
       {/* Cards de Informações */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="glassmorphism-light p-6">

@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { ToastManager } from '../components/ToastManager';
+import ImageUpload from '../components/ImageUpload';
 import { useTranslation } from '../utils/i18n';
 import { ArrowLeft, Save } from 'lucide-react';
 
@@ -20,7 +21,8 @@ export const CriarAnuncio = () => {
     preco: '',
     localizacao: '',
     telefone: '',
-    descricao: ''
+    descricao: '',
+    foto: null
   });
 
   const handleInputChange = useCallback((field, value) => {
@@ -51,8 +53,10 @@ export const CriarAnuncio = () => {
         <h1 className="text-3xl font-bold text-dark">Criar Anúncio</h1>
       </div>
 
-      <Card className="glassmorphism p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card className="glassmorphism p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex gap-2">
             <button
               type="button"
@@ -150,17 +154,29 @@ export const CriarAnuncio = () => {
             />
           </div>
 
-          <div className="flex gap-3 justify-end">
-            <Button type="button" variant="secondary" onClick={() => navigate('/marketplace')}>
-              Cancelar
-            </Button>
-            <Button type="submit" loading={loading}>
-              <Save className="w-4 h-4 mr-2" />
-              Publicar Anúncio
-            </Button>
-          </div>
-        </form>
-      </Card>
+              <div className="flex gap-3 justify-end">
+                <Button type="button" variant="secondary" onClick={() => navigate('/marketplace')}>
+                  Cancelar
+                </Button>
+                <Button type="submit" loading={loading}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Publicar Anúncio
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+
+        <div>
+          <Card className="glassmorphism p-6">
+            <h3 className="text-lg font-semibold text-dark mb-4">Foto do Animal</h3>
+            <ImageUpload
+              currentImage={formData.foto}
+              onUploadSuccess={(url) => handleInputChange('foto', url)}
+            />
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };

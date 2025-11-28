@@ -207,9 +207,17 @@ export const Rebanho = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3">
-                          {vaca.nome.charAt(0)}
-                        </div>
+                        {vaca.foto ? (
+                          <img 
+                            src={vaca.foto} 
+                            alt={vaca.nome}
+                            className="w-10 h-10 rounded-full object-cover mr-3 border-2 border-green-400"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3">
+                            {vaca.nome.charAt(0)}
+                          </div>
+                        )}
                         <span className="text-sm font-medium text-dark">{vaca.nome}</span>
                       </div>
                     </td>

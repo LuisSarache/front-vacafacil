@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -10,6 +11,7 @@ import { Search, Filter, ShoppingCart, DollarSign, MapPin, Calendar, Milk, PlusC
 
 export const Marketplace = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRaca, setFilterRaca] = useState('todas');
   const [filterTipo, setFilterTipo] = useState('todos');
@@ -97,7 +99,8 @@ export const Marketplace = () => {
       preco: Number(novoAnuncio.preco),
       idade: novoAnuncio.idade ? Number(novoAnuncio.idade) : null,
       producaoMedia: novoAnuncio.producaoMedia ? Number(novoAnuncio.producaoMedia) : 0,
-      status: 'disponivel'
+      status: 'disponivel',
+      userId: user?.id || user?.email // Identificar dono do anúncio
     };
 
     setAnuncios([...anuncios, novo]);
@@ -206,6 +209,17 @@ export const Marketplace = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredAnuncios.map((anuncio) => (
           <Card key={anuncio.id} className="glassmorphism p-6 hover:shadow-lg transition-all">
+            {/* Foto do Animal */}
+            {anuncio.foto && (
+              <div className="mb-4 rounded-lg overflow-hidden">
+                <img 
+                  src={anuncio.foto} 
+                  alt={anuncio.titulo}
+                  className="w-full h-48 object-cover"
+                />
+              </div>
+            )}
+            
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-xl font-bold text-dark">{anuncio.titulo}</h3>
@@ -249,24 +263,31 @@ export const Marketplace = () => {
                 <p className="text-xs text-medium/70">Anunciante</p>
                 <p className="text-sm font-medium text-dark">{anuncio.vendedor}</p>
               </div>
-              <Button 
-                size="sm" 
-                onClick={async () => {
-                  try {
-                    const conversation = await chatService.createConversation(
-                      anuncio.id, 
-                      anuncio.vendedor,
-                      anuncio.localizacao
-                    );
-                    navigate(`/marketplace/chat/${conversation.id}`);
-                  } catch (error) {
-                    ToastManager.error('Erro ao iniciar conversa');
-                  }
-                }}
-              >
-                <MessageCircle className="w-4 h-4 mr-1" />
-                Entrar em Contato
-              </Button>
+              {/* Só mostrar botão se não for o próprio anúncio */}
+              {anuncio.userId !== user?.id && anuncio.userId !== user?.email && (
+                <Button 
+                  size="sm" 
+                  onClick={async () => {
+                    try {
+                      const conversation = await chatService.createConversation(
+                        anuncio.id, 
+                        anuncio.vendedor,
+                        anuncio.localizacao
+                      );
+                      navigate(`/marketplace/chat/${conversation.id}`);
+                    } catch (error) {
+                      ToastManager.error('Erro ao iniciar conversa');
+                    }
+                  }}
+                >
+                  <MessageCircle className="w-4 h-4 mr-1" />
+                  Entrar em Contato
+                </Button>
+              )}
+              {/* Mostrar badge se for seu anúncio */}
+              {(anuncio.userId === user?.id || anuncio.userId === user?.email) && (
+                <Badge variant="info">Seu Anúncio</Badge>
+              )}
             </div>
           </Card>
         ))}
