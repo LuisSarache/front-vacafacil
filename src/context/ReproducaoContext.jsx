@@ -20,6 +20,9 @@ export const ReproducaoProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const loadReproducao = async () => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
+    if (!token) return;
+
     setLoading(true);
     try {
       const data = await apiService.getReproducao();

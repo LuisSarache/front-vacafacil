@@ -17,6 +17,17 @@ export const MarketplaceProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const loadAnuncios = async (filters = {}) => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
+    if (!token) {
+      const saved = localStorage.getItem('marketplace_anuncios');
+      if (saved) {
+        try {
+          setAnuncios(JSON.parse(saved));
+        } catch {}
+      }
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await apiService.getAnuncios(filters);
@@ -25,7 +36,11 @@ export const MarketplaceProvider = ({ children }) => {
     } catch (error) {
       console.error('Erro ao carregar anúncios da API:', error);
       const saved = localStorage.getItem('marketplace_anuncios');
-      if (saved) setAnuncios(JSON.parse(saved));
+      if (saved) {
+        try {
+          setAnuncios(JSON.parse(saved));
+        } catch {}
+      }
     } finally {
       setLoading(false);
     }
