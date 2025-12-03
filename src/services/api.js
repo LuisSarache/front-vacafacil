@@ -393,7 +393,7 @@ class ApiService {
   async subscribe(planoId) {
     return this.request('/subscriptions/subscribe', {
       method: 'POST',
-      body: JSON.stringify({ plan_id: planoId }),
+      body: JSON.stringify({ plan_type: planoId }),
     });
   }
 

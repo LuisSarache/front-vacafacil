@@ -102,8 +102,20 @@ export const SubscriptionProvider = ({ children }) => {
     setLoading(true);
     try {
       const data = await apiService.getSubscriptionStatus();
-      setSubscription(data);
-      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(data));
+      
+      // Mesclar dados da API com features locais
+      const planId = data.plan_type || data.id || 'free';
+      const planData = plans[planId] || plans.free;
+      const mergedSubscription = {
+        ...planData,
+        ...data,
+        id: planId,
+        features: planData.features,
+        limits: planData.limits
+      };
+      
+      setSubscription(mergedSubscription);
+      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(mergedSubscription));
     } catch (error) {
       console.error('Erro ao carregar assinatura da API:', error);
       const saved = localStorage.getItem(`subscription_${user.id}`);
@@ -127,10 +139,20 @@ export const SubscriptionProvider = ({ children }) => {
     try {
       setLoading(true);
       const data = await apiService.subscribe(planId);
-      setSubscription(data);
-      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(data));
+      
+      // Mesclar dados da API com features locais
+      const planData = plans[planId] || plans.free;
+      const mergedSubscription = {
+        ...planData,
+        ...data,
+        features: planData.features,
+        limits: planData.limits
+      };
+      
+      setSubscription(mergedSubscription);
+      localStorage.setItem(`subscription_${user.id}`, JSON.stringify(mergedSubscription));
       ToastManager.success('Plano atualizado com sucesso!');
-      return { success: true, subscription: data };
+      return { success: true, subscription: mergedSubscription };
     } catch (error) {
       ToastManager.error(error.message || 'Erro ao atualizar plano');
       return { success: false, error: error.message };
@@ -181,7 +203,7 @@ export const SubscriptionProvider = ({ children }) => {
   };
 
   const hasFeature = (feature) => {
-    if (!subscription) return false;
+    if (!subscription || !subscription.features) return false;
     return subscription.features[feature] === true || subscription.features[feature] !== false;
   };
 

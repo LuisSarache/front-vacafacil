@@ -54,7 +54,7 @@ export const Sidebar = () => {
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
     { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart, requiresFeature: 'marketplace' },
-    { to: '/marketplace/chat', label: 'Chat', icon: MessageCircle, requiresFeature: 'marketplace' },
+    { to: '/marketplace/chat', label: 'Mensagens', icon: MessageCircle, requiresFeature: 'marketplace' },
     { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }
   ];
