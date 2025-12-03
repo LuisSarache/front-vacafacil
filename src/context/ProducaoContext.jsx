@@ -17,6 +17,17 @@ export function ProducaoProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   const loadProducao = async () => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
+    if (!token) {
+      const saved = localStorage.getItem('producao_registros');
+      if (saved) {
+        try {
+          setRegistros(JSON.parse(saved));
+        } catch {}
+      }
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await apiService.getProducao();
@@ -25,7 +36,11 @@ export function ProducaoProvider({ children }) {
     } catch (error) {
       console.error('Erro ao carregar produção da API:', error);
       const saved = localStorage.getItem('producao_registros');
-      if (saved) setRegistros(JSON.parse(saved));
+      if (saved) {
+        try {
+          setRegistros(JSON.parse(saved));
+        } catch {}
+      }
     } finally {
       setLoading(false);
     }

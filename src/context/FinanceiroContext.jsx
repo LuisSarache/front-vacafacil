@@ -18,6 +18,23 @@ export function FinanceiroProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   const loadFinanceiro = async () => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
+    if (!token) {
+      const savedReceitas = localStorage.getItem('financeiro_receitas');
+      const savedDespesas = localStorage.getItem('financeiro_despesas');
+      if (savedReceitas) {
+        try {
+          setReceitas(JSON.parse(savedReceitas));
+        } catch {}
+      }
+      if (savedDespesas) {
+        try {
+          setDespesas(JSON.parse(savedDespesas));
+        } catch {}
+      }
+      return;
+    }
+
     setLoading(true);
     try {
       const [receitasData, despesasData] = await Promise.all([
@@ -32,8 +49,16 @@ export function FinanceiroProvider({ children }) {
       console.error('Erro ao carregar financeiro da API:', error);
       const savedReceitas = localStorage.getItem('financeiro_receitas');
       const savedDespesas = localStorage.getItem('financeiro_despesas');
-      if (savedReceitas) setReceitas(JSON.parse(savedReceitas));
-      if (savedDespesas) setDespesas(JSON.parse(savedDespesas));
+      if (savedReceitas) {
+        try {
+          setReceitas(JSON.parse(savedReceitas));
+        } catch {}
+      }
+      if (savedDespesas) {
+        try {
+          setDespesas(JSON.parse(savedDespesas));
+        } catch {}
+      }
     } finally {
       setLoading(false);
     }

@@ -17,6 +17,17 @@ export function VacasProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   const loadVacas = async () => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
+    if (!token) {
+      const saved = localStorage.getItem('vacas');
+      if (saved) {
+        try {
+          setVacas(JSON.parse(saved));
+        } catch {}
+      }
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await apiService.getVacas();
@@ -25,7 +36,11 @@ export function VacasProvider({ children }) {
     } catch (error) {
       console.error('Erro ao carregar vacas da API:', error);
       const saved = localStorage.getItem('vacas');
-      if (saved) setVacas(JSON.parse(saved));
+      if (saved) {
+        try {
+          setVacas(JSON.parse(saved));
+        } catch {}
+      }
     } finally {
       setLoading(false);
     }

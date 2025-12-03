@@ -16,6 +16,19 @@ export function NotificationProvider({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const loadNotifications = async () => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
+    if (!token) {
+      const saved = localStorage.getItem('notifications');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setNotifications(parsed);
+          setUnreadCount(parsed.filter(n => !n.read).length);
+        } catch {}
+      }
+      return;
+    }
+
     try {
       const data = await apiService.getNotifications();
       setNotifications(data);
@@ -25,16 +38,18 @@ export function NotificationProvider({ children }) {
       console.error('Erro ao carregar notificações da API:', error);
       const saved = localStorage.getItem('notifications');
       if (saved) {
-        const parsed = JSON.parse(saved);
-        setNotifications(parsed);
-        setUnreadCount(parsed.filter(n => !n.read).length);
+        try {
+          const parsed = JSON.parse(saved);
+          setNotifications(parsed);
+          setUnreadCount(parsed.filter(n => !n.read).length);
+        } catch {}
       }
     }
   };
 
   useEffect(() => {
     loadNotifications();
-    const interval = setInterval(loadNotifications, 60000); // Atualizar a cada 1 min
+    const interval = setInterval(loadNotifications, 60000);
     return () => clearInterval(interval);
   }, []);
 
