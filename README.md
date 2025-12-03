@@ -308,7 +308,7 @@ front-vacafacil/
 ### 💻 Desenvolvimento Local
 
 #### Pré-requisitos
-- Node.js 18+
+- Node.js 20.x ou 22.x (recomendado: 20.x)
 - npm ou yarn
 
 #### Instalação
