@@ -5,7 +5,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ToastManager } from '../components/ToastManager';
 import { InteractiveChart } from '../components/InteractiveChart';
 import { SubscriptionStatus } from '../components/SubscriptionStatus';
-import { DebugPanel } from '../components/DebugPanel';
+
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw, Bell, Plus } from 'lucide-react';
@@ -238,8 +238,7 @@ export const Dashboard = () => {
         </Card>
       </div>
 
-      {/* Debug Panel - Remover em produção */}
-      <DebugPanel />
+
 
       {/* Modal Adicionar Alerta */}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Adicionar Novo Alerta">
