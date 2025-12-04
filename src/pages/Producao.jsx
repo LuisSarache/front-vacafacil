@@ -24,17 +24,7 @@ export const Producao = () => {
     quantidade: ''
   });
 
-  const getProducaoData = () => {
-    // TODO: Integrar com dados reais da API
-    return [
-      { vaca: 'Mimosa #001', manha: 12, tarde: 13, total: 25 },
-      { vaca: 'Estrela #002', manha: 8, tarde: 10, total: 18 },
-      { vaca: 'Bonita #003', manha: 11, tarde: 11, total: 22 },
-      { vaca: 'Flor #004', manha: 9, tarde: 11, total: 20 }
-    ];
-  };
-
-  const producaoData = getProducaoData();
+  const producaoData = [];
 
   const totalDia = producaoData.reduce((sum, item) => sum + item.total, 0);
 
@@ -398,11 +388,7 @@ export const Producao = () => {
               className="w-full px-4 py-2 border border-medium/30 rounded-lg focus:ring-2 focus:ring-accent bg-white text-dark"
               required
             >
-              <option value="">Selecione</option>
-              <option value="1">Mimosa #001</option>
-              <option value="2">Estrela #002</option>
-              <option value="3">Bonita #003</option>
-              <option value="4">Flor #004</option>
+              <option value="">Selecione uma vaca</option>
             </select>
           </div>
           <div>
