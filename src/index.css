@@ -11,22 +11,7 @@
   --color-background: #F0E1C0;
 }
 
-/* ==============================
-   TOKENS SEMÂNTICOS
-   ============================== */
-:root {
-  --surface: #ffffff;
-  --on-surface: #264653;
-  --surface-variant: rgba(255, 255, 255, 0.9);
-  --border: #d1d5db;
-}
 
-.dashboard-container.dark {
-  --surface: rgba(30, 41, 59, 0.98);
-  --on-surface: #f1f5f9;
-  --surface-variant: rgba(51, 65, 85, 0.95);
-  --border: rgba(148, 163, 184, 0.5);
-}
 
 /* ==============================
    CLASSES DE CORES CUSTOMIZADAS
@@ -113,65 +98,7 @@ body {
 .dashboard-container .text-gray-800 { color: #111827; }
 .dashboard-container .text-gray-500 { color: #4b5563; }
 
-/* ==============================
-   DASHBOARD - MODO ESCURO
-   ============================== */
-.dashboard-container.dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
-}
 
-/* Remover regras globais problemáticas */
-
-.dashboard-container.dark .text-dark,
-.dashboard-container.dark .text-medium,
-.dashboard-container.dark .text-accent,
-.dashboard-container.dark .text-gray-900,
-.dashboard-container.dark .text-gray-600,
-.dashboard-container.dark .text-gray-700,
-.dashboard-container.dark .text-gray-800,
-.dashboard-container.dark .text-gray-500 {
-  color: #f1f5f9 !important;
-}
-
-/* CORES ESPECÍFICAS PARA ELEMENTOS COLORIDOS */
-.dashboard-container.dark .text-red-600,
-.dashboard-container.dark .text-red-800 {
-  color: #f87171 !important;
-}
-
-.dashboard-container.dark .text-green-600,
-.dashboard-container.dark .text-green-500 {
-  color: #4ade80 !important;
-}
-
-.dashboard-container.dark .text-blue-600 {
-  color: #60a5fa !important;
-}
-
-.dashboard-container.dark .text-purple-600 {
-  color: #c084fc !important;
-}
-
-.dashboard-container.dark .text-emerald-600 {
-  color: #34d399 !important;
-}
-
-.dashboard-container.dark .text-white {
-  color: #ffffff !important;
-}
-
-/* BORDAS E SEPARADORES */
-.dashboard-container.dark .border-gray-100,
-.dashboard-container.dark .border-gray-200,
-.dashboard-container.dark .border-medium\/20,
-.dashboard-container.dark .border-medium\/30 {
-  border-color: rgba(148, 163, 184, 0.2) !important;
-}
-
-.dashboard-container.dark .divide-gray-100 > * + *,
-.dashboard-container.dark .divide-gray-200 > * + * {
-  border-color: rgba(148, 163, 184, 0.2) !important;
-}
 
 /* ==============================
    GLASSMORPHISM
@@ -192,98 +119,13 @@ body {
   border-radius: 12px;
 }
 
-/* GLASSMORPHISM EM MODO ESCURO */
-.dashboard-container.dark .glassmorphism,
-.dashboard-container.dark .glassmorphism-light {
-  background: rgba(30, 41, 59, 0.98) !important;
-  border: 1px solid rgba(148, 163, 184, 0.3) !important;
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5) !important;
-}
 
-/* BACKGROUNDS EM MODO ESCURO */
-.dashboard-container.dark .bg-white {
-  background: rgba(30, 41, 59, 0.6) !important;
-}
 
-.dashboard-container.dark .bg-gray-50 {
-  background: rgba(51, 65, 85, 0.4) !important;
-}
 
-.dashboard-container.dark .bg-gray-100 {
-  background: rgba(51, 65, 85, 0.5) !important;
-}
 
-/* ==============================
-   SIDEBAR EM MODO ESCURO
-   ============================== */
-.dashboard-container.dark .bg-black\/70 {
-  background: rgba(15, 23, 42, 0.95) !important;
-  border-right: 2px solid rgba(148, 163, 184, 0.2) !important;
-  backdrop-filter: blur(10px) !important;
-}
 
-.dashboard-container.dark .border-white\/10 {
-  border-color: rgba(148, 163, 184, 0.2) !important;
-}
 
-.dashboard-container.dark .bg-white\/20 {
-  background: rgba(148, 163, 184, 0.25) !important;
-}
 
-.dashboard-container.dark .hover\:bg-white\/10:hover {
-  background: rgba(148, 163, 184, 0.15) !important;
-}
-
-.dashboard-container.dark .text-white\/70 {
-  color: rgba(241, 245, 249, 0.7) !important;
-}
-
-.dashboard-container.dark .text-white\/60 {
-  color: rgba(241, 245, 249, 0.6) !important;
-}
-
-/* ==============================
-   INPUTS E FORMULÁRIOS EM MODO ESCURO
-   ============================== */
-.dashboard-container.dark input,
-.dashboard-container.dark select,
-.dashboard-container.dark textarea {
-  background: rgba(51, 65, 85, 0.5) !important;
-  border-color: rgba(148, 163, 184, 0.3) !important;
-  color: #f1f5f9 !important;
-}
-
-.dashboard-container.dark input::placeholder,
-.dashboard-container.dark textarea::placeholder {
-  color: rgba(241, 245, 249, 0.5) !important;
-}
-
-/* ==============================
-   BOTÕES EM MODO ESCURO
-   ============================== */
-.dashboard-container.dark button {
-  color: #ffffff !important;
-}
-
-.dashboard-container.dark .bg-dark {
-  background-color: #6A994E !important;
-}
-
-.dashboard-container.dark .bg-medium {
-  background-color: #264653 !important;
-}
-
-.dashboard-container.dark .bg-red-600 {
-  background-color: #dc2626 !important;
-}
-
-.dashboard-container.dark .bg-blue-600 {
-  background-color: #2563eb !important;
-}
-
-.dashboard-container.dark .bg-green-600 {
-  background-color: #16a34a !important;
-}
 
 /* ==============================
    ANIMAÇÕES E TRANSIÇÕES
@@ -327,10 +169,4 @@ body {
   background: rgba(148, 163, 184, 0.5);
 }
 
-.dashboard-container.dark ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
-}
 
-.dashboard-container.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.6);
-}

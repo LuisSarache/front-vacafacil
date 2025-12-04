@@ -21,10 +21,21 @@ export function AuthProvider({ children }) {
     const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
     const userData = localStorage.getItem('user');
 
+    console.log('Token:', token ? 'existe' : 'não existe');
+    console.log('UserData:', userData);
+
     if (token && userData && userData !== 'undefined') {
       try {
         const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
+        console.log('Usuário carregado do storage:', parsedUser);
+        
+        // Garantir que name existe
+        const mappedUser = {
+          ...parsedUser,
+          name: parsedUser.nome || parsedUser.name || 'Usuário'
+        };
+        
+        setUser(mappedUser);
       } catch (error) {
         console.error('Erro ao carregar dados do usuário:', error);
         sessionStorage.removeItem('token');
@@ -61,12 +72,27 @@ export function AuthProvider({ children }) {
       // Buscar dados do usuário
       const userData = await apiService.request('/auth/me');
       
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      console.log('Dados do usuário da API:', userData);
       
-      ToastManager.success(`Bem-vindo, ${userData.name}!`);
+      // Mapear campos do backend (português) para frontend (inglês)
+      const mappedUser = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.nome || userData.name || 'Usuário',
+        phone: userData.telefone || userData.phone || '',
+        farmName: userData.fazenda || userData.farmName || '',
+        type: userData.tipo || userData.type || 'produtor'
+      };
+      
+      console.log('Dados mapeados:', mappedUser);
+      
+      setUser(mappedUser);
+      localStorage.setItem('user', JSON.stringify(mappedUser));
+      
+      ToastManager.success(`Bem-vindo, ${mappedUser.name}!`);
       return { success: true };
     } catch (error) {
+      console.error('Erro no login:', error);
       ToastManager.error(error.message);
       return { success: false, error: error.message };
     } finally {

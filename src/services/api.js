@@ -1,5 +1,6 @@
 // 🔗 Serviço de API para conectar com o Backend VacaFácil
 import { isValidUrl, generateCSRFToken, validateOrigin } from '../utils/sanitize';
+import { rateLimiter } from '../utils/rateLimit';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const ALLOWED_ORIGINS = [
@@ -29,6 +30,11 @@ class ApiService {
   // 🛠️ Método base para requisições
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+    
+    // Rate limiting
+    if (!rateLimiter.canMakeRequest(endpoint, 30, 60000)) {
+      throw new Error('Muitas requisições. Aguarde um momento.');
+    }
     
     // Valida URL antes de fazer requisição
     if (!isValidUrl(url, [this.baseURL])) {
@@ -85,7 +91,10 @@ class ApiService {
       
       return await response.json();
     } catch (error) {
-      console.error(`API Error [${endpoint}]:`, error);
+      // Melhor tratamento de erros
+      if (error.message === 'Failed to fetch') {
+        throw new Error('Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente.');
+      }
       throw error;
     }
   }
@@ -149,12 +158,6 @@ class ApiService {
     params.append('username', email);
     params.append('password', password);
     
-    console.log('🔐 Login attempt:', { 
-      email, 
-      url: `${this.baseURL}/auth/login`,
-      backend: this.baseURL 
-    });
-    
     try {
       const response = await fetch(`${this.baseURL}/auth/login`, {
         method: 'POST',
@@ -165,11 +168,8 @@ class ApiService {
         body: params,
       });
       
-      console.log('📡 Response status:', response.status);
-      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Login error:', errorData);
         
         // Se backend não responder, pode estar offline
         if (response.status === 0 || response.status >= 500) {
@@ -180,28 +180,21 @@ class ApiService {
       }
       
       const data = await response.json();
-      console.log('✅ Login success');
       this.setToken(data.access_token);
       return data;
     } catch (error) {
-      console.error('🔴 Login failed:', error);
       throw error;
     }
   }
 
   async register(userData) {
-    // Mapear campos do frontend (inglês) para backend (português)
     const mappedData = {
       email: userData.email,
-      nome: userData.name,        // name -> nome
+      nome: userData.name,
       password: userData.password,
-      telefone: userData.phone || null,   // phone -> telefone (opcional)
-      fazenda: userData.farmName || null  // farmName -> fazenda (opcional)
+      telefone: userData.phone || null,
+      fazenda: userData.farmName || null
     };
-    
-    // Debug: mostrar dados mapeados
-    console.log('Dados originais:', userData);
-    console.log('Dados mapeados para backend:', mappedData);
     
     return this.request('/auth/register', {
       method: 'POST',

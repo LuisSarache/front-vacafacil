@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 
 export default function ImageUpload({ vacaId, currentImage, onUploadSuccess }) {
-  const { isDark } = useTheme();
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(currentImage);
 
@@ -74,7 +72,7 @@ export default function ImageUpload({ vacaId, currentImage, onUploadSuccess }) {
           </button>
         </div>
       ) : (
-        <div className={`w-full h-64 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'} border-2 border-dashed rounded-lg flex items-center justify-center`}>
+        <div className="w-full h-64 bg-gray-50 border-gray-200 border-2 border-dashed rounded-lg flex items-center justify-center">
           <div className="text-center text-gray-400">
             <ImageIcon size={48} className="mx-auto mb-2" />
             <p>Nenhuma foto</p>
@@ -102,7 +100,7 @@ export default function ImageUpload({ vacaId, currentImage, onUploadSuccess }) {
       </label>
 
       {/* Info */}
-      <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+      <p className="text-sm text-gray-500 text-center">
         Formatos aceitos: JPG, PNG, WebP • Tamanho máximo: 5MB
       </p>
     </div>

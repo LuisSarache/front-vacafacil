@@ -1,4 +1,4 @@
-export const LoadingSpinner = ({ size = 'md', className = '' }) => {
+export const LoadingSpinner = ({ size = 'md', className = '', text = '' }) => {
     const sizes = {
       sm: 'w-4 h-4',
       md: 'w-8 h-8',
@@ -6,10 +6,11 @@ export const LoadingSpinner = ({ size = 'md', className = '' }) => {
     }
   
     return (
-      <div className={`flex justify-center items-center ${className}`}>
+      <div className={`flex flex-col justify-center items-center gap-3 ${className}`}>
         <div
           className={`${sizes[size]} border-4 border-medium/20 border-t-accent rounded-full animate-spin`}
         ></div>
+        {text && <p className="text-sm text-gray-600 animate-pulse">{text}</p>}
       </div>
     )
   }

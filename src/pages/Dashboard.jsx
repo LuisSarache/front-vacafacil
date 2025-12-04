@@ -6,10 +6,12 @@ import { ToastManager } from '../components/ToastManager';
 import { InteractiveChart } from '../components/InteractiveChart';
 import { SubscriptionStatus } from '../components/SubscriptionStatus';
 import { DebugPanel } from '../components/DebugPanel';
-import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw, Bell } from 'lucide-react';
+import { Modal } from '../components/Modal';
+import { Input } from '../components/Input';
+import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw, Bell, Plus } from 'lucide-react';
 
 export const Dashboard = () => {
-  const [dashboardData, _setDashboardData] = useState({
+  const [dashboardData, setDashboardData] = useState({
     producaoHoje: 850,
     vacasLactacao: 45,
     lucroMes: 12500,
@@ -17,12 +19,32 @@ export const Dashboard = () => {
   });
   const [loading, setLoading] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [alertas, setAlertas] = useState([
+    { id: 1, tipo: 'Vacina', vaca: 'Mimosa #123', prazo: '2 dias', resolvido: false },
+    { id: 2, tipo: 'Secagem', vaca: 'Estrela #089', prazo: 'Hoje', resolvido: false },
+    { id: 3, tipo: 'Prenhez', vaca: 'Bonita #156', prazo: '1 dia', resolvido: false }
+  ]);
+  const [showModal, setShowModal] = useState(false);
+  const [novoAlerta, setNovoAlerta] = useState({ tipo: '', vaca: '', prazo: '' });
 
-  const alertas = [
-    { tipo: 'Vacina', vaca: 'Mimosa #123', prazo: '2 dias' },
-    { tipo: 'Secagem', vaca: 'Estrela #089', prazo: 'Hoje' },
-    { tipo: 'Prenhez', vaca: 'Bonita #156', prazo: '1 dia' }
-  ];
+  const marcarResolvido = (id) => {
+    setAlertas(prev => prev.filter(alerta => alerta.id !== id));
+    setDashboardData(prev => ({ ...prev, alertas: prev.alertas - 1 }));
+    ToastManager.success('Alerta resolvido!');
+  };
+
+  const adicionarAlerta = () => {
+    if (!novoAlerta.tipo || !novoAlerta.vaca || !novoAlerta.prazo) {
+      ToastManager.error('Preencha todos os campos');
+      return;
+    }
+    const id = Math.max(...alertas.map(a => a.id), 0) + 1;
+    setAlertas(prev => [...prev, { ...novoAlerta, id, resolvido: false }]);
+    setDashboardData(prev => ({ ...prev, alertas: prev.alertas + 1 }));
+    setNovoAlerta({ tipo: '', vaca: '', prazo: '' });
+    setShowModal(false);
+    ToastManager.success('Alerta adicionado!');
+  };
 
   const chartData = [
     { date: '2024-01-10', value: 820, label: '10/01' },
@@ -131,28 +153,36 @@ export const Dashboard = () => {
             <Bell className="w-5 h-5 mr-2 text-red-500" />
             Alertas Importantes
           </h2>
-          <Button size="sm" variant="secondary" onClick={() => ToastManager.info('Lista completa em desenvolvimento')}>
-            Ver Todos
+          <Button size="sm" onClick={() => setShowModal(true)}>
+            <Plus className="w-4 h-4 mr-1" />
+            Adicionar Alerta
           </Button>
         </div>
         <div className="space-y-3">
-          {alertas.map((alerta, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border-l-4 border-red-500 hover:shadow-md transition-shadow">
-              <div className="flex items-center">
-                <div className="p-2 bg-red-100 rounded-full mr-3">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                </div>
-                <div>
-                  <span className="font-medium text-red-800">{alerta.tipo}</span>
-                  <p className="text-sm text-gray-700">{alerta.vaca}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="text-sm text-red-600 font-medium">{alerta.prazo}</span>
-                <Button size="sm" className="ml-2" onClick={() => ToastManager.info('Funcionalidade em desenvolvimento')}>Resolver</Button>
-              </div>
+          {alertas.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <Bell className="w-12 h-12 mx-auto mb-2 opacity-50" />
+              <p>Nenhum alerta pendente</p>
             </div>
-          ))}
+          ) : (
+            alertas.map((alerta) => (
+              <div key={alerta.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border-l-4 border-red-500 hover:shadow-md transition-shadow">
+                <div className="flex items-center">
+                  <div className="p-2 bg-red-100 rounded-full mr-3">
+                    <AlertTriangle className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div>
+                    <span className="font-medium text-red-800">{alerta.tipo}</span>
+                    <p className="text-sm text-gray-700">{alerta.vaca}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-red-600 font-medium">{alerta.prazo}</span>
+                  <Button size="sm" onClick={() => marcarResolvido(alerta.id)}>Resolvido</Button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </Card>
 
@@ -210,6 +240,38 @@ export const Dashboard = () => {
 
       {/* Debug Panel - Remover em produção */}
       <DebugPanel />
+
+      {/* Modal Adicionar Alerta */}
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Adicionar Novo Alerta">
+        <div className="space-y-4">
+          <Input
+            label="Tipo de Alerta"
+            placeholder="Ex: Vacina, Secagem, Prenhez"
+            value={novoAlerta.tipo}
+            onChange={(e) => setNovoAlerta(prev => ({ ...prev, tipo: e.target.value }))}
+          />
+          <Input
+            label="Vaca"
+            placeholder="Ex: Mimosa #123"
+            value={novoAlerta.vaca}
+            onChange={(e) => setNovoAlerta(prev => ({ ...prev, vaca: e.target.value }))}
+          />
+          <Input
+            label="Prazo"
+            placeholder="Ex: Hoje, 2 dias, 1 semana"
+            value={novoAlerta.prazo}
+            onChange={(e) => setNovoAlerta(prev => ({ ...prev, prazo: e.target.value }))}
+          />
+          <div className="flex gap-3 pt-4">
+            <Button variant="secondary" onClick={() => setShowModal(false)} className="flex-1">
+              Cancelar
+            </Button>
+            <Button onClick={adicionarAlerta} className="flex-1">
+              Adicionar
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

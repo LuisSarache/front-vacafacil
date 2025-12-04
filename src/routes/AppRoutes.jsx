@@ -4,7 +4,6 @@ import { lazy, Suspense } from 'react';
  
 // Importa contextos
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { useSubscription } from '../context/SubscriptionContext';
  
 // Componentes reutilizáveis
@@ -48,7 +47,6 @@ const ChatRoom = lazy(() => import('../pages/ChatRoom').then(m => ({ default: m.
    ============================== */
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading: authLoading } = useAuth(); // Obtém estado de autenticação e carregamento
-  const { isDark } = useTheme(); // Obtém estado do tema
   const { isNewUser, loading: subLoading } = useSubscription();
   const location = useLocation();
  
@@ -63,14 +61,14 @@ const ProtectedRoute = ({ children }) => {
   // Layout especial para página de escolher plano (sem sidebar)
   if (location.pathname === '/escolher-plano') {
     return (
-      <div className={`min-h-screen ${isDark ? 'dark' : ''}`}>
+      <div className="min-h-screen">
         {children}
       </div>
     );
   }
   
   return (
-    <div className={`min-h-screen flex dashboard-container ${isDark ? 'dark' : ''}`}>
+    <div className="min-h-screen flex dashboard-container">
       <Sidebar /> {/* Sidebar lateral sempre visível */}
       <main className="flex-1 lg:ml-64 p-8">
         {children} {/* Conteúdo da página protegida */}

@@ -91,14 +91,14 @@ export const ApiStatus = () => {
   }
 
   return (
-    <div className={`fixed top-4 right-4 z-50 ${status.bg} border border-current rounded-lg p-3 shadow-lg`}>
-      <div className="flex items-center gap-2">
-        <Icon className={`w-4 h-4 ${status.color}`} />
+    <div className={`fixed bottom-4 right-4 z-50 ${status.bg} border-2 ${status.color} rounded-lg p-4 shadow-xl animate-pulse`}>
+      <div className="flex items-center gap-3">
+        <Icon className={`w-5 h-5 ${status.color}`} />
         <div>
-          <div className={`text-sm font-medium ${status.color}`}>
+          <div className={`text-sm font-semibold ${status.color}`}>
             {status.text}
           </div>
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-gray-600 mt-1">
             {status.description}
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from "./context/AuthContext";
-import { ThemeProvider } from "./context/ThemeContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import { ProducaoProvider } from "./context/ProducaoContext";
 import { FinanceiroProvider } from "./context/FinanceiroContext";
@@ -15,42 +14,29 @@ import { useEffect } from 'react';
 
 function App(){
     useEffect(() => {
-        // Temporariamente desabilitado para debug do backend
-        // registerServiceWorker();
-        
-        // Desregistrar Service Worker existente
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                registrations.forEach(registration => {
-                    registration.unregister();
-                    console.log('Service Worker desregistrado');
-                });
-            });
-        }
+        registerServiceWorker();
     }, []);
 
     return(
-        <ThemeProvider>
-            <AuthProvider>
-                <SubscriptionProvider>
-                    <VacasProvider>
-                        <ReproducaoProvider>
-                            <NotificationProvider>
-                                <ProducaoProvider>
-                                    <FinanceiroProvider>
-                                        <ErrorBoundary>
-                                            <ApiStatus />
-                                            <AppRoutes/>
-                                        </ErrorBoundary>
-                                        <Toaster />
-                                    </FinanceiroProvider>
-                                </ProducaoProvider>
-                            </NotificationProvider>
-                        </ReproducaoProvider>
-                    </VacasProvider>
-                </SubscriptionProvider>
-            </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+            <SubscriptionProvider>
+                <VacasProvider>
+                    <ReproducaoProvider>
+                        <NotificationProvider>
+                            <ProducaoProvider>
+                                <FinanceiroProvider>
+                                    <ErrorBoundary>
+                                        <AppRoutes/>
+                                    </ErrorBoundary>
+                                    <ApiStatus />
+                                    <Toaster />
+                                </FinanceiroProvider>
+                            </ProducaoProvider>
+                        </NotificationProvider>
+                    </ReproducaoProvider>
+                </VacasProvider>
+            </SubscriptionProvider>
+        </AuthProvider>
     )
 }
 export default App;

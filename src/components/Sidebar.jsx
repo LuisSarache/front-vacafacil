@@ -126,9 +126,9 @@ export const Sidebar = () => {
                 <User className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-white font-medium">{user?.name}</p>
+                <p className="text-white font-medium">{user?.name || user?.nome || user?.email || 'Usuário'}</p>
                 {/* Tipo de usuário */}
-                <p className="text-xs text-white/60 capitalize">{user?.type}</p>
+                <p className="text-xs text-white/60 capitalize">{user?.type || user?.tipo || 'produtor'}</p>
               </div>
               <NotificationPanel />
             </div>

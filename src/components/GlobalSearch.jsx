@@ -3,22 +3,24 @@ import { Search, X } from 'lucide-react';
 import { useVacas } from '../context/VacasContext';
 import { useProducao } from '../context/ProducaoContext';
 import { useFinanceiro } from '../context/FinanceiroContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 export const GlobalSearch = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  const debouncedQuery = useDebounce(query, 300);
   const { vacas } = useVacas();
   const { producoes } = useProducao();
   const { transacoes } = useFinanceiro();
 
   useEffect(() => {
-    if (!query.trim()) {
+    if (!debouncedQuery.trim()) {
       setResults([]);
       return;
     }
 
     const searchResults = [];
-    const searchTerm = query.toLowerCase();
+    const searchTerm = debouncedQuery.toLowerCase();
 
     // Buscar vacas
     vacas.forEach(vaca => {
@@ -58,7 +60,7 @@ export const GlobalSearch = ({ isOpen, onClose }) => {
     });
 
     setResults(searchResults.slice(0, 10));
-  }, [query, vacas, producoes, transacoes]);
+  }, [debouncedQuery, vacas, producoes, transacoes]);
 
   if (!isOpen) return null;
 
