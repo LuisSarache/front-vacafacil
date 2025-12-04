@@ -19,12 +19,7 @@ export function VacasProvider({ children }) {
   const loadVacas = async () => {
     const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
     if (!token) {
-      const saved = localStorage.getItem('vacas');
-      if (saved) {
-        try {
-          setVacas(JSON.parse(saved));
-        } catch {}
-      }
+      setVacas([]);
       return;
     }
 
