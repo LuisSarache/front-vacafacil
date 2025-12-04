@@ -38,6 +38,7 @@ export const ReproducaoProvider = ({ children }) => {
 
   useEffect(() => {
     loadReproducao();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const adicionarInseminacao = async (inseminacao) => {

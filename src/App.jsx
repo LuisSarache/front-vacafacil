@@ -28,7 +28,6 @@ function App(){
                                     <ErrorBoundary>
                                         <AppRoutes/>
                                     </ErrorBoundary>
-                                    <ApiStatus />
                                     <Toaster />
                                 </FinanceiroProvider>
                             </ProducaoProvider>
