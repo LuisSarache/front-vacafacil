@@ -96,10 +96,10 @@ export const MarketplaceProvider = ({ children }) => {
       // Atualizar localStorage
       const updated = [novo, ...anuncios.filter(a => a.id !== novo.id)];
       localStorage.setItem('marketplace_anuncios', JSON.stringify(updated));
-      ToastManager.success('Anúncio criado com sucesso!');
+      ToastManager.success('✅ Anúncio publicado com sucesso! Seu anúncio já está visível no marketplace.');
       return novo;
     } catch (error) {
-      ToastManager.error(error.message || 'Erro ao criar anúncio');
+      ToastManager.error(error.message || '❌ Não foi possível publicar o anúncio. Verifique os dados e tente novamente.');
       throw error;
     }
   };
@@ -108,10 +108,10 @@ export const MarketplaceProvider = ({ children }) => {
     try {
       const updated = await apiService.updateAnuncio(id, data);
       setAnuncios(prev => prev.map(a => a.id === id ? updated : a));
-      ToastManager.success('Anúncio atualizado com sucesso!');
+      ToastManager.success('✅ Anúncio atualizado com sucesso! As alterações já estão visíveis.');
       return updated;
     } catch (error) {
-      ToastManager.error(error.message || 'Erro ao atualizar anúncio');
+      ToastManager.error(error.message || '❌ Não foi possível atualizar o anúncio. Tente novamente.');
       throw error;
     }
   };
@@ -120,9 +120,9 @@ export const MarketplaceProvider = ({ children }) => {
     try {
       await apiService.deleteAnuncio(id);
       setAnuncios(prev => prev.filter(a => a.id !== id));
-      ToastManager.success('Anúncio removido com sucesso!');
+      ToastManager.success('✅ Anúncio removido com sucesso! Ele não está mais visível no marketplace.');
     } catch (error) {
-      ToastManager.error(error.message || 'Erro ao remover anúncio');
+      ToastManager.error(error.message || '❌ Não foi possível remover o anúncio. Tente novamente.');
       throw error;
     }
   };

@@ -34,10 +34,10 @@ export const CriarAnuncio = () => {
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      ToastManager.success('Anúncio criado com sucesso!');
-      navigate('/marketplace');
+      ToastManager.success('✅ Anúncio publicado com sucesso! Redirecionando para o marketplace...');
+      setTimeout(() => navigate('/marketplace'), 1000);
     } catch {
-      ToastManager.error('Erro ao criar anúncio');
+      ToastManager.error('❌ Não foi possível publicar o anúncio. Verifique os dados e tente novamente.');
     } finally {
       setLoading(false);
     }
