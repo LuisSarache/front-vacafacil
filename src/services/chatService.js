@@ -2,13 +2,13 @@ import { apiService } from './api';
 
 export const chatService = {
   // Criar conversa com vendedor
-  createConversation: (anuncioId, vendedorNome, fazenda) => 
+  createConversation: (anuncioId, vendedorNome, localizacao) => 
     apiService.request('/chat/conversations', {
       method: 'POST',
       body: JSON.stringify({ 
         anuncio_id: anuncioId,
         vendedor_nome: vendedorNome,
-        fazenda: fazenda
+        localizacao: localizacao
       })
     }),
   

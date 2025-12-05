@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { chatService } from '../services/chatService';
+import { apiService } from '../services/api';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
@@ -30,7 +31,21 @@ export const ChatRoom = () => {
   const loadConversation = async () => {
     try {
       const data = await chatService.getConversation(id);
-      console.log('Dados da conversa:', data);
+      
+      // Sempre buscar dados do anúncio
+      if (data.anuncio_id) {
+        try {
+          const anuncios = await apiService.request('/marketplace/');
+          const anuncio = anuncios.find(a => a.id === data.anuncio_id);
+          if (anuncio) {
+            data.vendedor_nome = anuncio.vendedor;
+            data.localizacao = anuncio.localizacao;
+          }
+        } catch (err) {
+          console.error('Erro ao buscar anúncio:', err);
+        }
+      }
+      
       setConversation(data);
     } catch (error) {
       console.error('Erro ao carregar conversa:', error);
