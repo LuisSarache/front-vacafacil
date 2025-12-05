@@ -19,11 +19,16 @@ export const MarketplaceProvider = ({ children }) => {
   const loadAnuncios = async (filters = {}) => {
     const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
     if (!token) {
+      // Sem token, carregar apenas anúncios locais (sem mocks)
       const saved = localStorage.getItem('marketplace_anuncios');
       if (saved) {
         try {
           setAnuncios(JSON.parse(saved));
-        } catch {}
+        } catch {
+          setAnuncios([]);
+        }
+      } else {
+        setAnuncios([]);
       }
       return;
     }
@@ -35,11 +40,16 @@ export const MarketplaceProvider = ({ children }) => {
       localStorage.setItem('marketplace_anuncios', JSON.stringify(data));
     } catch (error) {
       console.error('Erro ao carregar anúncios da API:', error);
+      // Em caso de erro, carregar apenas anúncios locais salvos
       const saved = localStorage.getItem('marketplace_anuncios');
       if (saved) {
         try {
           setAnuncios(JSON.parse(saved));
-        } catch {}
+        } catch {
+          setAnuncios([]);
+        }
+      } else {
+        setAnuncios([]);
       }
     } finally {
       setLoading(false);
