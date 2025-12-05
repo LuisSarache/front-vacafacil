@@ -30,6 +30,7 @@ export const ChatRoom = () => {
   const loadConversation = async () => {
     try {
       const data = await chatService.getConversation(id);
+      console.log('Dados da conversa:', data);
       setConversation(data);
     } catch (error) {
       console.error('Erro ao carregar conversa:', error);
@@ -74,10 +75,10 @@ export const ChatRoom = () => {
           </Button>
           <div className="flex-1">
             <h2 className="font-bold text-dark text-lg">
-              {conversation?.vendedor_nome || conversation?.vendedorNome || 'Vendedor'}
+              {conversation?.vendedor_nome || conversation?.vendedorNome || conversation?.anuncio?.vendedor || 'Vendedor'}
             </h2>
             <p className="text-sm text-medium/70">
-              {conversation?.fazenda || conversation?.localizacao || 'Marketplace'}
+              {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Marketplace'}
             </p>
           </div>
         </div>
