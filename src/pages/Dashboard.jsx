@@ -46,13 +46,13 @@ export const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-dark">Dashboard VacaFácil</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-dark">Dashboard VacaFácil</h1>
           <SubscriptionStatus />
         </div>
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-medium">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full lg:w-auto">
+          <div className="text-xs sm:text-sm text-medium">
             Última atualização: {lastUpdate.toLocaleString('pt-BR')}
           </div>
           <Button 

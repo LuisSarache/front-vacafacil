@@ -13,10 +13,10 @@ export const Configuracoes = () => {
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
     // Perfil
-    nomeFazenda: user?.fazenda || '',
-    proprietario: user?.nome || user?.name || '',
+    nomeFazenda: user?.farmName || '',
+    proprietario: user?.name || '',
     email: user?.email || '',
-    telefone: user?.telefone || user?.phone || '',
+    telefone: user?.phone || '',
     
     // Preços
     precoLeite: 2.50,
@@ -325,7 +325,7 @@ export const Configuracoes = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900">João Silva</p>
+                  <p className="font-medium text-gray-900">{user?.name || 'Usuário'}</p>
                   <p className="text-sm text-gray-500">Administrador</p>
                 </div>
                 <Button variant="outline" size="sm">

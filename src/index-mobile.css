@@ -1,0 +1,205 @@
+/* ==============================
+   MELHORIAS MOBILE - VACAFÁCIL
+   ============================== */
+
+/* Touch Targets - Mínimo 44x44px (Apple HIG) */
+@media (max-width: 768px) {
+  button, a, input[type="checkbox"], input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Botões maiores em mobile */
+  .btn-mobile {
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+  }
+
+  /* Inputs maiores - apenas mobile */
+  input:not([type="checkbox"]):not([type="radio"]), 
+  select, 
+  textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  /* Cards com melhor espaçamento */
+  .card-mobile {
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Tabelas viram cards em mobile */
+  .table-mobile {
+    display: block;
+  }
+
+  .table-mobile thead {
+    display: none;
+  }
+
+  .table-mobile tbody {
+    display: block;
+  }
+
+  .table-mobile tr {
+    display: block;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .table-mobile td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .table-mobile td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-dark);
+  }
+
+  /* Textos legíveis */
+  .text-mobile-sm {
+    font-size: 14px !important;
+  }
+
+  .text-mobile-base {
+    font-size: 16px !important;
+  }
+
+  .text-mobile-lg {
+    font-size: 18px !important;
+  }
+
+  /* Espaçamento adequado */
+  .space-mobile {
+    padding: 16px !important;
+  }
+
+  /* Grid simplificado */
+  .grid-mobile-1 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sidebar full width */
+  .sidebar-mobile {
+    width: 85vw !important;
+    max-width: 320px !important;
+  }
+
+  /* Scroll suave */
+  .scroll-mobile {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Feedback visual ao tocar */
+  .touch-feedback:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+    transition: all 0.1s ease;
+  }
+
+  /* Modais full screen em mobile */
+  .modal-mobile {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Bottom sheet para ações */
+  .bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+  }
+
+  .bottom-sheet.active {
+    transform: translateY(0);
+  }
+
+  /* Safe area para notch */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Scroll horizontal suave para cards */
+  .horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .horizontal-scroll > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+
+  /* Ocultar scrollbar mas manter funcionalidade */
+  .horizontal-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* FAB (Floating Action Button) */
+  .fab-mobile {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 100;
+  }
+
+  .fab-mobile:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hide-landscape {
+    display: none;
+  }
+
+  .sidebar-mobile {
+    width: 280px !important;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .grid-tablet-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

@@ -10,6 +10,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { AdvancedFilters } from '../components/AdvancedFilters';
 import { Pagination } from '../components/Pagination';
 import { Search, Plus, Filter, Eye, Edit, Trash2, Download, Upload } from 'lucide-react';
+import { MobileCard } from '../components/MobileCard';
 
 export const Rebanho = () => {
   const navigate = useNavigate();
@@ -145,7 +146,31 @@ export const Rebanho = () => {
             <p className="text-medium mt-4">Carregando dados do rebanho...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Visualização Mobile (Cards) */}
+          <div className="lg:hidden p-4 space-y-4">
+            {paginatedVacas.map((vaca) => (
+              <MobileCard
+                key={vaca.id}
+                vaca={vaca}
+                onView={(id) => navigate(`/rebanho/${id}`)}
+                onEdit={(id) => navigate(`/rebanho/editar/${id}`)}
+                onDelete={(id, nome) => setConfirmDialog({ isOpen: true, vacaId: id, vacaNome: nome })}
+                getStatusColor={getStatusColor}
+                getStatusText={getStatusText}
+              />
+            ))}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </div>
+
+          {/* Visualização Desktop (Tabela) */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                 <tr>
@@ -267,6 +292,7 @@ export const Rebanho = () => {
               />
             )}
           </div>
+          </>
         )}
       </Card>
 
