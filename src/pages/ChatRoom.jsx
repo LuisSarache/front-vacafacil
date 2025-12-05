@@ -6,7 +6,7 @@ import { apiService } from '../services/api';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Image as ImageIcon, X } from 'lucide-react';
 
 export const ChatRoom = () => {
   const { id } = useParams();
@@ -16,7 +16,10 @@ export const ChatRoom = () => {
   const [mensagem, setMensagem] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     loadConversation();
@@ -54,14 +57,52 @@ export const ChatRoom = () => {
     }
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione uma imagem válida');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Imagem muito grande. Tamanho máximo: 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setImageFile(file);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setImageFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!mensagem.trim()) return;
+    if (!mensagem.trim() && !imageFile) return;
 
     setSending(true);
     try {
-      await chatService.sendMessage(id, mensagem);
+      let finalMessage = mensagem;
+      
+      // Se tiver imagem, adicionar ao texto
+      if (imagePreview) {
+        finalMessage = `${mensagem}\n[IMAGEM: ${imagePreview}]`;
+      }
+      
+      await chatService.sendMessage(id, finalMessage);
       setMensagem('');
+      handleRemoveImage();
       loadConversation();
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
@@ -121,7 +162,31 @@ export const ChatRoom = () => {
                         : 'bg-white text-dark border border-gray-200'
                     }`}
                   >
-                    <p className="break-words">{msg.mensagem}</p>
+                    {/* Verificar se tem imagem */}
+                    {msg.mensagem.includes('[IMAGEM:') ? (
+                      <>
+                        {(() => {
+                          const match = msg.mensagem.match(/\[IMAGEM: (.+?)\]/);
+                          const imageUrl = match ? match[1] : null;
+                          const textWithoutImage = msg.mensagem.replace(/\[IMAGEM: .+?\]/, '').trim();
+                          return (
+                            <>
+                              {imageUrl && (
+                                <img 
+                                  src={imageUrl} 
+                                  alt="Imagem enviada"
+                                  className="w-full rounded-lg mb-2 max-h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                                  onClick={() => window.open(imageUrl, '_blank')}
+                                />
+                              )}
+                              {textWithoutImage && <p className="break-words">{textWithoutImage}</p>}
+                            </>
+                          );
+                        })()}
+                      </>
+                    ) : (
+                      <p className="break-words">{msg.mensagem}</p>
+                    )}
                     <span className={`text-xs mt-2 block ${
                       isMyMessage ? 'text-white/70' : 'text-medium/50'
                     }`}>
@@ -141,7 +206,41 @@ export const ChatRoom = () => {
 
       {/* Input */}
       <Card className="glassmorphism p-4 shadow-lg">
+        {/* Preview da imagem */}
+        {imagePreview && (
+          <div className="mb-3 relative inline-block">
+            <img 
+              src={imagePreview} 
+              alt="Preview"
+              className="h-20 rounded-lg border-2 border-green-500"
+            />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+        
         <form onSubmit={handleSend} className="flex gap-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageSelect}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={sending}
+            className="px-4"
+          >
+            <ImageIcon className="w-4 h-4" />
+          </Button>
           <input
             type="text"
             value={mensagem}
@@ -152,7 +251,7 @@ export const ChatRoom = () => {
           />
           <Button 
             type="submit" 
-            disabled={sending || !mensagem.trim()}
+            disabled={sending || (!mensagem.trim() && !imageFile)}
             className="px-6"
           >
             <Send className="w-4 h-4" />
