@@ -16,6 +16,15 @@ export const MarketplaceProvider = ({ children }) => {
   const [anuncios, setAnuncios] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const removeDuplicates = (arr) => {
+    const seen = new Set();
+    return arr.filter(item => {
+      const duplicate = seen.has(item.id);
+      seen.add(item.id);
+      return !duplicate;
+    });
+  };
+
   const loadAnuncios = async (filters = {}) => {
     const token = sessionStorage.getItem('token') || localStorage.getItem('token_backup');
     if (!token) {
@@ -23,7 +32,10 @@ export const MarketplaceProvider = ({ children }) => {
       const saved = localStorage.getItem('marketplace_anuncios');
       if (saved) {
         try {
-          setAnuncios(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          const unique = removeDuplicates(parsed);
+          setAnuncios(unique);
+          localStorage.setItem('marketplace_anuncios', JSON.stringify(unique));
         } catch {
           setAnuncios([]);
         }
@@ -36,15 +48,22 @@ export const MarketplaceProvider = ({ children }) => {
     setLoading(true);
     try {
       const data = await apiService.getAnuncios(filters);
-      setAnuncios(data);
-      localStorage.setItem('marketplace_anuncios', JSON.stringify(data));
+      const unique = removeDuplicates(data);
+      setAnuncios(unique);
+      localStorage.setItem('marketplace_anuncios', JSON.stringify(unique));
     } catch (error) {
-      console.error('Erro ao carregar anúncios da API:', error);
+      // Silenciar erro 422 (validação) - backend pode não ter anúncios
+      if (!error.message?.includes('422')) {
+        console.error('Erro ao carregar anúncios da API:', error);
+      }
       // Em caso de erro, carregar apenas anúncios locais salvos
       const saved = localStorage.getItem('marketplace_anuncios');
       if (saved) {
         try {
-          setAnuncios(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          const unique = removeDuplicates(parsed);
+          setAnuncios(unique);
+          localStorage.setItem('marketplace_anuncios', JSON.stringify(unique));
         } catch {
           setAnuncios([]);
         }
@@ -63,7 +82,15 @@ export const MarketplaceProvider = ({ children }) => {
   const createAnuncio = async (anuncio) => {
     try {
       const novo = await apiService.createAnuncio(anuncio);
-      setAnuncios(prev => [novo, ...prev]);
+      // Evitar duplicação - verificar se já existe
+      setAnuncios(prev => {
+        const exists = prev.some(a => a.id === novo.id);
+        if (exists) return prev;
+        return [novo, ...prev];
+      });
+      // Atualizar localStorage
+      const updated = [novo, ...anuncios.filter(a => a.id !== novo.id)];
+      localStorage.setItem('marketplace_anuncios', JSON.stringify(updated));
       ToastManager.success('Anúncio criado com sucesso!');
       return novo;
     } catch (error) {
