@@ -81,7 +81,12 @@ export const MarketplaceProvider = ({ children }) => {
 
   const createAnuncio = async (anuncio) => {
     try {
-      const novo = await apiService.createAnuncio(anuncio);
+      // Adicionar campos obrigatórios do backend
+      const anuncioCompleto = {
+        ...anuncio,
+        categoria: anuncio.tipo || 'venda' // Backend exige categoria
+      };
+      const novo = await apiService.createAnuncio(anuncioCompleto);
       // Evitar duplicação - verificar se já existe
       setAnuncios(prev => {
         const exists = prev.some(a => a.id === novo.id);
