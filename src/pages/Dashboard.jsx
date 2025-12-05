@@ -12,18 +12,14 @@ import { Milk, Users, DollarSign, AlertTriangle, TrendingUp, Calendar, RefreshCw
 
 export const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({
-    producaoHoje: 850,
-    vacasLactacao: 45,
-    lucroMes: 12500,
-    alertas: 3
+    producaoHoje: 0,
+    vacasLactacao: 0,
+    lucroMes: 0,
+    alertas: 0
   });
   const [loading, setLoading] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  const [alertas, setAlertas] = useState([
-    { id: 1, tipo: 'Vacina', vaca: 'Mimosa #123', prazo: '2 dias', resolvido: false },
-    { id: 2, tipo: 'Secagem', vaca: 'Estrela #089', prazo: 'Hoje', resolvido: false },
-    { id: 3, tipo: 'Prenhez', vaca: 'Bonita #156', prazo: '1 dia', resolvido: false }
-  ]);
+  const [alertas, setAlertas] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [novoAlerta, setNovoAlerta] = useState({ tipo: '', vaca: '', prazo: '' });
 
@@ -46,15 +42,7 @@ export const Dashboard = () => {
     ToastManager.success('Alerta adicionado!');
   };
 
-  const chartData = [
-    { date: '2024-01-10', value: 820, label: '10/01' },
-    { date: '2024-01-11', value: 850, label: '11/01' },
-    { date: '2024-01-12', value: 780, label: '12/01' },
-    { date: '2024-01-13', value: 900, label: '13/01' },
-    { date: '2024-01-14', value: 870, label: '14/01' },
-    { date: '2024-01-15', value: 920, label: '15/01' },
-    { date: '2024-01-16', value: 850, label: '16/01' }
-  ];
+  const chartData = [];
 
   return (
     <div className="space-y-6">

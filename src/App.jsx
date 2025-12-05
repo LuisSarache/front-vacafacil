@@ -6,6 +6,7 @@ import { FinanceiroProvider } from "./context/FinanceiroContext";
 import { VacasProvider } from "./context/VacasContext";
 import { ReproducaoProvider } from "./context/ReproducaoContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
+import { MarketplaceProvider } from "./context/MarketplaceContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ApiStatus } from "./components/ApiStatus";
 import { AppRoutes } from "./routes/AppRoutes";
@@ -25,10 +26,12 @@ function App(){
                         <NotificationProvider>
                             <ProducaoProvider>
                                 <FinanceiroProvider>
-                                    <ErrorBoundary>
-                                        <AppRoutes/>
-                                    </ErrorBoundary>
-                                    <Toaster />
+                                    <MarketplaceProvider>
+                                        <ErrorBoundary>
+                                            <AppRoutes/>
+                                        </ErrorBoundary>
+                                        <Toaster />
+                                    </MarketplaceProvider>
                                 </FinanceiroProvider>
                             </ProducaoProvider>
                         </NotificationProvider>

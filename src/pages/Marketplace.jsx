@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useMarketplace } from '../context/MarketplaceContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -12,56 +13,11 @@ import { Search, Filter, ShoppingCart, DollarSign, MapPin, Calendar, Milk, PlusC
 export const Marketplace = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { anuncios, createAnuncio, loading } = useMarketplace();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRaca, setFilterRaca] = useState('todas');
   const [filterTipo, setFilterTipo] = useState('todos');
   const [showForm, setShowForm] = useState(false);
-
-  // 🔹 Lista inicial de anúncios
-  const [anuncios, setAnuncios] = useState([
-    {
-      id: 1,
-      tipo: 'venda',
-      titulo: 'Vaca Holandesa - Alta Produção',
-      raca: 'Holandesa',
-      idade: 3,
-      producaoMedia: 28,
-      preco: 8500,
-      localizacao: 'Pouso Alegre/MG',
-      vendedor: 'Fazenda São José',
-      telefone: '(35) 99999-9999',
-      descricao: 'Vaca em excelente estado, produção média de 28L/dia',
-      status: 'disponivel'
-    },
-    {
-      id: 2,
-      tipo: 'venda',
-      titulo: 'Novilha Jersey - Primeira Cria',
-      raca: 'Jersey',
-      idade: 2,
-      producaoMedia: 0,
-      preco: 5500,
-      localizacao: 'Varginha/MG',
-      vendedor: 'Fazenda Boa Vista',
-      telefone: '(35) 98888-8888',
-      descricao: 'Novilha prenha, primeira cria prevista para 3 meses',
-      status: 'disponivel'
-    },
-    {
-      id: 3,
-      tipo: 'compra',
-      titulo: 'Procuro Vaca Girolando',
-      raca: 'Girolando',
-      idade: null,
-      producaoMedia: 20,
-      preco: 7000,
-      localizacao: 'Pouso Alegre/MG',
-      vendedor: 'João Silva',
-      telefone: '(35) 97777-7777',
-      descricao: 'Busco vaca girolando com produção mínima de 20L/dia',
-      status: 'procurando'
-    }
-  ]);
 
   // 🔹 Novo anúncio temporário
   const [novoAnuncio, setNovoAnuncio] = useState({
@@ -86,38 +42,36 @@ export const Marketplace = () => {
     return matchesSearch && matchesRaca && matchesTipo;
   });
 
-  // 🔹 Função para adicionar anúncio
-  const handleAddAnuncio = () => {
+  const handleAddAnuncio = async () => {
     if (!novoAnuncio.titulo || !novoAnuncio.raca || !novoAnuncio.preco) {
       ToastManager.error('Preencha pelo menos o título, raça e preço!');
       return;
     }
 
-    const novo = {
-      ...novoAnuncio,
-      id: Date.now(),
-      preco: Number(novoAnuncio.preco),
-      idade: novoAnuncio.idade ? Number(novoAnuncio.idade) : null,
-      producaoMedia: novoAnuncio.producaoMedia ? Number(novoAnuncio.producaoMedia) : 0,
-      status: 'disponivel',
-      userId: user?.id || user?.email // Identificar dono do anúncio
-    };
-
-    setAnuncios([...anuncios, novo]);
-    setShowForm(false);
-    setNovoAnuncio({
-      tipo: 'venda',
-      titulo: '',
-      raca: '',
-      idade: '',
-      producaoMedia: '',
-      preco: '',
-      localizacao: '',
-      vendedor: '',
-      telefone: '',
-      descricao: ''
-    });
-    ToastManager.success('Anúncio adicionado com sucesso!');
+    try {
+      await createAnuncio({
+        ...novoAnuncio,
+        preco: Number(novoAnuncio.preco),
+        idade: novoAnuncio.idade ? Number(novoAnuncio.idade) : null,
+        producaoMedia: novoAnuncio.producaoMedia ? Number(novoAnuncio.producaoMedia) : 0
+      });
+      
+      setShowForm(false);
+      setNovoAnuncio({
+        tipo: 'venda',
+        titulo: '',
+        raca: '',
+        idade: '',
+        producaoMedia: '',
+        preco: '',
+        localizacao: '',
+        vendedor: '',
+        telefone: '',
+        descricao: ''
+      });
+    } catch (error) {
+      // Erro já tratado no context
+    }
   };
 
   return (
