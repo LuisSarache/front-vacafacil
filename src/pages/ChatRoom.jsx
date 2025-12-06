@@ -120,32 +120,36 @@ export const ChatRoom = () => {
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
       {/* Header */}
-      <Card className="glassmorphism p-4 mb-4 shadow-lg">
+      <div className="bg-gradient-to-r from-green-600 to-green-700 p-5 mb-4 rounded-2xl shadow-xl">
         <div className="flex items-center gap-4">
-          <Button
-            variant="secondary"
-            size="sm"
+          <button
             onClick={() => navigate('/marketplace/chat')}
+            className="p-2 hover:bg-white/20 rounded-full transition-all"
           >
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
+            <ArrowLeft className="w-5 h-5 text-white" />
+          </button>
           <div className="flex-1">
-            <h2 className="font-bold text-dark text-lg">
+            <h2 className="font-bold text-white text-xl">
               {conversation?.vendedor_nome || conversation?.vendedorNome || conversation?.anuncio?.vendedor || 'Vendedor'}
             </h2>
-            <p className="text-sm text-medium/70">
-              {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Marketplace'}
+            <p className="text-sm text-white/80 flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
+              {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Online'}
             </p>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Messages */}
-      <Card className="glassmorphism flex-1 overflow-y-auto p-6 mb-4">
+      <div className="flex-1 overflow-y-auto p-6 mb-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl">
         <div className="space-y-4">
           {conversation?.mensagens?.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-medium/50">Nenhuma mensagem ainda. Inicie a conversa!</p>
+              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Send className="w-10 h-10 text-gray-400" />
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 font-medium">Nenhuma mensagem ainda</p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Inicie a conversa!</p>
             </div>
           ) : (
             conversation?.mensagens.map((msg) => {
@@ -156,10 +160,10 @@ export const ChatRoom = () => {
                   className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-md px-4 py-3 rounded-2xl shadow-md ${
+                    className={`max-w-md px-4 py-3 rounded-2xl shadow-lg transition-all hover:shadow-xl ${
                       isMyMessage
-                        ? 'bg-[#6A994E] text-white'
-                        : 'bg-white text-dark border border-gray-200'
+                        ? 'bg-gradient-to-br from-green-600 to-green-700 text-white'
+                        : 'bg-white dark:bg-gray-800 text-dark dark:text-white border border-gray-200 dark:border-gray-700'
                     }`}
                   >
                     {/* Verificar se tem imagem */}
@@ -172,12 +176,19 @@ export const ChatRoom = () => {
                           return (
                             <>
                               {imageUrl && (
-                                <img 
-                                  src={imageUrl} 
-                                  alt="Imagem enviada"
-                                  className="w-full rounded-lg mb-2 max-h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                                  onClick={() => window.open(imageUrl, '_blank')}
-                                />
+                                <div className="relative group">
+                                  <img 
+                                    src={imageUrl} 
+                                    alt="Imagem enviada"
+                                    className="w-full rounded-xl mb-2 max-h-64 object-cover cursor-pointer transition-all"
+                                    onClick={() => window.open(imageUrl, '_blank')}
+                                  />
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all flex items-center justify-center">
+                                    <span className="opacity-0 group-hover:opacity-100 text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full transition-all">
+                                      Click para ampliar
+                                    </span>
+                                  </div>
+                                </div>
                               )}
                               {textWithoutImage && <p className="break-words">{textWithoutImage}</p>}
                             </>
@@ -187,14 +198,19 @@ export const ChatRoom = () => {
                     ) : (
                       <p className="break-words">{msg.mensagem}</p>
                     )}
-                    <span className={`text-xs mt-2 block ${
-                      isMyMessage ? 'text-white/70' : 'text-medium/50'
-                    }`}>
-                      {new Date(msg.created_at).toLocaleTimeString('pt-BR', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className={`text-xs ${
+                        isMyMessage ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
+                      }`}>
+                        {new Date(msg.created_at).toLocaleTimeString('pt-BR', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                      {isMyMessage && (
+                        <span className="text-white/70 text-xs">✓✓</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -202,22 +218,22 @@ export const ChatRoom = () => {
           )}
           <div ref={messagesEndRef} />
         </div>
-      </Card>
+      </div>
 
       {/* Input */}
-      <Card className="glassmorphism p-4 shadow-lg">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
         {/* Preview da imagem */}
         {imagePreview && (
-          <div className="mb-3 relative inline-block">
+          <div className="mb-3 relative inline-block animate-in fade-in slide-in-from-bottom-2">
             <img 
               src={imagePreview} 
               alt="Preview"
-              className="h-20 rounded-lg border-2 border-green-500"
+              className="h-24 rounded-xl border-2 border-green-500 shadow-lg"
             />
             <button
               type="button"
               onClick={handleRemoveImage}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+              className="absolute -top-2 -right-2 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full p-1.5 hover:scale-110 transition-all shadow-lg"
             >
               <X size={16} />
             </button>
@@ -232,26 +248,32 @@ export const ChatRoom = () => {
             onChange={handleImageSelect}
             className="hidden"
           />
-          <Button
+          <button
             type="button"
-            variant="secondary"
             onClick={() => fileInputRef.current?.click()}
             disabled={sending}
-            className="px-4"
+            className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-all disabled:opacity-50"
           >
-            <ImageIcon className="w-4 h-4" />
-          </Button>
+            <ImageIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+          </button>
           <input
             type="text"
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
             placeholder="Digite sua mensagem..."
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-dark focus:border-dark transition-all"
+            className="flex-1 px-5 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             disabled={sending}
           />
-          <Button 
+          <button
             type="submit" 
             disabled={sending || (!mensagem.trim() && !imageFile)}
+            className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center gap-2"
+          >
+            <Send className="w-5 h-5" />
+            {sending ? 'Enviando...' : 'Enviar'}
+          </button>
+        </form>
+      </div>!imageFile)}
             className="px-6"
           >
             <Send className="w-4 h-4" />
