@@ -39,8 +39,7 @@ const Assinatura = lazy(() => import('../pages/Assinatura').then(m => ({ default
 const EscolherPlano = lazy(() => import('../pages/EscolherPlano').then(m => ({ default: m.EscolherPlano })));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
 const ResetPassword = lazy(() => import('../pages/ResetPassword').then(m => ({ default: m.ResetPassword })));
-const ChatList = lazy(() => import('../pages/ChatList').then(m => ({ default: m.ChatList })));
-const ChatRoom = lazy(() => import('../pages/ChatRoom').then(m => ({ default: m.ChatRoom })));
+const Chat = lazy(() => import('../pages/Chat').then(m => ({ default: m.Chat })));
  
 /* ==============================
    Componente de rota protegida
@@ -268,18 +267,18 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         } />
         
-        <Route path="/marketplace/chat" element={
+        <Route path="/chat" element={
           <ProtectedRoute>
-            <FeatureRoute feature="marketplace" featureName="Chat do Marketplace">
-              <ChatList /> 
+            <FeatureRoute feature="marketplace" featureName="Chat">
+              <Chat /> 
             </FeatureRoute>
           </ProtectedRoute>
         } />
         
-        <Route path="/marketplace/chat/:id" element={
+        <Route path="/chat/:id" element={
           <ProtectedRoute>
-            <FeatureRoute feature="marketplace" featureName="Chat do Marketplace">
-              <ChatRoom /> 
+            <FeatureRoute feature="marketplace" featureName="Chat">
+              <Chat /> 
             </FeatureRoute>
           </ProtectedRoute>
         } />

@@ -228,7 +228,7 @@ export const Marketplace = () => {
                         anuncio.vendedor,
                         anuncio.localizacao
                       );
-                      navigate(`/marketplace/chat/${conversation.id}`);
+                      navigate(`/chat/${conversation.id}`);
                     } catch (error) {
                       ToastManager.error('Erro ao iniciar conversa');
                     }
