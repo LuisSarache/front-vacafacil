@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMarketplace } from '../context/MarketplaceContext';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -11,6 +12,7 @@ import { ArrowLeft, Save, Camera, MapPin, Phone, DollarSign, Milk, Calendar } fr
 export const CriarAnuncio = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { createAnuncio } = useMarketplace();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     tipo: 'venda',
@@ -33,11 +35,15 @@ export const CriarAnuncio = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      ToastManager.success('✅ Anúncio publicado com sucesso! Redirecionando para o marketplace...');
+      await createAnuncio({
+        ...formData,
+        preco: Number(formData.preco),
+        idade: formData.idade ? Number(formData.idade) : null,
+        producaoMedia: formData.producaoMedia ? Number(formData.producaoMedia) : 0
+      });
       setTimeout(() => navigate('/marketplace'), 1000);
-    } catch {
-      ToastManager.error('❌ Não foi possível publicar o anúncio. Verifique os dados e tente novamente.');
+    } catch (error) {
+      // Erro já tratado no context
     } finally {
       setLoading(false);
     }
