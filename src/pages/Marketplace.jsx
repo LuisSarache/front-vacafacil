@@ -44,7 +44,7 @@ export const Marketplace = () => {
       </div>
 
       {/* 🔹 Filtros */}
-      <Card className="glassmorphism p-6">
+      <Card className="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-medium/50 w-4 h-4 pointer-events-none z-10" />
@@ -87,7 +87,7 @@ export const Marketplace = () => {
       {/* 🔹 Lista de Anúncios */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredAnuncios.map((anuncio) => (
-          <Card key={anuncio.id} className="glassmorphism p-6 hover:shadow-lg transition-all">
+          <Card key={anuncio.id} className="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-all">
             {/* Foto do Animal */}
             <div className="mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
               {anuncio.foto ? (
