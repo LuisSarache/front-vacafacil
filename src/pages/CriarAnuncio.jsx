@@ -87,14 +87,14 @@ export const CriarAnuncio = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <Card className="bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-gray-700">
+          <Card className="!bg-white p-8 border border-gray-200">
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">* Campos obrigatórios</p>
             <form onSubmit={handleSubmit} className="space-y-8">
           {/* FOTO - DESTAQUE NO TOPO */}
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
+          <div className="!bg-gray-50 rounded-lg p-6 border border-gray-200">
             <div className="flex items-center gap-3 mb-4">
-              <Camera className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Foto do Animal</h3>
+              <Camera className="w-5 h-5 !text-gray-600" />
+              <h3 className="text-lg font-medium !text-gray-900">Foto do Animal</h3>
             </div>
             <ImageUpload
               currentImage={formData.foto}
@@ -284,7 +284,7 @@ export const CriarAnuncio = () => {
 
     {/* RESUMO DO ANÚNCIO */}
     <div className="lg:col-span-1">
-      <Card className="bg-white dark:bg-gray-800 p-6 sticky top-8 border border-gray-200 dark:border-gray-700">
+      <Card className="!bg-white p-6 sticky top-8 border border-gray-200">
         <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-4">Resumo do Anúncio</h3>
         <div className="space-y-4">
           {formData.foto && (
