@@ -115,35 +115,36 @@ export const ChatRoom = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
-      <div className="bg-gradient-to-r from-green-600 to-green-700 p-5 mb-4 rounded-2xl shadow-xl">
+      {/* Header */}
+      <div className="bg-[#6A994E] p-5 mb-4 rounded-lg shadow-md">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/marketplace/chat')}
-            className="p-2 hover:bg-white/20 rounded-full transition-all"
+            className="p-2 hover:bg-white/10 rounded-lg transition-all"
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <div className="flex-1">
-            <h2 className="font-bold text-white text-xl">
+            <h2 className="font-bold text-white text-lg">
               {conversation?.vendedor_nome || conversation?.vendedorNome || conversation?.anuncio?.vendedor || 'Vendedor'}
             </h2>
-            <p className="text-sm text-white/80 flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
-              {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Online'}
+            <p className="text-sm text-white/90">
+              {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Marketplace'}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 mb-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-6 mb-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
         <div className="space-y-4">
           {conversation?.mensagens?.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <Send className="w-10 h-10 text-gray-400" />
+              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Send className="w-8 h-8 text-gray-400" />
               </div>
-              <p className="text-gray-500 dark:text-gray-400 font-medium">Nenhuma mensagem ainda</p>
-              <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Inicie a conversa!</p>
+              <p className="text-gray-600 dark:text-gray-400 font-medium">Nenhuma mensagem ainda</p>
+              <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">Inicie a conversa!</p>
             </div>
           ) : (
             conversation?.mensagens.map((msg) => {
@@ -154,10 +155,10 @@ export const ChatRoom = () => {
                   className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-md px-4 py-3 rounded-2xl shadow-lg transition-all hover:shadow-xl ${
+                    className={`max-w-md px-4 py-3 rounded-lg shadow-sm ${
                       isMyMessage
-                        ? 'bg-gradient-to-br from-green-600 to-green-700 text-white'
-                        : 'bg-white dark:bg-gray-800 text-dark dark:text-white border border-gray-200 dark:border-gray-700'
+                        ? 'bg-[#6A994E] text-white'
+                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
                     }`}
                   >
                     {msg.mensagem.includes('[IMAGEM:') ? (
@@ -169,19 +170,12 @@ export const ChatRoom = () => {
                           return (
                             <>
                               {imageUrl && (
-                                <div className="relative group">
-                                  <img 
-                                    src={imageUrl} 
-                                    alt="Imagem enviada"
-                                    className="w-full rounded-xl mb-2 max-h-64 object-cover cursor-pointer transition-all"
-                                    onClick={() => window.open(imageUrl, '_blank')}
-                                  />
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all flex items-center justify-center">
-                                    <span className="opacity-0 group-hover:opacity-100 text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full transition-all">
-                                      Click para ampliar
-                                    </span>
-                                  </div>
-                                </div>
+                                <img 
+                                  src={imageUrl} 
+                                  alt="Imagem enviada"
+                                  className="w-full rounded-lg mb-2 max-h-64 object-cover cursor-pointer"
+                                  onClick={() => window.open(imageUrl, '_blank')}
+                                />
                               )}
                               {textWithoutImage && <p className="break-words">{textWithoutImage}</p>}
                             </>
@@ -191,19 +185,14 @@ export const ChatRoom = () => {
                     ) : (
                       <p className="break-words">{msg.mensagem}</p>
                     )}
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className={`text-xs ${
-                        isMyMessage ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
-                      }`}>
-                        {new Date(msg.created_at).toLocaleTimeString('pt-BR', {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
-                      {isMyMessage && (
-                        <span className="text-white/70 text-xs">✓✓</span>
-                      )}
-                    </div>
+                    <span className={`text-xs mt-2 block ${
+                      isMyMessage ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
+                    }`}>
+                      {new Date(msg.created_at).toLocaleTimeString('pt-BR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
                   </div>
                 </div>
               );
@@ -213,20 +202,21 @@ export const ChatRoom = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+      {/* Input */}
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
         {imagePreview && (
-          <div className="mb-3 relative inline-block animate-in fade-in slide-in-from-bottom-2">
+          <div className="mb-3 relative inline-block">
             <img 
               src={imagePreview} 
               alt="Preview"
-              className="h-24 rounded-xl border-2 border-green-500 shadow-lg"
+              className="h-20 rounded-lg border-2 border-[#6A994E]"
             />
             <button
               type="button"
               onClick={handleRemoveImage}
-              className="absolute -top-2 -right-2 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full p-1.5 hover:scale-110 transition-all shadow-lg"
+              className="absolute -top-2 -right-2 bg-gray-600 hover:bg-gray-700 text-white rounded-full p-1 transition-colors"
             >
-              <X size={16} />
+              <X size={14} />
             </button>
           </div>
         )}
@@ -243,7 +233,7 @@ export const ChatRoom = () => {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={sending}
-            className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-all disabled:opacity-50"
+            className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
           >
             <ImageIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
@@ -252,13 +242,13 @@ export const ChatRoom = () => {
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
             placeholder="Digite sua mensagem..."
-            className="flex-1 px-5 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6A994E] focus:border-transparent transition-all text-gray-900 dark:text-white placeholder-gray-500"
             disabled={sending}
           />
           <button
             type="submit" 
             disabled={sending || (!mensagem.trim() && !imageFile)}
-            className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center gap-2"
+            className="px-6 py-3 bg-[#6A994E] hover:bg-[#5a8442] text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <Send className="w-5 h-5" />
             {sending ? 'Enviando...' : 'Enviar'}
