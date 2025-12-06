@@ -114,37 +114,35 @@ export const ChatRoom = () => {
   if (loading) return <LoadingSpinner size="lg" />;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]">
-      {/* Header */}
-      <div className="bg-[#6A994E] p-5 mb-4 rounded-lg shadow-md">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/marketplace/chat')}
-            className="p-2 hover:bg-white/10 rounded-lg transition-all"
-          >
-            <ArrowLeft className="w-5 h-5 text-white" />
-          </button>
-          <div className="flex-1">
-            <h2 className="font-bold text-white text-lg">
-              {conversation?.vendedor_nome || conversation?.vendedorNome || conversation?.anuncio?.vendedor || 'Vendedor'}
-            </h2>
-            <p className="text-sm text-white/90">
-              {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Marketplace'}
-            </p>
-          </div>
+    <div className="flex flex-col h-[calc(100vh-8rem)] bg-gray-50">
+      {/* Header - Fino e elegante */}
+      <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center gap-3">
+        <button
+          onClick={() => navigate('/marketplace/chat')}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </button>
+        <div className="flex-1">
+          <h2 className="font-semibold text-gray-900 text-base">
+            {conversation?.vendedor_nome || conversation?.vendedorNome || conversation?.anuncio?.vendedor || 'Vendedor'}
+          </h2>
+          <p className="text-xs text-gray-500">
+            {conversation?.fazenda || conversation?.localizacao || conversation?.anuncio?.localizacao || 'Marketplace'}
+          </p>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-6 mb-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-        <div className="space-y-4">
+      {/* Messages - Fundo claro */}
+      <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <div className="max-w-4xl mx-auto space-y-3">
           {conversation?.mensagens?.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <Send className="w-8 h-8 text-gray-400" />
+            <div className="text-center py-16">
+              <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Send className="w-7 h-7 text-gray-400" />
               </div>
-              <p className="text-gray-600 dark:text-gray-400 font-medium">Nenhuma mensagem ainda</p>
-              <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">Inicie a conversa!</p>
+              <p className="text-gray-600 font-medium">Nenhuma mensagem ainda</p>
+              <p className="text-gray-400 text-sm mt-1">Inicie a conversa!</p>
             </div>
           ) : (
             conversation?.mensagens.map((msg) => {
@@ -155,10 +153,10 @@ export const ChatRoom = () => {
                   className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-md px-4 py-3 rounded-lg shadow-sm ${
+                    className={`max-w-md px-4 py-2.5 rounded-lg ${
                       isMyMessage
-                        ? 'bg-[#6A994E] text-white'
-                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
+                        ? 'bg-[#E8F5E9] text-gray-900'
+                        : 'bg-white text-gray-900 border border-gray-200'
                     }`}
                   >
                     {msg.mensagem.includes('[IMAGEM:') ? (
@@ -173,21 +171,19 @@ export const ChatRoom = () => {
                                 <img 
                                   src={imageUrl} 
                                   alt="Imagem enviada"
-                                  className="w-full rounded-lg mb-2 max-h-64 object-cover cursor-pointer"
+                                  className="w-full rounded-md mb-2 max-h-64 object-cover cursor-pointer"
                                   onClick={() => window.open(imageUrl, '_blank')}
                                 />
                               )}
-                              {textWithoutImage && <p className="break-words">{textWithoutImage}</p>}
+                              {textWithoutImage && <p className="break-words text-sm">{textWithoutImage}</p>}
                             </>
                           );
                         })()}
                       </>
                     ) : (
-                      <p className="break-words">{msg.mensagem}</p>
+                      <p className="break-words text-sm">{msg.mensagem}</p>
                     )}
-                    <span className={`text-xs mt-2 block ${
-                      isMyMessage ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
-                    }`}>
+                    <span className="text-xs text-gray-500 mt-1 block">
                       {new Date(msg.created_at).toLocaleTimeString('pt-BR', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -202,58 +198,60 @@ export const ChatRoom = () => {
         </div>
       </div>
 
-      {/* Input */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-        {imagePreview && (
-          <div className="mb-3 relative inline-block">
-            <img 
-              src={imagePreview} 
-              alt="Preview"
-              className="h-20 rounded-lg border-2 border-[#6A994E]"
+      {/* Input - Limpo e profissional */}
+      <div className="bg-white border-t border-gray-200 p-4">
+        <div className="max-w-4xl mx-auto">
+          {imagePreview && (
+            <div className="mb-3 relative inline-block">
+              <img 
+                src={imagePreview} 
+                alt="Preview"
+                className="h-20 rounded-md border border-gray-200"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="absolute -top-2 -right-2 bg-gray-500 hover:bg-gray-600 text-white rounded-full p-1 transition-colors"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
+          
+          <form onSubmit={handleSend} className="flex gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageSelect}
+              className="hidden"
             />
             <button
               type="button"
-              onClick={handleRemoveImage}
-              className="absolute -top-2 -right-2 bg-gray-600 hover:bg-gray-700 text-white rounded-full p-1 transition-colors"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={sending}
+              className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
             >
-              <X size={14} />
+              <ImageIcon className="w-5 h-5 text-gray-600" />
             </button>
-          </div>
-        )}
-        
-        <form onSubmit={handleSend} className="flex gap-3">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageSelect}
-            className="hidden"
-          />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={sending}
-            className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <ImageIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-          </button>
-          <input
-            type="text"
-            value={mensagem}
-            onChange={(e) => setMensagem(e.target.value)}
-            placeholder="Digite sua mensagem..."
-            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6A994E] focus:border-transparent transition-all text-gray-900 dark:text-white placeholder-gray-500"
-            disabled={sending}
-          />
-          <button
-            type="submit" 
-            disabled={sending || (!mensagem.trim() && !imageFile)}
-            className="px-6 py-3 bg-[#6A994E] hover:bg-[#5a8442] text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            <Send className="w-5 h-5" />
-            {sending ? 'Enviando...' : 'Enviar'}
-          </button>
-        </form>
+            <input
+              type="text"
+              value={mensagem}
+              onChange={(e) => setMensagem(e.target.value)}
+              placeholder="Digite sua mensagem..."
+              className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6A994E] focus:border-transparent text-gray-900 placeholder-gray-400"
+              disabled={sending}
+            />
+            <button
+              type="submit" 
+              disabled={sending || (!mensagem.trim() && !imageFile)}
+              className="px-5 py-2.5 bg-[#6A994E] hover:bg-[#5a8442] text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              Enviar
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
