@@ -55,15 +55,18 @@ export const CriarAnuncio = () => {
     }
     setLoading(true);
     try {
-      await createAnuncio({
+      const payload = {
         ...formData,
         preco: Number(formData.preco),
         idade: formData.idade ? Number(formData.idade) : null,
         producaoMedia: formData.producaoMedia ? Number(formData.producaoMedia) : 0
-      });
+      };
+      console.log('📤 Enviando anúncio:', payload);
+      console.log('📷 Foto presente?', !!payload.foto);
+      await createAnuncio(payload);
       setTimeout(() => navigate('/marketplace'), 1000);
     } catch (error) {
-      // Erro já tratado no context
+      console.error('❌ Erro ao criar anúncio:', error);
     } finally {
       setLoading(false);
     }
@@ -88,10 +91,10 @@ export const CriarAnuncio = () => {
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">* Campos obrigatórios</p>
             <form onSubmit={handleSubmit} className="space-y-8">
           {/* FOTO - DESTAQUE NO TOPO */}
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-8 border-2 border-dashed border-green-300 dark:border-green-700">
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-4">
-              <Camera className="w-6 h-6 text-green-600 dark:text-green-400" />
-              <h3 className="text-xl font-semibold text-dark dark:text-light">Foto do Animal</h3>
+              <Camera className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Foto do Animal</h3>
             </div>
             <ImageUpload
               currentImage={formData.foto}
@@ -106,8 +109,8 @@ export const CriarAnuncio = () => {
             <button
               type="button"
               onClick={() => handleInputChange('tipo', 'venda')}
-              className={`flex-1 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg ${
-                formData.tipo === 'venda' ? 'bg-green-600 text-white scale-105' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+                formData.tipo === 'venda' ? 'bg-[#6A994E] text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
               }`}
             >
               Vender
@@ -115,8 +118,8 @@ export const CriarAnuncio = () => {
             <button
               type="button"
               onClick={() => handleInputChange('tipo', 'compra')}
-              className={`flex-1 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg ${
-                formData.tipo === 'compra' ? 'bg-blue-600 text-white scale-105' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+                formData.tipo === 'compra' ? 'bg-[#6A994E] text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
               }`}
             >
               Procurar
@@ -125,8 +128,8 @@ export const CriarAnuncio = () => {
 
           {/* GRUPO 1: INFORMAÇÕES BÁSICAS */}
           <div className="space-y-5">
-            <h3 className="text-lg font-semibold text-dark dark:text-light flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 font-bold">1</div>
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-300 dark:border-gray-600">1</div>
               Informações Básicas
             </h3>
             <div className="pl-10 space-y-4">
@@ -176,8 +179,8 @@ export const CriarAnuncio = () => {
 
           {/* GRUPO 2: CARACTERÍSTICAS DO ANIMAL */}
           <div className="space-y-5">
-            <h3 className="text-lg font-semibold text-dark dark:text-light flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 font-bold">2</div>
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-300 dark:border-gray-600">2</div>
               Características do Animal
             </h3>
             <div className="pl-10 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -208,8 +211,8 @@ export const CriarAnuncio = () => {
 
           {/* GRUPO 3: CONTATO */}
           <div className="space-y-5">
-            <h3 className="text-lg font-semibold text-dark dark:text-light flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 font-bold">3</div>
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-300 dark:border-gray-600">3</div>
               Informações de Contato
             </h3>
             <div className="pl-10 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -240,8 +243,8 @@ export const CriarAnuncio = () => {
 
           {/* GRUPO 4: DESCRIÇÃO */}
           <div className="space-y-5">
-            <h3 className="text-lg font-semibold text-dark dark:text-light flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 font-bold">4</div>
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-300 dark:border-gray-600">4</div>
               Descrição Detalhada
             </h3>
             <div className="pl-10">
@@ -270,8 +273,8 @@ export const CriarAnuncio = () => {
             <Button type="button" variant="secondary" onClick={() => navigate('/marketplace')} className="px-10 py-3">
               Cancelar
             </Button>
-            <Button type="submit" loading={loading} className="px-10 py-3 text-base bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl">
-              <Save className="w-5 h-5 mr-2" />
+            <Button type="submit" loading={loading} className="px-10 py-3 text-base bg-[#6A994E] hover:bg-[#5a8442]">
+              <Save className="w-4 h-4 mr-2" />
               Publicar Anúncio
             </Button>
           </div>
@@ -282,7 +285,7 @@ export const CriarAnuncio = () => {
     {/* RESUMO DO ANÚNCIO */}
     <div className="lg:col-span-1">
       <Card className="glassmorphism p-6 sticky top-8">
-        <h3 className="text-lg font-semibold text-dark dark:text-light mb-4">Resumo do Anúncio</h3>
+        <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-4">Resumo do Anúncio</h3>
         <div className="space-y-4">
           {formData.foto && (
             <img src={formData.foto} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
@@ -294,7 +297,7 @@ export const CriarAnuncio = () => {
             </div>
             <div>
               <p className="text-gray-500 dark:text-gray-400 text-xs">Preço</p>
-              <p className="font-bold text-green-600 dark:text-green-400 text-lg">
+              <p className="font-semibold text-gray-900 dark:text-gray-100 text-base">
                 {formData.preco ? `R$ ${Number(formData.preco).toLocaleString('pt-BR', {minimumFractionDigits: 2})}` : 'R$ 0,00'}
               </p>
             </div>

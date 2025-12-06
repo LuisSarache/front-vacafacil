@@ -89,15 +89,20 @@ export const Marketplace = () => {
         {filteredAnuncios.map((anuncio) => (
           <Card key={anuncio.id} className="glassmorphism p-6 hover:shadow-lg transition-all">
             {/* Foto do Animal */}
-            {anuncio.foto && (
-              <div className="mb-4 rounded-lg overflow-hidden">
+            <div className="mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+              {anuncio.foto ? (
                 <img 
                   src={anuncio.foto} 
                   alt={anuncio.titulo}
                   className="w-full h-48 object-cover"
+                  onError={(e) => e.target.style.display = 'none'}
                 />
-              </div>
-            )}
+              ) : (
+                <div className="w-full h-48 flex items-center justify-center text-gray-400">
+                  <ShoppingCart className="w-16 h-16" />
+                </div>
+              )}
+            </div>
             
             <div className="flex justify-between items-start mb-4">
               <div>
