@@ -44,7 +44,7 @@ export const Marketplace = () => {
       </div>
 
       {/* 🔹 Filtros */}
-      <Card className="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700">
+      <Card className="!bg-white p-6 border border-gray-200">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-medium/50 w-4 h-4 pointer-events-none z-10" />
@@ -87,9 +87,9 @@ export const Marketplace = () => {
       {/* 🔹 Lista de Anúncios */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredAnuncios.map((anuncio) => (
-          <Card key={anuncio.id} className="bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all">
+          <Card key={anuncio.id} className="!bg-white p-6 border border-gray-200 hover:border-gray-300 transition-all">
             {/* Foto do Animal */}
-            <div className="mb-4 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700">
+            <div className="mb-4 rounded-lg overflow-hidden !bg-gray-100">
               {anuncio.foto ? (
                 <img 
                   src={anuncio.foto} 
@@ -98,7 +98,7 @@ export const Marketplace = () => {
                   onError={(e) => e.target.style.display = 'none'}
                 />
               ) : (
-                <div className="w-full h-48 flex items-center justify-center text-gray-300 dark:text-gray-500">
+                <div className="w-full h-48 flex items-center justify-center text-gray-400">
                   <ShoppingCart className="w-16 h-16" />
                 </div>
               )}
@@ -106,8 +106,8 @@ export const Marketplace = () => {
             
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{anuncio.titulo}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{anuncio.raca}</p>
+                <h3 className="text-xl font-bold !text-gray-900">{anuncio.titulo}</h3>
+                <p className="text-sm !text-gray-600 mt-1">{anuncio.raca}</p>
               </div>
               <Badge variant={anuncio.tipo === 'venda' ? 'success' : 'info'}>
                 {anuncio.tipo === 'venda' ? 'Venda' : 'Procura'}
@@ -115,37 +115,37 @@ export const Marketplace = () => {
             </div>
 
             <div className="space-y-3 mb-4">
-              <div className="flex items-center text-sm text-gray-700 dark:text-gray-300">
+              <div className="flex items-center text-sm !text-gray-700">
                 <DollarSign className="w-4 h-4 mr-2" />
-                <span className="font-bold text-gray-900 dark:text-gray-100">R$ {anuncio.preco.toLocaleString()}</span>
+                <span className="font-bold !text-gray-900">R$ {anuncio.preco.toLocaleString()}</span>
               </div>
 
               {anuncio.idade && (
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center text-sm !text-gray-600">
                   <Calendar className="w-4 h-4 mr-2" />
                   <span>{anuncio.idade} anos</span>
                 </div>
               )}
 
               {anuncio.producaoMedia > 0 && (
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center text-sm !text-gray-600">
                   <Milk className="w-4 h-4 mr-2" />
                   <span>{anuncio.producaoMedia}L/dia</span>
                 </div>
               )}
 
-              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center text-sm !text-gray-600">
                 <MapPin className="w-4 h-4 mr-2" />
                 <span>{anuncio.localizacao}</span>
               </div>
             </div>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{anuncio.descricao}</p>
+            <p className="text-sm !text-gray-600 mb-4">{anuncio.descricao}</p>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between items-center">
+            <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-500">Anunciante</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{anuncio.vendedor}</p>
+                <p className="text-xs !text-gray-500">Anunciante</p>
+                <p className="text-sm font-medium !text-gray-900">{anuncio.vendedor}</p>
               </div>
               {/* Só mostrar botão se não for o próprio anúncio */}
               {anuncio.userId !== user?.id && anuncio.userId !== user?.email && (
