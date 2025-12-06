@@ -247,13 +247,16 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         } />
         
-        <Route path="/marketplace/novo" element={
+        <Route path="/marketplace/criar-anuncio" element={
           <ProtectedRoute>
             <FeatureRoute feature="marketplace" featureName="Marketplace">
               <CriarAnuncio /> 
             </FeatureRoute>
           </ProtectedRoute>
         } />
+        
+        {/* Redirecionamento de rota antiga */}
+        <Route path="/marketplace/novo" element={<Navigate to="/marketplace/criar-anuncio" replace />} />
         
         <Route path="/assinatura" element={
           <ProtectedRoute>
