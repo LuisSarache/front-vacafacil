@@ -420,6 +420,21 @@ class ApiService {
     return this.request(`/relatorios/rebanho?${queryString}`);
   }
 
+  async getRankingVacas(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/relatorios/ranking?${queryString}`);
+  }
+
+  async getRelatorioLucratividade(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/relatorios/lucratividade?${queryString}`);
+  }
+
+  async getRelatorioReproducao(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/relatorios/reproducao?${queryString}`);
+  }
+
   // 📄 Gerar relatórios PDF/Excel no backend
   async gerarRelatorioPDF(tipo, params = {}) {
     const queryString = new URLSearchParams(params).toString();

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import apiService from '../services/api';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { ToastManager } from '../components/ToastManager';
@@ -9,6 +10,8 @@ import jsPDF from 'jspdf';
 export const Relatorios = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('mensal');
   const [selectedReport, setSelectedReport] = useState('producao');
+  const [loading, setLoading] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   const generatePDF = () => {
     try {
@@ -98,28 +101,46 @@ export const Relatorios = () => {
     { id: 'reproducao', nome: 'Indicadores de Reprodução', icon: FileText }
   ];
 
-  const getDadosProducao = () => {
-    // TODO: Integrar com dados reais da API
-    return {
-      totalPeriodo: 2450,
-      mediaDiaria: 85,
-      melhorDia: { data: '15/01/2024', producao: 95 },
-      piorDia: { data: '08/01/2024', producao: 72 }
-    };
-  };
+  const [dadosProducao, setDadosProducao] = useState(null);
+  const [rankingVacas, setRankingVacas] = useState([]);
+  const [dadosLucratividade, setDadosLucratividade] = useState(null);
+  const [dadosReproducao, setDadosReproducao] = useState(null);
 
-  const getRankingVacas = () => {
-    // TODO: Integrar com dados reais da API
-    return [
-      { posicao: 1, vaca: 'Mimosa #001', producao: 750, media: 25 },
-      { posicao: 2, vaca: 'Bonita #003', producao: 660, media: 22 },
-      { posicao: 3, vaca: 'Flor #004', producao: 600, media: 20 },
-      { posicao: 4, vaca: 'Estrela #002', producao: 540, media: 18 }
-    ];
+  const carregarDados = async () => {
+    setLoading(true);
+    try {
+      if (selectedReport === 'producao') {
+        const data = await apiService.getRelatorioProducao({ periodo: selectedPeriod });
+        setDadosProducao(data);
+      } else if (selectedReport === 'ranking') {
+        const data = await apiService.getRankingVacas({ periodo: selectedPeriod });
+        setRankingVacas(data);
+      } else if (selectedReport === 'lucratividade') {
+        const data = await apiService.getRelatorioLucratividade({ periodo: selectedPeriod });
+        setDadosLucratividade(data);
+      } else if (selectedReport === 'reproducao') {
+        const data = await apiService.getRelatorioReproducao();
+        setDadosReproducao(data);
+      }
+      setShowReport(true);
+      ToastManager.success('Relatório gerado com sucesso!');
+    } catch (error) {
+      console.error('Erro:', error);
+      ToastManager.error('Erro ao gerar relatório. Usando dados de exemplo.');
+      if (selectedReport === 'producao') {
+        setDadosProducao({ totalPeriodo: 2450, mediaDiaria: 85, melhorDia: { data: '15/01/2024', producao: 95 }, piorDia: { data: '08/01/2024', producao: 72 } });
+      } else if (selectedReport === 'ranking') {
+        setRankingVacas([{ posicao: 1, vaca: 'Mimosa #001', producao: 750, media: 25 }, { posicao: 2, vaca: 'Bonita #003', producao: 660, media: 22 }]);
+      } else if (selectedReport === 'lucratividade') {
+        setDadosLucratividade({ receita: 15800, custos: 8300, lucro: 7500, margem: 47.5 });
+      } else if (selectedReport === 'reproducao') {
+        setDadosReproducao({ taxaPrenhez: 75, intervaloPartos: 385, partosEsperados: 2 });
+      }
+      setShowReport(true);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const dadosProducao = getDadosProducao();
-  const rankingVacas = getRankingVacas();
 
   return (
     <div className="space-y-6">
@@ -174,7 +195,11 @@ export const Relatorios = () => {
           </div>
           
           <div className="flex items-end">
-            <Button className="w-full">
+            <Button 
+              className="w-full !bg-[#6A994E] hover:!bg-[#5a8442]" 
+              onClick={carregarDados}
+              loading={loading}
+            >
               Gerar Relatório
             </Button>
           </div>
@@ -198,7 +223,7 @@ export const Relatorios = () => {
       </div>
 
       {/* Conteúdo do Relatório Selecionado */}
-      {selectedReport === 'producao' && (
+      {showReport && selectedReport === 'producao' && dadosProducao && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Resumo de Produção - {selectedPeriod}</h3>
@@ -240,7 +265,7 @@ export const Relatorios = () => {
         </div>
       )}
 
-      {selectedReport === 'ranking' && (
+      {showReport && selectedReport === 'ranking' && (
         <Card>
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold">Ranking de Vacas Mais Produtivas</h3>
@@ -296,7 +321,7 @@ export const Relatorios = () => {
         </Card>
       )}
 
-      {selectedReport === 'lucratividade' && (
+      {showReport && selectedReport === 'lucratividade' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Análise de Lucratividade</h3>
@@ -332,7 +357,7 @@ export const Relatorios = () => {
         </div>
       )}
 
-      {selectedReport === 'reproducao' && (
+      {showReport && selectedReport === 'reproducao' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="p-6 text-center">
             <h4 className="text-lg font-semibold text-gray-900 mb-2">Taxa de Prenhez</h4>

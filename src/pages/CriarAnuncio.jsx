@@ -143,11 +143,11 @@ export const CriarAnuncio = () => {
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Raça *</label>
+                  <label className="block text-sm font-medium !text-gray-700 mb-2">Raça *</label>
                   <select
                     value={formData.raca}
                     onChange={(e) => handleInputChange('raca', e.target.value)}
-                    className="w-full h-12 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-dark dark:text-light shadow-sm"
+                    className="w-full h-12 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 !bg-white !text-gray-900"
                     required
                   >
                     <option value="">Selecione a raça</option>
@@ -252,7 +252,7 @@ export const CriarAnuncio = () => {
                 value={formData.descricao}
                 onChange={(e) => handleInputChange('descricao', e.target.value)}
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-dark dark:text-light shadow-sm resize-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 !bg-white !text-gray-900 resize-none"
                 placeholder="Descreva detalhadamente..."
                 required
               />
