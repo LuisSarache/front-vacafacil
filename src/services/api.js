@@ -41,11 +41,14 @@ class ApiService {
       throw new Error('URL inválida ou não permitida');
     }
     
+    // Sempre pegar o token mais recente
+    const currentToken = this.getToken();
+    
     const config = {
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-Token': this.csrfToken,
-        ...(this.token && { Authorization: `Bearer ${this.token}` }),
+        ...(currentToken && { Authorization: `Bearer ${currentToken}` }),
       },
       credentials: 'same-origin',
       ...options,
@@ -56,11 +59,12 @@ class ApiService {
       
       if (!response.ok) {
         // Token expirado - tentar renovar
-        if (response.status === 401 && this.token && endpoint !== '/auth/refresh') {
+        if (response.status === 401 && currentToken && endpoint !== '/auth/refresh') {
           try {
             await this.refreshToken();
             // Tentar novamente com novo token
-            config.headers.Authorization = `Bearer ${this.token}`;
+            const newToken = this.getToken();
+            config.headers.Authorization = `Bearer ${newToken}`;
             const retryResponse = await fetch(url, config);
             if (retryResponse.ok) {
               return await retryResponse.json();

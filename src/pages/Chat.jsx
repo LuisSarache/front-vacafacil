@@ -40,9 +40,9 @@ export const Chat = () => {
     try {
       const data = await chatService.getConversations();
       setConversations(data);
-      setLoading(false);
     } catch (error) {
       console.error('Erro ao carregar conversas:', error);
+    } finally {
       setLoading(false);
     }
   };

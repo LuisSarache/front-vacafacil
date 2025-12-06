@@ -54,7 +54,7 @@ export const Sidebar = () => {
     { to: '/reproducao', label: 'Reprodução', icon: Heart },
     { to: '/relatorios', label: 'Relatórios', icon: FileText },
     { to: '/marketplace', label: 'Marketplace', icon: ShoppingCart, requiresFeature: 'marketplace' },
-    { to: '/marketplace/chat', label: 'Mensagens', icon: MessageCircle, requiresFeature: 'marketplace' },
+    { to: '/chat', label: 'Mensagens', icon: MessageCircle, requiresFeature: 'marketplace' },
     { to: '/assinatura', label: 'Assinatura', icon: Crown },
     { to: '/configuracoes', label: 'Configurações', icon: Settings }
   ];
@@ -68,7 +68,12 @@ export const Sidebar = () => {
   });
  
   // 📌 Função para verificar se o link é o atual
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === '/chat') {
+      return location.pathname.startsWith('/chat');
+    }
+    return location.pathname === path;
+  };
  
   return (
     <>

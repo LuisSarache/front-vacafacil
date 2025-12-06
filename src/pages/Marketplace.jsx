@@ -230,7 +230,8 @@ export const Marketplace = () => {
                       );
                       navigate(`/chat/${conversation.id}`);
                     } catch (error) {
-                      ToastManager.error('Erro ao iniciar conversa');
+                      console.error('Erro ao criar conversa:', error);
+                      ToastManager.error('Erro ao iniciar conversa. Tente novamente.');
                     }
                   }}
                 >

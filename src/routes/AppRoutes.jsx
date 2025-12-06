@@ -282,6 +282,10 @@ export const AppRoutes = () => {
             </FeatureRoute>
           </ProtectedRoute>
         } />
+        
+        {/* Redirecionamento de rotas antigas */}
+        <Route path="/marketplace/chat" element={<Navigate to="/chat" replace />} />
+        <Route path="/marketplace/chat/:id" element={<Navigate to="/chat/:id" replace />} />
       </Routes>
       </Suspense>
     </Router>
