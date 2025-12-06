@@ -110,7 +110,7 @@ export const CriarAnuncio = () => {
               type="button"
               onClick={() => handleInputChange('tipo', 'venda')}
               className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
-                formData.tipo === 'venda' ? 'bg-[#6A994E] text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+                formData.tipo === 'venda' ? '!bg-[#6A994E] !text-white' : '!bg-gray-200 !text-gray-700 border border-gray-300 hover:!bg-gray-300'
               }`}
             >
               Vender
@@ -119,7 +119,7 @@ export const CriarAnuncio = () => {
               type="button"
               onClick={() => handleInputChange('tipo', 'compra')}
               className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
-                formData.tipo === 'compra' ? 'bg-[#6A994E] text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+                formData.tipo === 'compra' ? '!bg-[#6A994E] !text-white' : '!bg-gray-200 !text-gray-700 border border-gray-300 hover:!bg-gray-300'
               }`}
             >
               Procurar
