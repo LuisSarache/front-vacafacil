@@ -3,8 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { chatService } from '../services/chatService';
 import { apiService } from '../services/api';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ArrowLeft, Send, Image as ImageIcon, X } from 'lucide-react';
 
@@ -35,7 +33,6 @@ export const ChatRoom = () => {
     try {
       const data = await chatService.getConversation(id);
       
-      // Sempre buscar dados do anúncio
       if (data.anuncio_id) {
         try {
           const anuncios = await apiService.request('/marketplace/');
@@ -95,7 +92,6 @@ export const ChatRoom = () => {
     try {
       let finalMessage = mensagem;
       
-      // Se tiver imagem, adicionar ao texto
       if (imagePreview) {
         finalMessage = `${mensagem}\n[IMAGEM: ${imagePreview}]`;
       }
@@ -119,7 +115,6 @@ export const ChatRoom = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
-      {/* Header */}
       <div className="bg-gradient-to-r from-green-600 to-green-700 p-5 mb-4 rounded-2xl shadow-xl">
         <div className="flex items-center gap-4">
           <button
@@ -140,7 +135,6 @@ export const ChatRoom = () => {
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-6 mb-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl">
         <div className="space-y-4">
           {conversation?.mensagens?.length === 0 ? (
@@ -166,7 +160,6 @@ export const ChatRoom = () => {
                         : 'bg-white dark:bg-gray-800 text-dark dark:text-white border border-gray-200 dark:border-gray-700'
                     }`}
                   >
-                    {/* Verificar se tem imagem */}
                     {msg.mensagem.includes('[IMAGEM:') ? (
                       <>
                         {(() => {
@@ -220,9 +213,7 @@ export const ChatRoom = () => {
         </div>
       </div>
 
-      {/* Input */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
-        {/* Preview da imagem */}
         {imagePreview && (
           <div className="mb-3 relative inline-block animate-in fade-in slide-in-from-bottom-2">
             <img 
@@ -273,13 +264,7 @@ export const ChatRoom = () => {
             {sending ? 'Enviando...' : 'Enviar'}
           </button>
         </form>
-      </div>!imageFile)}
-            className="px-6"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
-        </form>
-      </Card>
+      </div>
     </div>
   );
 };
