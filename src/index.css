@@ -105,11 +105,9 @@ body {
    GLASSMORPHISM
    ============================== */
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(106, 153, 78, 0.1);
-  box-shadow: 0 20px 40px -12px rgba(38, 70, 83, 0.15);
-  border-radius: 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
 }
 
 .glassmorphism-light {
